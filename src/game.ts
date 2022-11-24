@@ -1,9 +1,10 @@
+import { Player } from './player';
 import 'phaser';
 
 export default class Demo extends Phaser.Scene
 {
     playerSpeed: number = 2;
-    player;
+    player: Player;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -42,10 +43,20 @@ export default class Demo extends Phaser.Scene
         //var layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
         //var layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
 
-        this.player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
+        //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
-        //Animations.createAnims(this.anims);
-        
+        this.player = new Player({
+            scene: this,
+            x: 200,
+            y: 200,
+            key: "utilityCars",
+            frame: 'police_W.png'
+            //playerId: playerId,
+            //isMyPlayer: true,
+            //isMultiplayer: this.isMultiplayer
+        });        
+
+        //Animations.createAnims(this.anims);        
         this.player.anims.create({
             key: 'police-N',
             frames: [{key: 'utilityCars', frame: 'police_N.png'}],
@@ -84,6 +95,59 @@ export default class Demo extends Phaser.Scene
         this.player.anims.create({
             key: 'police-SW',
             frames: [{key: 'utilityCars', frame: 'police_SW.png'}],
+            frameRate: 10,
+        });
+
+        var player2 = new Player({
+            scene: this,
+            x: 250,
+            y: 250,
+            key: "utilityCars",
+            frame: 'garbage_W.png'
+            //playerId: playerId,
+            //isMyPlayer: true,
+            //isMultiplayer: this.isMultiplayer
+        });        
+
+        //Animations.createAnims(this.anims);        
+        this.player.anims.create({
+            key: 'garbage-N',
+            frames: [{key: 'utilityCars', frame: 'garbage_N.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-S',
+            frames: [{key: 'utilityCars', frame: 'garbage_S.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-E',
+            frames: [{key: 'utilityCars', frame: 'garbage_E.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-W',
+            frames: [{key: 'utilityCars', frame: 'garbage_W.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-NE',
+            frames: [{key: 'utilityCars', frame: 'garbage_NE.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-NW',
+            frames: [{key: 'utilityCars', frame: 'garbage_NW.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-SE',
+            frames: [{key: 'utilityCars', frame: 'garbage_SE.png'}],
+            frameRate: 10,
+        });
+        this.player.anims.create({
+            key: 'garbage-SW',
+            frames: [{key: 'utilityCars', frame: 'garbage_SW.png'}],
             frameRate: 10,
         });
 

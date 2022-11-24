@@ -20,7 +20,7 @@ export default {
         name: 'MyGame',
         format: 'iife',
         sourcemap: false,
-        intro: 'var global = window;'
+        //intro: 'var global = window;'
     },
 
     plugins: [
@@ -49,8 +49,8 @@ export default {
             exclude: [ 
                 'node_modules/phaser/src/polyfills/requestAnimationFrame.js'
             ],
-            sourceMap: false,
-            ignoreGlobal: true
+            sourceMap: true,
+            ignoreGlobal: false
         }),
 
         //  See https://www.npmjs.com/package/rollup-plugin-typescript2 for config options
