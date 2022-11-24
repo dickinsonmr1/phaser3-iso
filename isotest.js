@@ -18,9 +18,9 @@ var game = new Phaser.Game(config);
 
 function preload ()
 {
-    this.load.image('tiles', './assets/iso/iso-64x64-outside.png');
-    this.load.image('tiles2', './assets/iso/iso-64x64-building.png');
-    this.load.tilemapTiledJSON('map', './assets/iso/isorpg.json');
+    this.load.image('tiles', './assets/iso-64x64-outside.png');
+    this.load.image('tiles2', './assets/iso-64x64-building.png');
+    this.load.tilemapTiledJSON('map', './assets/isorpg.json');
 }
 
 function create ()
@@ -40,7 +40,7 @@ function create ()
 
     var cursors = this.input.keyboard.createCursorKeys();
 
-    this.cameras.main.setZoom(2);
+    this.cameras.main.setZoom(1);
 
     var controlConfig = {
         camera: this.cameras.main,
