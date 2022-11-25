@@ -2,6 +2,7 @@ import 'phaser'
 import { Constants } from './constants';
 import { HealthBar } from './healthBar';
 import { Bullet } from './bullet';
+import { Point, Utilities } from './utilities';
 
 export enum PlayerOrientation {
     N,
@@ -15,7 +16,7 @@ export enum PlayerOrientation {
 }
 
 export class Player extends Phaser.GameObjects.Sprite {
-    playerSpeed: number = 2;
+    playerSpeed: number = 100;
     health = 10;
 
     private get healthBarOffsetX(): number {return -30;}
@@ -41,8 +42,17 @@ export class Player extends Phaser.GameObjects.Sprite {
     public bulletTimeInterval: number = 200;
     private bulletVelocity: number = 3;
 
+    public MapPosition: Phaser.Geom.Point;
+
     constructor(params) {
         super(params.scene, params.x, params.y, params.key, params.frame);
+
+        //var utilities = new Utilities();
+        //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
+        //super(params.scene,  this.ScreenLocation.x, this.ScreenLocation.y, params.key, params.frame);
+
+        //let isoPt = new Phaser.Geom.Point();//It is not advisable to create points in update loop
+        this.MapPosition = new Phaser.Geom.Point(0, 0); 
 
         this.playerId = params.playerId;
 
@@ -59,27 +69,33 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
 
-                // multiplayer player name text
-                var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
-                    {
-                        font: '16px Courier',
-                        //fontFamily: 'KenneyRocketSquare',         
-                        color:"rgb(255,255,255)",
-                    });
-                playerNameText.setAlpha(0.5);
-                playerNameText.setOrigin(0, 0.5);
-                playerNameText.setDepth(7);
-                //playerNameText.setStroke('rgb(0,0,0)', 4);     
-                //playerNameText.setFontSize(24); 
-                
-                this.multiplayerNameText = playerNameText;
-                this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-                this.multiplayerNameText.setOrigin(0, 0.5);
-                this.multiplayerNameText.setFontSize(16);
-                this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
+        // multiplayer player name text
+        var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
+            {
+                font: '16px Courier',
+                //fontFamily: 'KenneyRocketSquare',         
+                color:"rgb(255,255,255)",
+            });
+        playerNameText.setAlpha(0.5);
+        playerNameText.setOrigin(0, 0.5);
+        playerNameText.setDepth(7);
+        //playerNameText.setStroke('rgb(0,0,0)', 4);     
+        //playerNameText.setFontSize(24); 
+        
+        this.multiplayerNameText = playerNameText;
+        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+        this.multiplayerNameText.setOrigin(0, 0.5);
+        this.multiplayerNameText.setFontSize(16);
+        this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
     }
 
     update(...args: any[]): void {
+
+        var utility = new Utilities();
+        var screenPosition = utility.cartesianToIsometric(this.MapPosition);
+
+        this.x = screenPosition.x;
+        this.y = screenPosition.y;
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
 

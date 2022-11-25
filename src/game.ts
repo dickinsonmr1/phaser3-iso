@@ -3,19 +3,21 @@ import 'phaser';
 
 export default class Demo extends Phaser.Scene
 {
-    playerSpeed: number = 2;
+    playerSpeed: number = 0.25;
     player: Player;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
     zoomOutKey: Phaser.Input.Keyboard.Key;
 
-    moveNorthKey: Phaser.Input.Keyboard.Key;
-    moveSouthKey: Phaser.Input.Keyboard.Key;
-    moveEastKey: Phaser.Input.Keyboard.Key;
-    moveWestKey: Phaser.Input.Keyboard.Key;
+    moveUpKey: Phaser.Input.Keyboard.Key;
+    moveDownKey: Phaser.Input.Keyboard.Key;
+    moveLeftKey: Phaser.Input.Keyboard.Key;
+    moveRightKey: Phaser.Input.Keyboard.Key;
 
     fireWeaponKey: Phaser.Input.Keyboard.Key;
+
+    light: any;
 
     constructor ()
     {
@@ -67,12 +69,36 @@ export default class Demo extends Phaser.Scene
         //var layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
         //var layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
 
+
+        let colorIndex = 0;
+        const spectrum = Phaser.Display.Color.ColorSpectrum(128);
+
+        this.light = this.add.pointlight(400, 300, 0, 10, 1);
+        var color = spectrum[colorIndex];
+
+        this.light.color.setTo(color.r, color.g, color.b);
+        /*
+        var tileset = map.addTilesetImage('tiles3', null, 32, 32, 1, 2);
+        var layer = map.createLayer(0, tileset, 0, 0).setPipeline('Light2D');
+
+        this.lights.enable();
+        this.lights.setAmbientColor(0x808080);
+    
+        this.light = this.lights.addLight(0, 0, 200);
+    
+        this.lights.addLight(0, 100, 140).setColor(0xff0000).setIntensity(3.0);
+        this.lights.addLight(0, 250, 140).setColor(0x00ff00).setIntensity(3.0);
+        this.lights.addLight(0, 400, 140).setColor(0xff00ff).setIntensity(3.0);
+        this.lights.addLight(0, 550, 140).setColor(0xffff00).setIntensity(3.0);
+        */
         //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
         this.player = new Player({
             scene: this,
-            x: 200,
-            y: 200,
+            x: 10,
+            y: 10,
+            //mapX: 10,
+            //mapY: 10,
             key: "utilityCars",
             frame: 'police_W.png',
             playerId: "Police",
@@ -196,13 +222,13 @@ export default class Demo extends Phaser.Scene
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
-        this.moveNorthKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.moveSouthKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.moveEastKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.moveWestKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.moveUpKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.moveDownKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.moveRightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.moveLeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
         this.fireWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
-
+    
     }
 
     update(time, delta) {
@@ -215,47 +241,56 @@ export default class Demo extends Phaser.Scene
         if(this.zoomOutKey.isDown)
             this.cameras.main.zoom += 0.01;  
 
-        if(this.moveNorthKey.isDown && !this.moveEastKey.isDown && !this.moveWestKey.isDown) {
-            this.player.y -= 1 * this.playerSpeed;
+        if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
+            this.player.MapPosition.x -= Math.cos(Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(Math.PI / 4) * this.playerSpeed;
+                        
             this.player.anims.play('police-N', true);
             this.player.playerOrientation = PlayerOrientation.N;
         }
-        else if(this.moveSouthKey.isDown && !this.moveEastKey.isDown && !this.moveWestKey.isDown) {
-            this.player.y += 1 * this.playerSpeed;
+        else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
+            this.player.MapPosition.x -= Math.cos(5 * Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(5 * Math.PI / 4) * this.playerSpeed;            
+
             this.player.anims.play('police-S', true);
             this.player.playerOrientation = PlayerOrientation.S;
         }
-        else if(this.moveEastKey.isDown && !this.moveNorthKey.isDown && !this.moveSouthKey.isDown) {
-            this.player.x += 1 * this.playerSpeed;
+        else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
+            this.player.MapPosition.x -= Math.cos(3 * Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(3 * Math.PI / 4) * this.playerSpeed;
+                                   
             this.player.anims.play('police-E', true);
             this.player.playerOrientation = PlayerOrientation.E;
         }
-        else if(this.moveWestKey.isDown && !this.moveNorthKey.isDown && !this.moveSouthKey.isDown) {
-            this.player.x -= 1 * this.playerSpeed;
+        else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
+          
+            this.player.MapPosition.x -= Math.cos(7 * Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(7 * Math.PI / 4) * this.playerSpeed;            
+            
             this.player.anims.play('police-W', true);
             this.player.playerOrientation = PlayerOrientation.W;
         }
-        else if(this.moveNorthKey.isDown && this.moveEastKey.isDown) {
-            this.player.x += Math.cos(Math.PI / 4) * this.playerSpeed;
-            this.player.y -= Math.sin(Math.PI / 4) * this.playerSpeed;
+        else if(this.moveUpKey.isDown && this.moveRightKey.isDown) { // WORKING
+            this.player.MapPosition.y -= 1 * this.playerSpeed;
+                        
             this.player.anims.play('police-NE', true);
             this.player.playerOrientation = PlayerOrientation.NE;
         }
-        else if(this.moveNorthKey.isDown && this.moveWestKey.isDown) {
-            this.player.x += Math.cos(3 * Math.PI / 4) * this.playerSpeed;
-            this.player.y -= Math.sin(3 * Math.PI / 4) * this.playerSpeed;
-            this.player.anims.play('police-NW', true);
-            this.player.playerOrientation = PlayerOrientation.NW;
-        }
-        if(this.moveSouthKey.isDown && this.moveEastKey.isDown) {
-            this.player.x += Math.cos(7 * Math.PI / 4) * this.playerSpeed;
-            this.player.y -= Math.sin(7 * Math.PI / 4) * this.playerSpeed;
+        else if(this.moveRightKey.isDown && this.moveDownKey.isDown) { // WORKING
+            this.player.MapPosition.x += 1 * this.playerSpeed;
+            
             this.player.anims.play('police-SE', true);
             this.player.playerOrientation = PlayerOrientation.SE;
         }
-        else if(this.moveSouthKey.isDown && this.moveWestKey.isDown) {
-            this.player.x += Math.cos(5 * Math.PI / 4) * this.playerSpeed;
-            this.player.y -= Math.sin(5 * Math.PI / 4) * this.playerSpeed;
+        if(this.moveUpKey.isDown && this.moveLeftKey.isDown) { // WORKING
+            this.player.MapPosition.x -= 1 * this.playerSpeed;            
+            
+            this.player.anims.play('police-NW', true);
+            this.player.playerOrientation = PlayerOrientation.NW;
+        }
+        else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
+            this.player.MapPosition.y += 1 * this.playerSpeed;
+
             this.player.anims.play('police-SW', true);
             this.player.playerOrientation = PlayerOrientation.SW;
         }
@@ -265,6 +300,8 @@ export default class Demo extends Phaser.Scene
         }
 
         this.player.update();
+        this.light.x = this.player.x;
+        this.light.y = this.player.y;
     }
 }
 
