@@ -1,4 +1,4 @@
-import { Player } from './player';
+import { Player, PlayerOrientation } from './player';
 import 'phaser';
 
 export default class Demo extends Phaser.Scene
@@ -15,6 +15,8 @@ export default class Demo extends Phaser.Scene
     moveEastKey: Phaser.Input.Keyboard.Key;
     moveWestKey: Phaser.Input.Keyboard.Key;
 
+    fireWeaponKey: Phaser.Input.Keyboard.Key;
+
     constructor ()
     {
         super('demo');
@@ -22,6 +24,28 @@ export default class Demo extends Phaser.Scene
 
     preload ()
     {
+        // hud
+        this.load.atlasXML('hudSprites', './assets/sprites/HUD/spritesheet_hud.png', './assets/sprites/HUD/spritesheet_hud.xml');        
+        this.load.atlasXML('uiSpaceSprites', './assets/sprites/HUD/uipackSpace_sheet.png', './assets/sprites/HUD/uipackSpace_sheet.xml');        
+        this.load.atlasXML('redUISprites', './assets/sprites/HUD/redSheet.png', './assets/sprites/HUD/redSheet.xml');        
+        this.load.atlasXML('greyUISprites', './assets/sprites/HUD/greySheet.png', './assets/sprites/HUD/greySheet.xml');        
+        //this.load.image('weaponIconLaserPistol', './assets/sprites/player/raygun.png');
+        //this.load.image('weaponIconLaserRepeater', './assets/sprites/player/raygunBig.png');
+        //this.load.image('weaponIconPulseCharge', './assets/sprites/player/raygunPurple.png');
+        //this.load.image('weaponIconRocketLauncher', './assets/sprites/player/raygunPurpleBig.png');
+
+        this.load.image('healthBarLeft', './assets/sprites/HUD/barHorizontal_red_left.png');
+        this.load.image('healthBarMid', './assets/sprites/HUD/barHorizontal_red_mid.png');
+        this.load.image('healthBarRight', './assets/sprites/HUD/barHorizontal_red_right.png');
+
+        this.load.image('shieldBarLeft', './assets/sprites/HUD/barHorizontal_blue_left.png');
+        this.load.image('shieldBarMid', './assets/sprites/HUD/barHorizontal_blue_mid.png');
+        this.load.image('shieldBarRight', './assets/sprites/HUD/barHorizontal_blue_right.png');
+
+        //
+        this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
+
+        // tiles
         this.load.image('tiles', './assets/iso-64x64-outside.png');
         this.load.image('tiles2', './assets/iso-64x64-building.png');
         this.load.tilemapTiledJSON('map', './assets/isorpg.json');
@@ -50,8 +74,8 @@ export default class Demo extends Phaser.Scene
             x: 200,
             y: 200,
             key: "utilityCars",
-            frame: 'police_W.png'
-            //playerId: playerId,
+            frame: 'police_W.png',
+            playerId: "Police",
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -103,8 +127,8 @@ export default class Demo extends Phaser.Scene
             x: 250,
             y: 250,
             key: "utilityCars",
-            frame: 'garbage_W.png'
-            //playerId: playerId,
+            frame: 'garbage_W.png',
+            playerId: "Trash Man",
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -177,6 +201,8 @@ export default class Demo extends Phaser.Scene
         this.moveEastKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.moveWestKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
+        this.fireWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+
     }
 
     update(time, delta) {
@@ -192,39 +218,53 @@ export default class Demo extends Phaser.Scene
         if(this.moveNorthKey.isDown && !this.moveEastKey.isDown && !this.moveWestKey.isDown) {
             this.player.y -= 1 * this.playerSpeed;
             this.player.anims.play('police-N', true);
+            this.player.playerOrientation = PlayerOrientation.N;
         }
         else if(this.moveSouthKey.isDown && !this.moveEastKey.isDown && !this.moveWestKey.isDown) {
             this.player.y += 1 * this.playerSpeed;
             this.player.anims.play('police-S', true);
+            this.player.playerOrientation = PlayerOrientation.S;
         }
         else if(this.moveEastKey.isDown && !this.moveNorthKey.isDown && !this.moveSouthKey.isDown) {
             this.player.x += 1 * this.playerSpeed;
             this.player.anims.play('police-E', true);
+            this.player.playerOrientation = PlayerOrientation.E;
         }
         else if(this.moveWestKey.isDown && !this.moveNorthKey.isDown && !this.moveSouthKey.isDown) {
             this.player.x -= 1 * this.playerSpeed;
             this.player.anims.play('police-W', true);
+            this.player.playerOrientation = PlayerOrientation.W;
         }
         else if(this.moveNorthKey.isDown && this.moveEastKey.isDown) {
             this.player.x += Math.cos(Math.PI / 4) * this.playerSpeed;
             this.player.y -= Math.sin(Math.PI / 4) * this.playerSpeed;
             this.player.anims.play('police-NE', true);
+            this.player.playerOrientation = PlayerOrientation.NE;
         }
         else if(this.moveNorthKey.isDown && this.moveWestKey.isDown) {
             this.player.x += Math.cos(3 * Math.PI / 4) * this.playerSpeed;
             this.player.y -= Math.sin(3 * Math.PI / 4) * this.playerSpeed;
             this.player.anims.play('police-NW', true);
+            this.player.playerOrientation = PlayerOrientation.NW;
         }
         if(this.moveSouthKey.isDown && this.moveEastKey.isDown) {
             this.player.x += Math.cos(7 * Math.PI / 4) * this.playerSpeed;
             this.player.y -= Math.sin(7 * Math.PI / 4) * this.playerSpeed;
             this.player.anims.play('police-SE', true);
+            this.player.playerOrientation = PlayerOrientation.SE;
         }
         else if(this.moveSouthKey.isDown && this.moveWestKey.isDown) {
             this.player.x += Math.cos(5 * Math.PI / 4) * this.playerSpeed;
             this.player.y -= Math.sin(5 * Math.PI / 4) * this.playerSpeed;
             this.player.anims.play('police-SW', true);
+            this.player.playerOrientation = PlayerOrientation.SW;
         }
+
+        if(this.fireWeaponKey.isDown) {
+            this.player.tryFireBullet();
+        }
+
+        this.player.update();
     }
 }
 
