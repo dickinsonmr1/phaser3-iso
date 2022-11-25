@@ -4,7 +4,18 @@ import { HealthBar } from './healthBar';
 import { Bullet } from './bullet';
 import { Point, Utilities } from './utilities';
 
-export enum PlayerOrientation {
+export enum PlayerDrawOrientation {
+    N,
+    S,
+    E,
+    W,
+    NE,
+    SE,
+    NW,
+    SW,
+}
+
+export enum PlayerCartesianOrientation {
     N,
     S,
     E,
@@ -16,7 +27,7 @@ export enum PlayerOrientation {
 }
 
 export class Player extends Phaser.GameObjects.Sprite {
-    playerSpeed: number = 100;
+    playerSpeed: number = 3;
     health = 10;
 
     private get healthBarOffsetX(): number {return -30;}
@@ -34,7 +45,28 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     public playerId: string;
 
-    playerOrientation: PlayerOrientation;
+    playerDrawOrientation: PlayerDrawOrientation;
+    getPlayerIsometricOrientation(): PlayerCartesianOrientation {
+        switch(this.playerDrawOrientation)
+        {
+            case PlayerDrawOrientation.N:
+                return PlayerCartesianOrientation.NW;
+            case PlayerDrawOrientation.NW:
+                return PlayerCartesianOrientation.W;
+            case PlayerDrawOrientation.W:
+                return PlayerCartesianOrientation.SW;
+            case PlayerDrawOrientation.SW:
+                return PlayerCartesianOrientation.S;
+            case PlayerDrawOrientation.S:
+                return PlayerCartesianOrientation.SE;
+            case PlayerDrawOrientation.SE:
+                return PlayerCartesianOrientation.E;
+            case PlayerDrawOrientation.E:
+                return PlayerCartesianOrientation.NE;
+            case PlayerDrawOrientation.NE:
+                return PlayerCartesianOrientation.N;
+        }
+    }
 
     public bullets: Phaser.GameObjects.Group;
     public lastUsedBulletIndex: number;
@@ -43,6 +75,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private bulletVelocity: number = 3;
 
     public MapPosition: Phaser.Geom.Point;
+    public playerPositionOnTileset: Phaser.Geom.Point;
 
     constructor(params) {
         super(params.scene, params.x, params.y, params.key, params.frame);
@@ -53,12 +86,13 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         //let isoPt = new Phaser.Geom.Point();//It is not advisable to create points in update loop
         this.MapPosition = new Phaser.Geom.Point(0, 0); 
+        this.playerPositionOnTileset = new Phaser.Geom.Point(0,0);
 
         this.playerId = params.playerId;
 
         this.scene.add.existing(this);
 
-        this.playerOrientation = PlayerOrientation.W;
+        this.playerDrawOrientation = PlayerDrawOrientation.W;
 
         this.healthBar = new HealthBar(this.scene)
         
@@ -93,6 +127,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         var utility = new Utilities();
         var screenPosition = utility.cartesianToIsometric(this.MapPosition);
+        var playerPositionOnTileset = utility.getTileCoordinates(this.MapPosition, 64);
 
         this.x = screenPosition.x;
         this.y = screenPosition.y;
@@ -105,6 +140,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     alignPlayerNameText(x: number, y: number) {
         var text = this.multiplayerNameText;
+        text.setText(`${this.playerId} - Map(${this.MapPosition.x}, ${this.MapPosition.y})
+                        \nIso(${this.x}, ${this.y})
+                        \nTileCoordinates(${this.playerPositionOnTileset.x}, ${this.playerPositionOnTileset.y})`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0.5);
@@ -124,38 +162,39 @@ export class Player extends Phaser.GameObjects.Sprite {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
         var velocityY: number;
-        switch(this.playerOrientation){
-            case PlayerOrientation.N:
+        var cartesianOrientation = this.getPlayerIsometricOrientation()
+        switch(cartesianOrientation){
+            case PlayerCartesianOrientation.N:
                 velocityX = 0;
                 velocityY = -this.bulletVelocity;
                 break;
-            case PlayerOrientation.E:
+            case PlayerCartesianOrientation.E:
                 velocityX = this.bulletVelocity;
                 velocityY = 0;
                 break;
-            case PlayerOrientation.S:
+            case PlayerCartesianOrientation.S:
                 velocityX = 0;
                 velocityY = this.bulletVelocity;
                 break;
-            case PlayerOrientation.W:
+            case PlayerCartesianOrientation.W:
                 velocityX = -this.bulletVelocity;
                 velocityY = 0;
                 break;
-            case PlayerOrientation.NE:
+            case PlayerCartesianOrientation.NE:
                 velocityX = this.bulletVelocity;
                 velocityY = -this.bulletVelocity;
                 break;
-            case PlayerOrientation.SE:
+            case PlayerCartesianOrientation.SE:
                 velocityX = this.bulletVelocity;
                 velocityY = this.bulletVelocity;
                 break;
-            case PlayerOrientation.NW:
+            case PlayerCartesianOrientation.NW:
                 velocityX = -this.bulletVelocity;
                 velocityY = -this.bulletVelocity;
                 break;
-            case PlayerOrientation.SW:
-                velocityX = -1;
-                velocityY = 1;
+            case PlayerCartesianOrientation.E:
+                velocityX = -this.bulletVelocity;
+                velocityY = this.bulletVelocity;
                 break;
         }
 

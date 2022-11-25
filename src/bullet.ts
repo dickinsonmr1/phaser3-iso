@@ -1,6 +1,7 @@
 // https://labs.phaser.io/edit.html?src=src\games\topdownShooter\topdown_combatMechanics.js
 import "phaser";
 import { Scene } from "phaser";
+import { Utilities } from "./utilities";
 /*
 import { Constants } from "../client/constants";
 import { MainScene } from "../client/scenes/mainScene";
@@ -15,10 +16,13 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     public velocityY: number;
     //public bulletId: uuidv4;
 
+    public MapPosition: Phaser.Geom.Point;
+
     constructor(params)
     {
         super(params.scene, params.x, params.y, params.key);
 
+        this.MapPosition = new Phaser.Geom.Point(params.x, params.y); 
         //this.bulletId = uuidv4();
 
         this.scene.add.existing(this);
@@ -45,15 +49,19 @@ export class Bullet extends Phaser.GameObjects.Sprite {
        
     }
 
-    preUpdate(time, delta): void {        
+    preUpdate(time, delta): void {    
+        var utility = new Utilities();    
         super.preUpdate(time, delta);
 
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         //body.setVelocityX(this.velocityX);
         //body.setVelocityY(this.velocityY);
-        this.x += this.velocityX;
-        this.y += this.velocityY;
+        this.MapPosition.x += this.velocityX;
+        this.MapPosition.y += this.velocityY;
         
+        var isoPosition = utility.cartesianToIsometric(this.MapPosition);
+        this.x = isoPosition.x;
+        this.y = isoPosition.y;
         /*
         console.log('bulletMovement');
 

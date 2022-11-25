@@ -1,9 +1,9 @@
-import { Player, PlayerOrientation } from './player';
+import { Player, PlayerDrawOrientation } from './player';
 import 'phaser';
 
 export default class Demo extends Phaser.Scene
 {
-    playerSpeed: number = 0.25;
+    //playerSpeed: number = 0.25;
     player: Player;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
@@ -73,7 +73,7 @@ export default class Demo extends Phaser.Scene
         let colorIndex = 0;
         const spectrum = Phaser.Display.Color.ColorSpectrum(128);
 
-        this.light = this.add.pointlight(400, 300, 0, 10, 1);
+        this.light = this.add.pointlight(400, 300, 0, 20, 1);
         var color = spectrum[colorIndex];
 
         this.light.color.setTo(color.r, color.g, color.b);
@@ -242,57 +242,57 @@ export default class Demo extends Phaser.Scene
             this.cameras.main.zoom += 0.01;  
 
         if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
-            this.player.MapPosition.x -= Math.cos(Math.PI / 4) * this.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.x -= Math.cos(Math.PI / 4) * this.player.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(Math.PI / 4) * this.player.playerSpeed;
                         
             this.player.anims.play('police-N', true);
-            this.player.playerOrientation = PlayerOrientation.N;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.N;
         }
         else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
-            this.player.MapPosition.x -= Math.cos(5 * Math.PI / 4) * this.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(5 * Math.PI / 4) * this.playerSpeed;            
+            this.player.MapPosition.x -= Math.cos(5 * Math.PI / 4) * this.player.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(5 * Math.PI / 4) * this.player.playerSpeed;            
 
             this.player.anims.play('police-S', true);
-            this.player.playerOrientation = PlayerOrientation.S;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.S;
         }
         else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-            this.player.MapPosition.x -= Math.cos(3 * Math.PI / 4) * this.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(3 * Math.PI / 4) * this.playerSpeed;
+            this.player.MapPosition.x -= Math.cos(3 * Math.PI / 4) * this.player.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(3 * Math.PI / 4) * this.player.playerSpeed;
                                    
             this.player.anims.play('police-E', true);
-            this.player.playerOrientation = PlayerOrientation.E;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.E;
         }
         else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
           
-            this.player.MapPosition.x -= Math.cos(7 * Math.PI / 4) * this.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(7 * Math.PI / 4) * this.playerSpeed;            
+            this.player.MapPosition.x -= Math.cos(7 * Math.PI / 4) * this.player.playerSpeed;
+            this.player.MapPosition.y -= Math.sin(7 * Math.PI / 4) * this.player.playerSpeed;            
             
             this.player.anims.play('police-W', true);
-            this.player.playerOrientation = PlayerOrientation.W;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.W;
         }
         else if(this.moveUpKey.isDown && this.moveRightKey.isDown) { // WORKING
-            this.player.MapPosition.y -= 1 * this.playerSpeed;
+            this.player.MapPosition.y -= 1 * this.player.playerSpeed;
                         
             this.player.anims.play('police-NE', true);
-            this.player.playerOrientation = PlayerOrientation.NE;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.NE;
         }
         else if(this.moveRightKey.isDown && this.moveDownKey.isDown) { // WORKING
-            this.player.MapPosition.x += 1 * this.playerSpeed;
+            this.player.MapPosition.x += 1 * this.player.playerSpeed;
             
             this.player.anims.play('police-SE', true);
-            this.player.playerOrientation = PlayerOrientation.SE;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.SE;
         }
         if(this.moveUpKey.isDown && this.moveLeftKey.isDown) { // WORKING
-            this.player.MapPosition.x -= 1 * this.playerSpeed;            
+            this.player.MapPosition.x -= 1 * this.player.playerSpeed;            
             
             this.player.anims.play('police-NW', true);
-            this.player.playerOrientation = PlayerOrientation.NW;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.NW;
         }
         else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
-            this.player.MapPosition.y += 1 * this.playerSpeed;
+            this.player.MapPosition.y += 1 * this.player.playerSpeed;
 
             this.player.anims.play('police-SW', true);
-            this.player.playerOrientation = PlayerOrientation.SW;
+            this.player.playerDrawOrientation = PlayerDrawOrientation.SW;
         }
 
         if(this.fireWeaponKey.isDown) {
