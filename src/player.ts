@@ -39,9 +39,12 @@ export class Player extends Phaser.GameObjects.Sprite {
     private get GetTextOffsetY(): number { return -100; }
 
     healthBar: HealthBar;
+    private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
     private get GetPlayerNameOffsetX(): number { return -20; }
     private get GetPlayerNameOffsetY(): number { return -40; }
+
+    
 
     public playerId: string;
 
@@ -106,9 +109,9 @@ export class Player extends Phaser.GameObjects.Sprite {
         // multiplayer player name text
         var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
             {
-                font: '16px Courier',
+                //font: '16px Courier',
                 //fontFamily: 'KenneyRocketSquare',         
-                color:"rgb(255,255,255)",
+                //color:"rgb(255,255,255)",
             });
         playerNameText.setAlpha(0.5);
         playerNameText.setOrigin(0, 0.5);
@@ -121,18 +124,39 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.multiplayerNameText.setOrigin(0, 0.5);
         this.multiplayerNameText.setFontSize(16);
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
+
+        var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
+            {
+                font: '24px Courier',
+                //fontFamily: 'KenneyRocketSquare',         
+                color:"rgb(255,255,255)",
+            });
+        text.setAlpha(0.5);
+        text.setOrigin(0, 0.5);
+        text.setDepth(7);
+        //playerNameText.setStroke('rgb(0,0,0)', 4);     
+        //playerNameText.setFontSize(24); 
+        
+        this.debugCoordinatesText = text;
+        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+        this.debugCoordinatesText.setOrigin(0, 0.5);
+        this.debugCoordinatesText.setFontSize(16);
+        this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
     }
 
     update(...args: any[]): void {
 
         var utility = new Utilities();
         var screenPosition = utility.cartesianToIsometric(this.MapPosition);
-        var playerPositionOnTileset = utility.getTileCoordinates(this.MapPosition, 64);
+        this.playerPositionOnTileset = utility.getTileCoordinates(this.MapPosition, 32);
 
         this.x = screenPosition.x;
         this.y = screenPosition.y;
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+        this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);
+
+        this.setOrigin(0.5, 0.5);
 
         if(this.bulletTime > 0)
             this.bulletTime--;
@@ -140,9 +164,17 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     alignPlayerNameText(x: number, y: number) {
         var text = this.multiplayerNameText;
-        text.setText(`${this.playerId} - Map(${this.MapPosition.x}, ${this.MapPosition.y})
-                        \nIso(${this.x}, ${this.y})
-                        \nTileCoordinates(${this.playerPositionOnTileset.x}, ${this.playerPositionOnTileset.y})`)
+        text.setText(`${this.playerId}`)
+        text.setX(x);
+        text.setY(y);// + this.GetTextOffsetY);
+        text.setOrigin(0, 0.5);
+    }
+
+    alignDebugText(x: number, y: number) {
+        var text = this.debugCoordinatesText;
+        text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)})
+                        \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
+                        \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0.5);

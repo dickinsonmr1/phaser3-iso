@@ -206,6 +206,7 @@ export default class Demo extends Phaser.Scene
 
         this.cameras.main.setZoom(2);
 
+        /*
         var controlConfig = {
             camera: this.cameras.main,
             left: cursors.left,
@@ -216,24 +217,27 @@ export default class Demo extends Phaser.Scene
             drag: 0.0005,
             maxSpeed: 0.7
         };
+        */
 
-        this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+        //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+        this.cameras.main.startFollow(this.player, false, 0.5, 0.5, 0, 0);
 
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
-        this.moveUpKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.moveDownKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.moveRightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.moveLeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.moveUpKey = cursors.up;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.moveDownKey = cursors.down; //this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        this.moveRightKey = cursors.right;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.moveLeftKey = cursors.left;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
 
-        this.fireWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
+        this.fireWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
     }
 
     update(time, delta) {
         //player.y -= 1;
-        this.controls.update(delta);
+        //this.controls.update(delta);
 
         if(this.zoomInKey.isDown)
             this.cameras.main.zoom -= 0.01;
