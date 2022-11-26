@@ -15,14 +15,15 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     public velocityX: number;
     public velocityY: number;
     //public bulletId: uuidv4;
+    public initiated: boolean = false;
 
     public MapPosition: Phaser.Geom.Point;
 
     constructor(params)
     {
-        super(params.scene, params.x, params.y, params.key);
+        super(params.scene, params.isometricX, params.isometricY, params.key);
 
-        this.MapPosition = new Phaser.Geom.Point(params.x, params.y); 
+        this.MapPosition = new Phaser.Geom.Point(params.mapPositionX, params.mapPositionY); 
         //this.bulletId = uuidv4();
 
         this.scene.add.existing(this);
@@ -30,10 +31,10 @@ export class Bullet extends Phaser.GameObjects.Sprite {
         this.flipX = params.flipX;
         this.damage = params.damage;       
         this.velocityX = params.velocityX;
-        if(params.velocityY != null)
+        //if(params.velocityY != null)
             this.velocityY = params.velocityY;
-        else   
-            this.velocityY = 0;
+        //else   
+            //this.velocityY = 0;
 
         //this.scene.physics.world.enable(this);
        
@@ -46,22 +47,25 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     }
 
     public init() {       
-       
+        this.initiated = true;
     }
 
-    preUpdate(time, delta): void {    
-        var utility = new Utilities();    
-        super.preUpdate(time, delta);
+    preUpdate(time, delta): void {  
+        if(this.initiated) {
 
-        //var body = <Phaser.Physics.Arcade.Body>this.body;
-        //body.setVelocityX(this.velocityX);
-        //body.setVelocityY(this.velocityY);
-        this.MapPosition.x += this.velocityX;
-        this.MapPosition.y += this.velocityY;
-        
-        var isoPosition = utility.cartesianToIsometric(this.MapPosition);
-        this.x = isoPosition.x;
-        this.y = isoPosition.y;
+            var utility = new Utilities();    
+            super.preUpdate(time, delta);
+
+            //var body = <Phaser.Physics.Arcade.Body>this.body;
+            //body.setVelocityX(this.velocityX);
+            //body.setVelocityY(this.velocityY);
+            this.MapPosition.x += this.velocityX;
+            this.MapPosition.y += this.velocityY;
+            
+            var isoPosition = utility.cartesianToIsometric(this.MapPosition);
+            this.x = isoPosition.x;
+            this.y = isoPosition.y;
+        }
         /*
         console.log('bulletMovement');
 

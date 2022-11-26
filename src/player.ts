@@ -72,7 +72,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     public lastUsedBulletIndex: number;
     public bulletTime: number = 0;
     public bulletTimeInterval: number = 200;
-    private bulletVelocity: number = 3;
+    private bulletVelocity: number = 5;
 
     public MapPosition: Phaser.Geom.Point;
     public playerPositionOnTileset: Phaser.Geom.Point;
@@ -162,7 +162,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
         var velocityY: number;
-        var cartesianOrientation = this.getPlayerIsometricOrientation()
+        var cartesianOrientation = this.getPlayerIsometricOrientation();
+
         switch(cartesianOrientation){
             case PlayerCartesianOrientation.N:
                 velocityX = 0;
@@ -192,7 +193,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                 velocityX = -this.bulletVelocity;
                 velocityY = -this.bulletVelocity;
                 break;
-            case PlayerCartesianOrientation.E:
+            case PlayerCartesianOrientation.SW:
                 velocityX = -this.bulletVelocity;
                 velocityY = this.bulletVelocity;
                 break;
@@ -206,10 +207,18 @@ export class Player extends Phaser.GameObjects.Sprite {
             velocityX = this.playerBulletVelocityX;
         */
 
+        var utility = new Utilities();
+        var screenPosition = utility.cartesianToIsometric(this.MapPosition);
+        
+        //this.x = screenPosition.x;
+        //this.y = screenPosition.y;
+
         var bullet = new Bullet({
             scene: this.scene,
-            x: this.x, //body.x + this.playerBulletOffsetX(),
-            y: this.y, //body.y + this.getBulletOffsetY(),
+            isometricX: screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            isometricY: screenPosition.y, //body.y + this.getBulletOffsetY(),
+            mapPositionX: this.MapPosition.x,
+            mapPositionY: this.MapPosition.y,
             key: "playerGunLaser1",//this.currentWeaponBulletName,
             //flipX: this.flipX,
             damage: 1,//this.currentWeaponDamage,
