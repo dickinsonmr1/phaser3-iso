@@ -5,6 +5,7 @@ export default class Demo extends Phaser.Scene
 {
     //playerSpeed: number = 0.25;
     player: Player;
+    player2: Player;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -56,7 +57,9 @@ export default class Demo extends Phaser.Scene
 
     create ()
     {
-       var map = this.add.tilemap('map');
+        //this.physics.world.setBounds(-200, -200, 400, 400);
+
+        var map = this.add.tilemap('map');
 
         console.log(map);
 
@@ -95,8 +98,8 @@ export default class Demo extends Phaser.Scene
 
         this.player = new Player({
             scene: this,
-            x: 10,
-            y: 10,
+            mapX: 200,
+            mapY: 200,
             //mapX: 10,
             //mapY: 10,
             key: "utilityCars",
@@ -105,6 +108,7 @@ export default class Demo extends Phaser.Scene
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
+        this.player.init();
 
         //Animations.createAnims(this.anims);        
         this.player.anims.create({
@@ -158,6 +162,7 @@ export default class Demo extends Phaser.Scene
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
+        player2.init();
 
         //Animations.createAnims(this.anims);        
         this.player.anims.create({
@@ -239,6 +244,8 @@ export default class Demo extends Phaser.Scene
         //player.y -= 1;
         //this.controls.update(delta);
 
+        var body = <Phaser.Physics.Arcade.Body>this.player.body;
+
         if(this.zoomInKey.isDown)
             this.cameras.main.zoom -= 0.01;
 
@@ -246,57 +253,32 @@ export default class Demo extends Phaser.Scene
             this.cameras.main.zoom += 0.01;  
 
         if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
-            this.player.MapPosition.x -= Math.cos(Math.PI / 4) * this.player.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(Math.PI / 4) * this.player.playerSpeed;
-                        
-            this.player.anims.play('police-N', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.N;
+            this.player.tryMove(PlayerDrawOrientation.N);
         }
         else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
-            this.player.MapPosition.x -= Math.cos(5 * Math.PI / 4) * this.player.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(5 * Math.PI / 4) * this.player.playerSpeed;            
-
-            this.player.anims.play('police-S', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.S;
+            this.player.tryMove(PlayerDrawOrientation.S);
         }
         else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-            this.player.MapPosition.x -= Math.cos(3 * Math.PI / 4) * this.player.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(3 * Math.PI / 4) * this.player.playerSpeed;
-                                   
-            this.player.anims.play('police-E', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.E;
+            this.player.tryMove(PlayerDrawOrientation.E);
         }
         else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-          
-            this.player.MapPosition.x -= Math.cos(7 * Math.PI / 4) * this.player.playerSpeed;
-            this.player.MapPosition.y -= Math.sin(7 * Math.PI / 4) * this.player.playerSpeed;            
-            
-            this.player.anims.play('police-W', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.W;
+            this.player.tryMove(PlayerDrawOrientation.W);
         }
-        else if(this.moveUpKey.isDown && this.moveRightKey.isDown) { // WORKING
-            this.player.MapPosition.y -= 1 * this.player.playerSpeed;
-                        
-            this.player.anims.play('police-NE', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.NE;
+        else if(this.moveUpKey.isDown && this.moveRightKey.isDown) {
+            this.player.tryMove(PlayerDrawOrientation.NE);
         }
-        else if(this.moveRightKey.isDown && this.moveDownKey.isDown) { // WORKING
-            this.player.MapPosition.x += 1 * this.player.playerSpeed;
-            
-            this.player.anims.play('police-SE', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.SE;
+        else if(this.moveRightKey.isDown && this.moveDownKey.isDown) {
+            this.player.tryMove(PlayerDrawOrientation.SE);
         }
-        if(this.moveUpKey.isDown && this.moveLeftKey.isDown) { // WORKING
-            this.player.MapPosition.x -= 1 * this.player.playerSpeed;            
-            
-            this.player.anims.play('police-NW', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.NW;
+        if(this.moveUpKey.isDown && this.moveLeftKey.isDown) {
+           this.player.tryMove(PlayerDrawOrientation.NW);
         }
         else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
-            this.player.MapPosition.y += 1 * this.player.playerSpeed;
-
-            this.player.anims.play('police-SW', true);
-            this.player.playerDrawOrientation = PlayerDrawOrientation.SW;
+            this.player.tryMove(PlayerDrawOrientation.SW);
+        }
+        else {
+            //this.player.body.velocity.x = 0;
+            //this.player.body.velocity.y = 0;
         }
 
         if(this.fireWeaponKey.isDown) {
@@ -314,6 +296,13 @@ const config = {
     backgroundColor: '#125555',
     width: 1920,
     height: 1080,
+    pixelArt: true,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: true
+        }
+    },
     scene: Demo
 };
 

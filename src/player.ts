@@ -81,14 +81,14 @@ export class Player extends Phaser.GameObjects.Sprite {
     public playerPositionOnTileset: Phaser.Geom.Point;
 
     constructor(params) {
-        super(params.scene, params.x, params.y, params.key, params.frame);
+        super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
-        //var utilities = new Utilities();
+        var utilities = new Utilities();
         //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
         //super(params.scene,  this.ScreenLocation.x, this.ScreenLocation.y, params.key, params.frame);
 
         //let isoPt = new Phaser.Geom.Point();//It is not advisable to create points in update loop
-        this.MapPosition = new Phaser.Geom.Point(0, 0); 
+        this.MapPosition = new Phaser.Geom.Point(params.mapX, params.mapY); 
         this.playerPositionOnTileset = new Phaser.Geom.Point(0,0);
 
         this.playerId = params.playerId;
@@ -143,8 +143,14 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.debugCoordinatesText.setFontSize(16);
         this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
     }
+    init() {
+        this.scene.physics.world.enable(this);
+    }
 
     update(...args: any[]): void {
+
+        this.MapPosition.x += this.body.velocity.x;
+        this.MapPosition.y += this.body.velocity.y;
 
         var utility = new Utilities();
         var screenPosition = utility.cartesianToIsometric(this.MapPosition);
@@ -152,6 +158,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.x = screenPosition.x;
         this.y = screenPosition.y;
+        //this.body.position.x = screenPosition.x;
+        //this.body.position.y = screenPosition.y;
+
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
         this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);
@@ -174,10 +183,58 @@ export class Player extends Phaser.GameObjects.Sprite {
         var text = this.debugCoordinatesText;
         text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)})
                         \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
+                        \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
                         \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0.5);
+    }
+
+    tryMove(direction: PlayerDrawOrientation) {
+        this.playerDrawOrientation = direction;
+
+        switch(direction) {
+            case PlayerDrawOrientation.N:
+                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.playerSpeed;
+                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.playerSpeed;                            
+                this.anims.play('police-N', true);
+                break;
+            case PlayerDrawOrientation.S:                
+                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.playerSpeed;
+                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.playerSpeed; 
+                this.anims.play('police-S', true);
+                break;
+            case PlayerDrawOrientation.E:
+                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.playerSpeed;
+                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.playerSpeed;                                       
+                this.anims.play('police-E', true);
+                break;
+            case PlayerDrawOrientation.W:
+                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.playerSpeed;
+                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.playerSpeed;                            
+                this.anims.play('police-W', true);
+                break;
+            case PlayerDrawOrientation.NE:
+                this.body.velocity.x = 0;
+                this.body.velocity.y = -1 * this.playerSpeed;                              
+                this.anims.play('police-NE', true);
+                break;
+            case PlayerDrawOrientation.SE:                    
+                this.body.velocity.x = 1 * this.playerSpeed;
+                this.body.velocity.y = 0;                
+                this.anims.play('police-SE', true);
+                break;
+            case PlayerDrawOrientation.NW:
+                this.body.velocity.x = -1 * this.playerSpeed;
+                this.body.velocity.y = 0;                
+                this.anims.play('police-NW', true);   
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 1 * this.playerSpeed;  
+                this.anims.play('police-SW', true);                
+                break;
+        }
     }
 
     tryFireBullet() {
