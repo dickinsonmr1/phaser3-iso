@@ -67,7 +67,7 @@ export default class Demo extends Phaser.Scene
         var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2');
 
         var layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]);
-        //var layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
+        var layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //var layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
         //var layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
         //var layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
@@ -225,6 +225,13 @@ export default class Demo extends Phaser.Scene
         */
 
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+        this.physics.add.collider(this.player, layer1);
+
+        var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
+        isoBox.alpha = 0.5;
+
+        this.physics.add.collider(this.player, isoBox);
 
         this.cameras.main.startFollow(this.player, false, 0.5, 0.5, 0, 0);
 
