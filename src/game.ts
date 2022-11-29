@@ -20,6 +20,12 @@ export default class Demo extends Phaser.Scene
 
     light: any;
 
+    layer1 : Phaser.Tilemaps.TilemapLayer;
+    layer2 : Phaser.Tilemaps.TilemapLayer;
+    layer3 : Phaser.Tilemaps.TilemapLayer;
+    layer4 : Phaser.Tilemaps.TilemapLayer;
+    layer5 : Phaser.Tilemaps.TilemapLayer;
+
     constructor ()
     {
         super('demo');
@@ -66,11 +72,11 @@ export default class Demo extends Phaser.Scene
         var tileset1 = map.addTilesetImage('iso-64x64-outside', 'tiles');
         var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2');
 
-        var layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]);
-        var layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
-        //var layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
-        //var layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
-        //var layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
+        this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]);
+        //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
+        //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
+        //this.layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
+        //this.layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
 
 
         let colorIndex = 0;
@@ -226,7 +232,8 @@ export default class Demo extends Phaser.Scene
 
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
-        this.physics.add.collider(this.player, layer1);
+        this.physics.add.overlap(this.player, this.layer1);
+        this.layer1.setTileIndexCallback(2, this.playerTouchingTileHandler, this);
 
         var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
         isoBox.alpha = 0.5;
@@ -245,6 +252,13 @@ export default class Demo extends Phaser.Scene
 
         this.fireWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
+    }
+
+    playerTouchingTileHandler(sprite, tile): boolean {
+        let scene = <Demo>this;//.scene;
+        scene.layer1.removeTileAt(tile.x, tile.y);
+
+        return true;
     }
 
     update(time, delta) {
