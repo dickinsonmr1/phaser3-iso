@@ -25,6 +25,7 @@ export default class Demo extends Phaser.Scene
     layer3 : Phaser.Tilemaps.TilemapLayer;
     layer4 : Phaser.Tilemaps.TilemapLayer;
     layer5 : Phaser.Tilemaps.TilemapLayer;
+    layerPickups : Phaser.Tilemaps.TilemapLayer;
 
     constructor ()
     {
@@ -57,7 +58,9 @@ export default class Demo extends Phaser.Scene
         // tiles
         this.load.image('tiles', './assets/iso-64x64-outside.png');
         this.load.image('tiles2', './assets/iso-64x64-building.png');
-        this.load.tilemapTiledJSON('map', './assets/isorpg.json');
+        //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
+        this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
+        this.load.tilemapTiledJSON('map', './assets/isoCarCombat.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
     }
 
@@ -71,8 +74,10 @@ export default class Demo extends Phaser.Scene
 
         var tileset1 = map.addTilesetImage('iso-64x64-outside', 'tiles');
         var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2');
+        var tilesetPickups = map.addTilesetImage('Crates - Metal 64x64', 'crateTilesMetal');
 
         this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]);
+        this.layerPickups = map.createLayer('Pickups', [ tileset1, tileset2, tilesetPickups ]);
         //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
         //this.layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
@@ -114,7 +119,7 @@ export default class Demo extends Phaser.Scene
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
-        this.player.init();
+        this.player.init();        
 
         //Animations.createAnims(this.anims);        
         this.player.anims.create({
@@ -232,8 +237,8 @@ export default class Demo extends Phaser.Scene
 
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
-        this.physics.add.overlap(this.player, this.layer1);
-        this.layer1.setTileIndexCallback(2, this.playerTouchingTileHandler, this);
+        this.physics.add.overlap(this.player, this.layerPickups);
+        this.layerPickups.setTileIndexCallback(217, this.playerTouchingTileHandler, this);
 
         var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
         isoBox.alpha = 0.5;
@@ -256,7 +261,7 @@ export default class Demo extends Phaser.Scene
 
     playerTouchingTileHandler(sprite, tile): boolean {
         let scene = <Demo>this;//.scene;
-        scene.layer1.removeTileAt(tile.x, tile.y);
+        scene.layerPickups.removeTileAt(tile.x, tile.y);
 
         return true;
     }

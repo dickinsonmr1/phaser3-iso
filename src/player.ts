@@ -93,6 +93,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.playerId = params.playerId;
 
+        this.setDisplayOrigin(0, 100);
+
         this.scene.add.existing(this);
 
         this.playerDrawOrientation = PlayerDrawOrientation.W;
