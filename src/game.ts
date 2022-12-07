@@ -6,6 +6,8 @@ export default class Demo extends Phaser.Scene
     //playerSpeed: number = 0.25;
     player: Player;
     player2: Player;
+    player3: Player;
+    player4: Player;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -163,17 +165,41 @@ export default class Demo extends Phaser.Scene
             frameRate: 10,
         });
 
-        var player2 = new Player({
+        this.player2 = new Player({
             scene: this,
-            x: 250,
-            y: 250,
+            mapX: 500,
+            mapY: 500,
             key: "utilityCars",
             frame: 'garbage_W.png',
             playerId: "Trash Man",
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
-        player2.init();
+        this.player2.init();
+
+        this.player3 = new Player({
+            scene: this,
+            mapX: 100,
+            mapY: 400,
+            key: "utilityCars",
+            frame: 'taxi_NE.png',
+            playerId: "Taxi",
+            //isMyPlayer: true,
+            //isMultiplayer: this.isMultiplayer
+        });        
+        this.player3.init();
+
+        this.player4 = new Player({
+            scene: this,
+            mapX: 300,
+            mapY: 50,
+            key: "utilityCars",
+            frame: 'ambulance_NE.png',
+            playerId: "Ambulance",
+            //isMyPlayer: true,
+            //isMultiplayer: this.isMultiplayer
+        });        
+        this.player4.init();
 
         //Animations.createAnims(this.anims);        
         this.player.anims.create({
@@ -312,6 +338,10 @@ export default class Demo extends Phaser.Scene
         }
 
         this.player.update();
+        this.player2.update();
+        this.player3.update();
+        this.player4.update();
+
         this.light.x = this.player.x;
         this.light.y = this.player.y;
     }
