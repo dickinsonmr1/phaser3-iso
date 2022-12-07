@@ -239,6 +239,34 @@ export class Player extends Phaser.GameObjects.Sprite {
         }
     }
 
+    tryDamage(): void {
+        this.health--;
+        /*
+        if(this.hurtTime == 0) {
+            if(this.shieldHealth > 0) {
+                
+                this.shieldHealth--;
+                this.scene.events.emit("playerShieldUpdated", this.playerId, this.shieldHealth);
+                //this.healthBar.updateHealth(this.health);
+                
+                this.hurtTime = 60;
+
+                if(this.shieldHealth <= 0) {
+                    this.scene.sound.play("shieldDrainSound");
+                    this.shieldDrainTime = 20;
+                }
+            }
+            else if(this.health > 0) {
+                this.health--;
+                this.scene.events.emit("playerHealthUpdated", this.playerId, this.health);
+
+                this.scene.sound.play("hurtSound");
+                this.hurtTime = 60;
+                this.multiplayerHealthBar.updateHealth(this.health);
+            }
+        }*/
+    }
+
     tryFireBullet() {
         var gameTime = this.scene.game.loop.time;
 
@@ -247,7 +275,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.createBullet();//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
-    }
+    }  
 
     private createBullet() : Bullet {
         //var body = <Phaser.Physics.Arcade.Body>this.body;

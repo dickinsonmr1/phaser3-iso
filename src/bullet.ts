@@ -36,7 +36,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
         //else   
             //this.velocityY = 0;
 
-        //this.scene.physics.world.enable(this);
+        this.scene.physics.world.enable(this);
        
         this.setAlpha(1.0);
         this.setDepth(1);//Constants.depthBullets);

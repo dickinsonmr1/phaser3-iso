@@ -1,5 +1,6 @@
 import { Player, PlayerDrawOrientation } from './player';
 import 'phaser';
+import { Bullet } from './bullet';
 
 export default class Demo extends Phaser.Scene
 {
@@ -271,6 +272,11 @@ export default class Demo extends Phaser.Scene
 
         this.physics.add.collider(this.player, isoBox);
 
+        this.physics.add.collider(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+        this.physics.add.collider(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+        this.physics.add.collider(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+
+
         this.cameras.main.startFollow(this.player, false, 0.5, 0.5, 0, 0);
 
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
@@ -291,6 +297,39 @@ export default class Demo extends Phaser.Scene
 
         return true;
     }
+
+    
+
+    bulletTouchingEnemyHandler(enemy: any, bullet: any): void {       
+
+        var otherPlayer = <Player>enemy;
+        otherPlayer.tryDamage();
+
+        bullet.destroy();
+        /*         
+        var scene = <MainScene>enemy.getScene();
+        scene.weaponHitParticleEmitter.explode(10, enemy.x, enemy.y);
+              
+        var damage = bullet.damage;
+        scene.addExpiringText(scene, enemy.x, enemy.y, damage.toString())
+
+        enemy.tryDamage(damage);
+        scene.player.score += damage;
+
+        scene.sound.play("enemyHurtSound");
+        
+        if(this.isMultiplayer) {
+            var socket = scene.getSocket();        
+            if(socket != null) {
+                // sends back to server
+                socket.emit('bulletDestruction', {bulletId: bullet.bulletId});                
+            }
+        }
+
+        bullet.destroy();
+        */
+    }
+
 
     update(time, delta) {
         //player.y -= 1;
