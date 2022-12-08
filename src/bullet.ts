@@ -56,15 +56,24 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             var utility = new Utilities();    
             super.preUpdate(time, delta);
 
-            //var body = <Phaser.Physics.Arcade.Body>this.body;
-            //body.setVelocityX(this.velocityX);
-            //body.setVelocityY(this.velocityY);
+            /*
+            var body = <Phaser.Physics.Arcade.Body>this.body;
+            body.setVelocityX(this.velocityX);
+            body.setVelocityY(this.velocityY);
+            */
+            
             this.MapPosition.x += this.velocityX;
             this.MapPosition.y += this.velocityY;
             
             var isoPosition = utility.cartesianToIsometric(this.MapPosition);
             this.x = isoPosition.x;
             this.y = isoPosition.y;
+            
+            /*
+            var body = <Phaser.Physics.Arcade.Body>this.body;
+            body.position.x = this.MapPosition.x; //isoPosition.x;
+            body.position.y = this.MapPosition.y; //isoPosition.y;
+            */
         }
         /*
         console.log('bulletMovement');

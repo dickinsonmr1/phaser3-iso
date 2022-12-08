@@ -144,6 +144,10 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.debugCoordinatesText.setOrigin(0, 0.5);
         this.debugCoordinatesText.setFontSize(16);
         this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
+        
+        this.bullets = this.scene.physics.add.group({
+            allowGravity: false
+        });
     }
     init() {
         this.scene.physics.world.enable(this);
@@ -346,7 +350,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         });
         bullet.init();
 
-        //this.bullets.add(bullet);
+        this.bullets.add(bullet);
 
         return bullet;
 
