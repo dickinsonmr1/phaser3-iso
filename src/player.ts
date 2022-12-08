@@ -31,7 +31,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     health = 10;
 
     private get healthBarOffsetX(): number {return -30;}
-    private get healthBarOffsetY(): number {return -30;}
+    private get healthBarOffsetY(): number {return -40;}
 
     public static get maxHealth(): number { return 4; }
     public static get maxShield(): number { return 4; }
@@ -103,7 +103,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 10, false);
+            50, 12, false);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -245,6 +245,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryDamage(): void {
         this.health--;
+        this.healthBar.updateHealth(this.health);
         /*
         if(this.hurtTime == 0) {
             if(this.shieldHealth > 0) {
