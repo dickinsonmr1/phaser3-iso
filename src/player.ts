@@ -44,7 +44,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private get GetPlayerNameOffsetX(): number { return -20; }
     private get GetPlayerNameOffsetY(): number { return -40; }
 
-    
+    private arctangent: number = 0;
 
     public playerId: string;
 
@@ -190,7 +190,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)})
                         \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
                         \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
-                        \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})`)
+                        \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})
+                        \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0.5);
@@ -241,6 +242,81 @@ export class Player extends Phaser.GameObjects.Sprite {
                 this.anims.play('police-SW', true);                
                 break;
         }
+    }
+
+    tryMoveViaGamepad(x: number, y: number) {
+
+        //var  utility = new Utilities();
+
+        //this.MapPosition.x += x * this.playerSpeed;
+        //this.MapPosition.y += y * this.playerSpeed;
+        
+        //var isoPosition = utility.cartesianToIsometric(this.MapPosition);
+
+        //this.body.position.x += isoPosition.x;
+        //this.body.position.y += isoPosition.y;
+
+        this.body.velocity.x = x * this.playerSpeed;
+        this.body.velocity.y = y * this.playerSpeed; 
+
+        this.arctangent = Math.atan2(x, y);
+        let temp = this.arctangent;
+
+        //       -1 PI     1 PI 
+        //   -0.5PI           0.5 PI
+        //            0  PI
+        if(temp >= 7 * Math.PI / 8 || temp < - 7 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N;
+            this.anims.play('police-N', true);
+        }
+        else if(temp >= 5 * Math.PI / 8 && temp < 7 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NE;
+            this.anims.play('police-NE', true);
+        }
+        else if(temp >= 3 * Math.PI / 8 && temp < 5 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E;
+            this.anims.play('police-E', true);
+        }
+        else if(temp >= Math.PI / 8 && temp < 3 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SE;
+            this.anims.play('police-SE', true);
+        }
+        else if(temp >= -Math.PI / 8 && temp < Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S;
+            this.anims.play('police-S', true);
+        }
+        else if(temp >= -3 * Math.PI / 8 && temp < -Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SW;
+            this.anims.play('police-SW', true);
+        }
+        else if(temp >= -5 * Math.PI / 8 && temp < -3 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W;
+            this.anims.play('police-W', true);
+        }
+        else if(temp >= -7 * Math.PI / 8 && temp < -5 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NW;
+            this.anims.play('police-NW', true);
+        }        
+
+        //console.log(temp);
+        /*
+        if(x > 0 && y < 0) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NE;
+            this.anims.play('police-NE', true);
+        }
+        else if(x < 0 && y < 0) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NW;
+            this.anims.play('police-NW', true);   
+        }
+        else if(x < 0 && y > 0) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SW;
+            this.anims.play('police-SW', true);
+        }
+        else if(x > 0 && y > 0) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SE;
+            this.anims.play('police-SE', true);     
+        }
+        */
     }
 
     tryDamage(): void {

@@ -1,6 +1,7 @@
 import { Player, PlayerDrawOrientation } from './player';
 import 'phaser';
 import { Bullet } from './bullet';
+import { Constants } from './constants';
 
 export default class Demo extends Phaser.Scene
 {
@@ -20,6 +21,9 @@ export default class Demo extends Phaser.Scene
     moveRightKey: Phaser.Input.Keyboard.Key;
 
     fireWeaponKey: Phaser.Input.Keyboard.Key;
+
+    
+    gamepad: Phaser.Input.Gamepad.Gamepad;
 
     light: any;
 
@@ -289,6 +293,55 @@ export default class Demo extends Phaser.Scene
 
         this.fireWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
+        this.addGamePadListeners();
+    }
+
+    addGamePadListeners() {
+        if (this.input.gamepad.total === 0)
+        {
+            this.input.gamepad.once('connected', pad => {
+        
+            //if(this.input.gamepad.pad1 != null) {
+                //this.gamepad = this.input.gamepad.pad1;
+
+                this.gamepad = pad;
+                pad.on('down', (index, value, button) => {
+
+                    switch(index) {
+                        case Constants.gamepadIndexJump:
+                            console.log('A');
+                            //this.tryJump(scene.sound);
+                            break;
+                        case Constants.gamepadIndexInteract:
+                            console.log('X');
+                            //this.tryInteract();
+                            break;
+                        case Constants.gamepadIndexPause:
+                            //scene.sceneController.pauseGame();
+                            break;
+                        case Constants.gamepadIndexUp:
+                            console.log('Up');
+                            //this.tryJump(scene.sound);
+                            break;
+                        case Constants.gamepadIndexDown:
+                            console.log('Down');
+                            //this.duck();
+                            break;
+                        case Constants.gamepadIndexLeft:
+                            console.log('Left');
+                            //this.moveX(-1);
+                            break;
+                        case Constants.gamepadIndexRight:
+                            console.log('Right');
+                            //this.moveX(1);
+                            break;                    
+                        case Constants.gamepadIndexShoot:
+                            console.log('B');
+                            //this.player.tryFireBullet(this.sys.game.loop.time, this.sound);
+                    }
+                });
+            });
+        }     
     }
 
     playerTouchingTileHandler(sprite, tile): boolean {
@@ -335,45 +388,70 @@ export default class Demo extends Phaser.Scene
         //player.y -= 1;
         //this.controls.update(delta);
 
-        var body = <Phaser.Physics.Arcade.Body>this.player.body;
-
         if(this.zoomInKey.isDown)
             this.cameras.main.zoom -= 0.01;
 
         if(this.zoomOutKey.isDown)
             this.cameras.main.zoom += 0.01;  
 
-        if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.N);
-        }
-        else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
-            this.player.tryMove(PlayerDrawOrientation.S);
-        }
-        else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.E);
-        }
-        else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.W);
-        }
-        else if(this.moveUpKey.isDown && this.moveRightKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.NE);
-        }
-        else if(this.moveRightKey.isDown && this.moveDownKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.SE);
-        }
-        if(this.moveUpKey.isDown && this.moveLeftKey.isDown) {
-           this.player.tryMove(PlayerDrawOrientation.NW);
-        }
-        else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
-            this.player.tryMove(PlayerDrawOrientation.SW);
-        }
-        else {
-            //this.player.body.velocity.x = 0;
-            //this.player.body.velocity.y = 0;
-        }
+        var body = <Phaser.Physics.Arcade.Body>this.player.body;
 
-        if(this.fireWeaponKey.isDown) {
-            this.player.tryFireBullet();
+        const pad = this.gamepad;
+        const threshold = 0.25;
+        if (pad != null && pad.axes.length)
+        {
+            var leftAxisX = pad.axes[0].getValue();
+            var leftAxisY = pad.axes[1].getValue();
+            console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
+
+            if(leftAxisX != 0 || leftAxisY != 0) {
+                this.player.tryMoveViaGamepad(leftAxisX, leftAxisY);
+                //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
+            }
+            else {
+                //this.player.tryStopSpaceShipX();
+                //this.player.tryStopSpaceShipY();
+            }                    
+
+            if(pad.B || pad.R2) {
+                this.player.tryFireBullet();
+                //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
+            }
+        }
+        if(pad == null) {
+
+            if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.N);
+            }
+            else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
+                this.player.tryMove(PlayerDrawOrientation.S);
+            }
+            else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.E);
+            }
+            else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.W);
+            }
+            else if(this.moveUpKey.isDown && this.moveRightKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.NE);
+            }
+            else if(this.moveRightKey.isDown && this.moveDownKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.SE);
+            }
+            if(this.moveUpKey.isDown && this.moveLeftKey.isDown) {
+               this.player.tryMove(PlayerDrawOrientation.NW);
+            }
+            else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
+                this.player.tryMove(PlayerDrawOrientation.SW);
+            }
+            else {
+                //this.player.body.velocity.x = 0;
+                //this.player.body.velocity.y = 0;
+            }
+    
+            if(this.fireWeaponKey.isDown) {
+                this.player.tryFireBullet();
+            }
         }
 
         this.player.update();
@@ -392,6 +470,7 @@ const config = {
     width: 1920,
     height: 1080,
     pixelArt: true,
+    input: { keyboard: true, gamepad: true },
     physics: {
         default: 'arcade',
         arcade: {
