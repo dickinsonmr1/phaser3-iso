@@ -2,6 +2,7 @@ import { Player, PlayerDrawOrientation } from './player';
 import 'phaser';
 import { Bullet } from './bullet';
 import { Constants } from './constants';
+import { Utility } from './utility';
 
 export default class Demo extends Phaser.Scene
 {
@@ -400,12 +401,19 @@ export default class Demo extends Phaser.Scene
         const threshold = 0.25;
         if (pad != null && pad.axes.length)
         {
+            pad.axes[0].threshold = 0.25;
+            pad.axes[1].threshold = 0.25;
+
             var leftAxisX = pad.axes[0].getValue();
             var leftAxisY = pad.axes[1].getValue();
             console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
             if(leftAxisX != 0 || leftAxisY != 0) {
-                this.player.tryMoveViaGamepad(leftAxisX, leftAxisY);
+
+                var utility = new Utility();
+                var cartesianGamepadAxes = utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+
+                this.player.tryMoveViaGamepad(cartesianGamepadAxes.x, cartesianGamepadAxes.y);
                 //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
             }
             else {

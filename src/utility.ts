@@ -9,7 +9,7 @@ export class Point {
         this.y = y;
     }
 }
-export class Utilities {
+export class Utility {
     constructor() {
 
     }

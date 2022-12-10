@@ -1,7 +1,7 @@
 // https://labs.phaser.io/edit.html?src=src\games\topdownShooter\topdown_combatMechanics.js
 import "phaser";
 import { Scene } from "phaser";
-import { Utilities } from "./utilities";
+import { Utility } from "./utility";
 /*
 import { Constants } from "../client/constants";
 import { MainScene } from "../client/scenes/mainScene";
@@ -53,7 +53,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     preUpdate(time, delta): void {  
         if(this.initiated) {
 
-            var utility = new Utilities();    
+            var utility = new Utility();    
             super.preUpdate(time, delta);
 
             /*

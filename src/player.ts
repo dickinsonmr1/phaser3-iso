@@ -2,7 +2,7 @@ import 'phaser'
 import { Constants } from './constants';
 import { HealthBar } from './healthBar';
 import { Bullet } from './bullet';
-import { Point, Utilities } from './utilities';
+import { Point, Utility } from './utility';
 
 export enum PlayerDrawOrientation {
     N,
@@ -83,7 +83,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     constructor(params) {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
-        var utilities = new Utilities();
+        var utilities = new Utility();
         //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
         //super(params.scene,  this.ScreenLocation.x, this.ScreenLocation.y, params.key, params.frame);
 
@@ -158,7 +158,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.MapPosition.x += this.body.velocity.x;
         this.MapPosition.y += this.body.velocity.y;
 
-        var utility = new Utilities();
+        var utility = new Utility();
         var screenPosition = utility.cartesianToIsometric(this.MapPosition);
         this.playerPositionOnTileset = utility.getTileCoordinates(this.MapPosition, 32);
 
@@ -246,12 +246,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryMoveViaGamepad(x: number, y: number) {
 
-        //var  utility = new Utilities();
 
         //this.MapPosition.x += x * this.playerSpeed;
         //this.MapPosition.y += y * this.playerSpeed;
-        
-        //var isoPosition = utility.cartesianToIsometric(this.MapPosition);
 
         //this.body.position.x += isoPosition.x;
         //this.body.position.y += isoPosition.y;
@@ -259,7 +256,10 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.body.velocity.x = x * this.playerSpeed;
         this.body.velocity.y = y * this.playerSpeed; 
 
-        this.arctangent = Math.atan2(x, y);
+        
+        var utility = new Utility();
+        var isometricGamepadAxes = utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+        this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
         let temp = this.arctangent;
 
         //       -1 PI     1 PI 
@@ -407,7 +407,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             velocityX = this.playerBulletVelocityX;
         */
 
-        var utility = new Utilities();
+        var utility = new Utility();
         var screenPosition = utility.cartesianToIsometric(this.MapPosition);
         
         //this.x = screenPosition.x;
