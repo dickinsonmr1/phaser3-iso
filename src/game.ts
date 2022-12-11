@@ -425,6 +425,12 @@ export default class Demo extends Phaser.Scene
                 this.player.tryFireBulletWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             }
+            if(pad.L2) {
+                this.player.tryTurboBoostOn();
+            }
+            else {
+                this.player.tryTurboBoostOff();
+            }
         }
         if(pad == null) {
 

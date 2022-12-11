@@ -27,16 +27,26 @@ export enum PlayerCartesianOrientation {
 }
 
 export class Player extends Phaser.GameObjects.Sprite {
-    playerSpeed: number = 3;
-    health = 10;
+    getPlayerSpeed() {
+        if(this.turboOn) {
+            return 5;
+        }
+        else 
+            return 3;
+    }
+    private health: number = 4;
+    private turbo: number = 10;
 
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -40;}
 
     public static get maxHealth(): number { return 4; }
     public static get maxShield(): number { return 4; }
+    public static get maxTurbo(): number { return 10; }
 
     private get GetTextOffsetY(): number { return -100; }
+
+    private turboOn: boolean = false;
 
     healthBar: HealthBar;
     private debugCoordinatesText: Phaser.GameObjects.Text;
@@ -75,7 +85,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     public lastUsedBulletIndex: number;
     public bulletTime: number = 0;
     public bulletTimeInterval: number = 200;
-    private bulletVelocity: number = 5;
+    private bulletVelocity: number = 7;
 
     public MapPosition: Phaser.Geom.Point;
     public playerPositionOnTileset: Phaser.Geom.Point;
@@ -172,6 +182,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.setOrigin(0.5, 0.5);
 
+        //this.turboOn = false;
+
         if(this.bulletTime > 0)
             this.bulletTime--;
     }
@@ -201,43 +213,43 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         switch(direction) {
             case PlayerDrawOrientation.N:
-                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.playerSpeed;
-                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.playerSpeed;                            
+                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.getPlayerSpeed();                            
                 this.anims.play('police-N', true);
                 break;
             case PlayerDrawOrientation.S:                
-                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.playerSpeed;
-                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.playerSpeed; 
+                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.getPlayerSpeed(); 
                 this.anims.play('police-S', true);
                 break;
             case PlayerDrawOrientation.E:
-                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.playerSpeed;
-                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.playerSpeed;                                       
+                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.getPlayerSpeed();                                       
                 this.anims.play('police-E', true);
                 break;
             case PlayerDrawOrientation.W:
-                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.playerSpeed;
-                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.playerSpeed;                            
+                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.getPlayerSpeed();                            
                 this.anims.play('police-W', true);
                 break;
             case PlayerDrawOrientation.NE:
                 this.body.velocity.x = 0;
-                this.body.velocity.y = -1 * this.playerSpeed;                              
+                this.body.velocity.y = -1 * this.getPlayerSpeed();                              
                 this.anims.play('police-NE', true);
                 break;
             case PlayerDrawOrientation.SE:                    
-                this.body.velocity.x = 1 * this.playerSpeed;
+                this.body.velocity.x = 1 * this.getPlayerSpeed();
                 this.body.velocity.y = 0;                
                 this.anims.play('police-SE', true);
                 break;
             case PlayerDrawOrientation.NW:
-                this.body.velocity.x = -1 * this.playerSpeed;
+                this.body.velocity.x = -1 * this.getPlayerSpeed();
                 this.body.velocity.y = 0;                
                 this.anims.play('police-NW', true);   
                 break;
             case PlayerDrawOrientation.SW:    
                 this.body.velocity.x = 0;
-                this.body.velocity.y = 1 * this.playerSpeed;  
+                this.body.velocity.y = 1 * this.getPlayerSpeed();  
                 this.anims.play('police-SW', true);                
                 break;
         }
@@ -245,8 +257,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryMoveWithGamepad(x: number, y: number) {
 
-        this.body.velocity.x = x * this.playerSpeed;
-        this.body.velocity.y = y * this.playerSpeed; 
+        this.body.velocity.x = x * this.getPlayerSpeed();
+        this.body.velocity.y = y * this.getPlayerSpeed(); 
         
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
@@ -347,6 +359,16 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
+
+    tryTurboBoostOn(): void {
+        this.turboOn = true;
+    }
+
+    
+    tryTurboBoostOff(): void {
+        if(this.turboOn)
+            this.turboOn = false;
+    }
 
     tryFireBulletWithGamepad(x, y) {
         var gameTime = this.scene.game.loop.time;
