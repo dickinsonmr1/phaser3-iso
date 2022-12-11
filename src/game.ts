@@ -61,6 +61,9 @@ export default class Demo extends Phaser.Scene
         this.load.image('shieldBarMid', './assets/sprites/HUD/barHorizontal_blue_mid.png');
         this.load.image('shieldBarRight', './assets/sprites/HUD/barHorizontal_blue_right.png');
 
+        this.load.image('turboBarLeft', './assets/sprites/HUD/barHorizontal_yellow_left.png');
+        this.load.image('turboBarMid', './assets/sprites/HUD/barHorizontal_yellow_mid.png');
+        this.load.image('turboBarRight', './assets/sprites/HUD/barHorizontal_yellow_right.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
 
@@ -409,6 +412,13 @@ export default class Demo extends Phaser.Scene
             var leftAxisY = pad.axes[1].getValue();
             console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
+            if(pad.L2) {
+                this.player.tryTurboBoostOn();
+            }
+            else {
+                this.player.tryTurboBoostOff();
+            }
+
             if(leftAxisX != 0 || leftAxisY != 0) {
 
                 this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
@@ -417,20 +427,14 @@ export default class Demo extends Phaser.Scene
                 //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
             }
             else {
-                //this.player.tryStopSpaceShipX();
+                this.player.tryStopMove();
                 //this.player.tryStopSpaceShipY();
             }                    
 
             if(pad.B || pad.R2) {
                 this.player.tryFireBulletWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
-            }
-            if(pad.L2) {
-                this.player.tryTurboBoostOn();
-            }
-            else {
-                this.player.tryTurboBoostOff();
-            }
+            }            
         }
         if(pad == null) {
 

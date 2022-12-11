@@ -1,6 +1,6 @@
 import 'phaser'
 import { Constants } from './constants';
-import { HealthBar } from './healthBar';
+import { HealthBar, HUDBarType } from './healthBar';
 import { Bullet } from './bullet';
 import { Point, Utility } from './utility';
 
@@ -34,18 +34,19 @@ export class Player extends Phaser.GameObjects.Sprite {
         else 
             return 3;
     }
-    private health: number = 4;
-    private turbo: number = 10;
+    private health: number = Player.maxHealth;
+    private turbo: number = Player.maxTurbo;
 
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -40;}
 
     public static get maxHealth(): number { return 4; }
     public static get maxShield(): number { return 4; }
-    public static get maxTurbo(): number { return 10; }
+    public static get maxTurbo(): number { return 100; }
 
     private get GetTextOffsetY(): number { return -100; }
 
+    turboBar: HealthBar;
     private turboOn: boolean = false;
 
     healthBar: HealthBar;
@@ -113,10 +114,18 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 12, false);
+            50, 12, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
+
+        this.turboBar = new HealthBar(this.scene)        
+        this.turboBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.5,
+            this.turbo, 
+            50, 6, HUDBarType.Turbo);
+        
+        this.turboBar.setDepth(Constants.depthHealthBar);
+        this.turboBar.show();
 
         // multiplayer player name text
         var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
@@ -181,6 +190,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);
 
         this.setOrigin(0.5, 0.5);
+
+        this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.5);
 
         //this.turboOn = false;
 
@@ -321,6 +332,11 @@ export class Player extends Phaser.GameObjects.Sprite {
         */
     }
 
+    tryStopMove(): void {
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+    }
+
     tryDamage(): void {
         this.health--;
         this.healthBar.updateHealth(this.health);
@@ -361,7 +377,13 @@ export class Player extends Phaser.GameObjects.Sprite {
     }  
 
     tryTurboBoostOn(): void {
-        this.turboOn = true;
+        
+        if(this.turbo > 0) {
+            this.turboOn = true;
+                
+            this.turbo--;
+            this.turboBar.updateHealth(this.turbo);
+        }        
     }
 
     

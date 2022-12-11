@@ -1,5 +1,11 @@
 import { Constants } from "./constants";
 
+export enum HUDBarType {
+    Health,
+    Shield,
+    Turbo
+}
+
 export class HealthBar extends Phaser.GameObjects.Group {
 
     private healthBarOriginX: number;
@@ -7,7 +13,9 @@ export class HealthBar extends Phaser.GameObjects.Group {
     private static get healthBarLeftSegmentWidth(): number {return 6;}  
     private static get healthBarRightSegmentWidth(): number {return 6;}  
     private healthBarHeight: number;
-    private isShield: boolean;
+    
+    private hudBarType: HUDBarType;
+
     public isVisible: boolean;
 
     private static get healthBarShadowBuffer(): number {return 4;}
@@ -30,12 +38,24 @@ export class HealthBar extends Phaser.GameObjects.Group {
     healthBarMid: Phaser.GameObjects.Image;
     healthBarRight: Phaser.GameObjects.Image;
 
-    init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, isShield: boolean): void {
+    init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, hudBarType: HUDBarType): void {
         
-        var shadowAlpha = isShield ? 0.2 : 0.2;
-        var barAlpha = isShield ? 0.8 : 0.9;
+        var shadowAlpha = 0.2; //isShield ? 0.2 : 0.2;
 
-        this.isShield = isShield;
+        let barAlpha = 0;
+        switch(hudBarType){
+            case HUDBarType.Health:
+                barAlpha = 0.9;
+                break;
+            case HUDBarType.Shield:
+                barAlpha = 0.8;
+                break;
+            case HUDBarType.Turbo:
+                barAlpha = 0.6;
+                break;
+        }
+
+        this.hudBarType = hudBarType;
         this.healthMax = healthMax;
         this.currentHealth = healthMax;
 
@@ -74,7 +94,18 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarShadowRight.alpha = shadowAlpha;    
         this.healthBarShadowRight.setDepth(Constants.depthHealthBar);
 
-        let barLeftTextureName = isShield ? 'shieldBarLeft' : 'healthBarLeft';
+        var barLeftTextureName = '';
+        switch(hudBarType){
+            case HUDBarType.Health:
+                barLeftTextureName = 'healthBarLeft';
+                break;
+            case HUDBarType.Shield:
+                barLeftTextureName = 'shieldBarLeft';
+                break;
+            case HUDBarType.Turbo:
+                barLeftTextureName = 'turboBarLeft';
+                break;
+        }
 
         this.healthBarLeft = this.scene.add.image(this.healthBarOriginX, this.healthBarOriginY, barLeftTextureName);
         this.healthBarLeft.setOrigin(0,0);
@@ -83,7 +114,19 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarLeft.alpha = barAlpha;    
         this.healthBarLeft.setDepth(Constants.depthHealthBar);
 
-        let barMidTextureName = isShield ? 'shieldBarMid' : 'healthBarMid';
+        var barMidTextureName = '';
+        switch(hudBarType){
+            case HUDBarType.Health:
+                barMidTextureName = 'healthBarMid';
+                break;
+            case HUDBarType.Shield:
+                barMidTextureName = 'shieldBarMid';
+                break;
+            case HUDBarType.Turbo:
+                barMidTextureName = 'turboBarMid';
+                break;
+        }
+        
         this.healthBarMid = this.scene.add.image(
             this.healthBarOriginX + HealthBar.healthBarLeftSegmentWidth,
             this.healthBarOriginY, barMidTextureName);
@@ -93,7 +136,18 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarMid.alpha = barAlpha;    
         this.healthBarMid.setDepth(Constants.depthHealthBar);
 
-        let barRightTextureName = isShield ? 'shieldBarRight' : 'healthBarRight';
+        var barRightTextureName = '';
+        switch(hudBarType){
+            case HUDBarType.Health:
+                barRightTextureName = 'healthBarRight';
+                break;
+            case HUDBarType.Shield:
+                barRightTextureName = 'shieldBarRight';
+                break;
+            case HUDBarType.Turbo:
+                barRightTextureName = 'turboBarRight';
+                break;
+        }
         this.healthBarRight = this.scene.add.image(
             this.healthBarOriginX + HealthBar.healthBarLeftSegmentWidth + this.calculateCurrentHealthBarWidthInPixels(),
             this.healthBarOriginY, barRightTextureName);
