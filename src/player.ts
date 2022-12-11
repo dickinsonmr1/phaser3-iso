@@ -158,9 +158,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.MapPosition.x += this.body.velocity.x;
         this.MapPosition.y += this.body.velocity.y;
 
-        var utility = new Utility();
-        var screenPosition = utility.cartesianToIsometric(this.MapPosition);
-        this.playerPositionOnTileset = utility.getTileCoordinates(this.MapPosition, 32);
+        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
+        this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, 32);
 
         this.x = screenPosition.x;
         this.y = screenPosition.y;
@@ -197,7 +196,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         text.setOrigin(0, 0.5);
     }
 
-    tryMove(direction: PlayerDrawOrientation) {
+    tryMoveWithKeyboard(direction: PlayerDrawOrientation) {
         this.playerDrawOrientation = direction;
 
         switch(direction) {
@@ -244,21 +243,12 @@ export class Player extends Phaser.GameObjects.Sprite {
         }
     }
 
-    tryMoveViaGamepad(x: number, y: number) {
-
-
-        //this.MapPosition.x += x * this.playerSpeed;
-        //this.MapPosition.y += y * this.playerSpeed;
-
-        //this.body.position.x += isoPosition.x;
-        //this.body.position.y += isoPosition.y;
+    tryMoveWithGamepad(x: number, y: number) {
 
         this.body.velocity.x = x * this.playerSpeed;
         this.body.velocity.y = y * this.playerSpeed; 
-
         
-        var utility = new Utility();
-        var isometricGamepadAxes = utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+        var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
         let angle = this.arctangent;
 
@@ -428,8 +418,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             velocityX = this.playerBulletVelocityX;
         */
 
-        var utility = new Utility();
-        var screenPosition = utility.cartesianToIsometric(this.MapPosition);
+        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
         
         //this.x = screenPosition.x;
         //this.y = screenPosition.y;

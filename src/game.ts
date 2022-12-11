@@ -411,10 +411,9 @@ export default class Demo extends Phaser.Scene
 
             if(leftAxisX != 0 || leftAxisY != 0) {
 
-                var utility = new Utility();
-                this.mostRecentCartesianGamepadAxes = utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
 
-                this.player.tryMoveViaGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                this.player.tryMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
             }
             else {
@@ -430,28 +429,28 @@ export default class Demo extends Phaser.Scene
         if(pad == null) {
 
             if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.N);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.N);
             }
             else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
-                this.player.tryMove(PlayerDrawOrientation.S);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.S);
             }
             else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.E);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.E);
             }
             else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.W);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.W);
             }
             else if(this.moveUpKey.isDown && this.moveRightKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.NE);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.NE);
             }
             else if(this.moveRightKey.isDown && this.moveDownKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.SE);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.SE);
             }
             if(this.moveUpKey.isDown && this.moveLeftKey.isDown) {
-               this.player.tryMove(PlayerDrawOrientation.NW);
+               this.player.tryMoveWithKeyboard(PlayerDrawOrientation.NW);
             }
             else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
-                this.player.tryMove(PlayerDrawOrientation.SW);
+                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.SW);
             }
             else {
                 //this.player.body.velocity.x = 0;

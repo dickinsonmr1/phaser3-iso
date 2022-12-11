@@ -51,9 +51,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     }
 
     preUpdate(time, delta): void {  
-        if(this.initiated) {
-
-            var utility = new Utility();    
+        if(this.initiated) {  
             super.preUpdate(time, delta);
 
             /*
@@ -65,7 +63,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             this.MapPosition.x += this.velocityX;
             this.MapPosition.y += this.velocityY;
             
-            var isoPosition = utility.cartesianToIsometric(this.MapPosition);
+            var isoPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.x = isoPosition.x;
             this.y = isoPosition.y;
             
