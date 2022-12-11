@@ -260,40 +260,40 @@ export class Player extends Phaser.GameObjects.Sprite {
         var utility = new Utility();
         var isometricGamepadAxes = utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        let temp = this.arctangent;
+        let angle = this.arctangent;
 
         //       -1 PI     1 PI 
         //   -0.5PI           0.5 PI
         //            0  PI
-        if(temp >= 7 * Math.PI / 8 || temp < - 7 * Math.PI / 8) {
+        if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.N;
             this.anims.play('police-N', true);
         }
-        else if(temp >= 5 * Math.PI / 8 && temp < 7 * Math.PI / 8) {
+        else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NE;
             this.anims.play('police-NE', true);
         }
-        else if(temp >= 3 * Math.PI / 8 && temp < 5 * Math.PI / 8) {
+        else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.E;
             this.anims.play('police-E', true);
         }
-        else if(temp >= Math.PI / 8 && temp < 3 * Math.PI / 8) {
+        else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SE;
             this.anims.play('police-SE', true);
         }
-        else if(temp >= -Math.PI / 8 && temp < Math.PI / 8) {
+        else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.S;
             this.anims.play('police-S', true);
         }
-        else if(temp >= -3 * Math.PI / 8 && temp < -Math.PI / 8) {
+        else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SW;
             this.anims.play('police-SW', true);
         }
-        else if(temp >= -5 * Math.PI / 8 && temp < -3 * Math.PI / 8) {
+        else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.W;
             this.anims.play('police-W', true);
         }
-        else if(temp >= -7 * Math.PI / 8 && temp < -5 * Math.PI / 8) {
+        else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NW;
             this.anims.play('police-NW', true);
         }        
@@ -353,53 +353,74 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         if(gameTime > this.bulletTime) {
             
-            this.createBullet();//this.playerOrientation);
+            this.createBullet(null, null);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
 
-    private createBullet() : Bullet {
+    tryFireBulletWithGamepad(x, y) {
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.bulletTime) {
+            
+            this.createBullet(x, y);//this.playerOrientation);
+            this.bulletTime = gameTime + this.bulletTimeInterval;
+        }
+    }  
+
+    private createBullet(x, y) : Bullet {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
         var velocityY: number;
-        var cartesianOrientation = this.getPlayerIsometricOrientation();
+    
+        if(x == null && y == null) {
+            var cartesianOrientation = this.getPlayerIsometricOrientation();
 
-        switch(cartesianOrientation){
-            case PlayerCartesianOrientation.N:
-                velocityX = 0;
-                velocityY = -this.bulletVelocity;
-                break;
-            case PlayerCartesianOrientation.E:
-                velocityX = this.bulletVelocity;
-                velocityY = 0;
-                break;
-            case PlayerCartesianOrientation.S:
-                velocityX = 0;
-                velocityY = this.bulletVelocity;
-                break;
-            case PlayerCartesianOrientation.W:
-                velocityX = -this.bulletVelocity;
-                velocityY = 0;
-                break;
-            case PlayerCartesianOrientation.NE:
-                velocityX = this.bulletVelocity;
-                velocityY = -this.bulletVelocity;
-                break;
-            case PlayerCartesianOrientation.SE:
-                velocityX = this.bulletVelocity;
-                velocityY = this.bulletVelocity;
-                break;
-            case PlayerCartesianOrientation.NW:
-                velocityX = -this.bulletVelocity;
-                velocityY = -this.bulletVelocity;
-                break;
-            case PlayerCartesianOrientation.SW:
-                velocityX = -this.bulletVelocity;
-                velocityY = this.bulletVelocity;
-                break;
+            switch(cartesianOrientation){
+                case PlayerCartesianOrientation.N:
+                    velocityX = 0;
+                    velocityY = -this.bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.E:
+                    velocityX = this.bulletVelocity;
+                    velocityY = 0;
+                    break;
+                case PlayerCartesianOrientation.S:
+                    velocityX = 0;
+                    velocityY = this.bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.W:
+                    velocityX = -this.bulletVelocity;
+                    velocityY = 0;
+                    break;
+                case PlayerCartesianOrientation.NE:
+                    velocityX = this.bulletVelocity;
+                    velocityY = -this.bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.SE:
+                    velocityX = this.bulletVelocity;
+                    velocityY = this.bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.NW:
+                    velocityX = -this.bulletVelocity;
+                    velocityY = -this.bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.SW:
+                    velocityX = -this.bulletVelocity;
+                    velocityY = this.bulletVelocity;
+                    break;
+            }
         }
+        else {
+            // gamepad
 
-        var velocityX: number;
+            var temp = this.arctangent + 7 * Math.PI / 4;
+
+            velocityX = Math.cos(temp) * this.bulletVelocity;
+            velocityY = Math.sin(-temp) * this.bulletVelocity;
+            //velocityX = x * this.bulletVelocity;
+            //velocityY = y * this.bulletVelocity;
+        }
         /*
         if(this.flipX)
             velocityX = -this.playerBulletVelocityX

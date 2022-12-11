@@ -25,6 +25,7 @@ export default class Demo extends Phaser.Scene
 
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
+    mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
 
     light: any;
 
@@ -411,9 +412,9 @@ export default class Demo extends Phaser.Scene
             if(leftAxisX != 0 || leftAxisY != 0) {
 
                 var utility = new Utility();
-                var cartesianGamepadAxes = utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                this.mostRecentCartesianGamepadAxes = utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
 
-                this.player.tryMoveViaGamepad(cartesianGamepadAxes.x, cartesianGamepadAxes.y);
+                this.player.tryMoveViaGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
             }
             else {
@@ -422,7 +423,7 @@ export default class Demo extends Phaser.Scene
             }                    
 
             if(pad.B || pad.R2) {
-                this.player.tryFireBullet();
+                this.player.tryFireBulletWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             }
         }
@@ -482,7 +483,13 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: true,
+            debugShowBody: true,
+            debugShowStaticBody: true,
+            debugShowVelocity: true,
+            debugVelocityColor: 0xffff00,
+            debugBodyColor: 0x0000ff,
+            debugStaticBodyColor: 0xffffff
         }
     },
     scene: Demo
