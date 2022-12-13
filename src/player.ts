@@ -40,7 +40,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -40;}
 
-    public static get maxHealth(): number { return 4; }
+    public static get maxHealth(): number { return 20; }
     public static get maxShield(): number { return 4; }
     public static get maxTurbo(): number { return 100; }
 
@@ -54,6 +54,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     private multiplayerNameText: Phaser.GameObjects.Text;
     private get GetPlayerNameOffsetX(): number { return -20; }
     private get GetPlayerNameOffsetY(): number { return -40; }
+
+    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+    private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
 
@@ -114,7 +117,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 12, HUDBarType.Health);
+            100, 12, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -170,6 +173,21 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
     init() {
         this.scene.physics.world.enable(this);
+
+        var weaponHitParticles = this.scene.add.particles('explosion');
+        weaponHitParticles.setDepth(4);
+        this.particleEmitter = weaponHitParticles.createEmitter({
+            x: 0,
+            y: 0,
+            lifespan: 750,
+            speed: { min: -50, max: 50 },
+            //tint: 0xff0000, 
+            scale: {start: 0.5, end: 1.0},
+            blendMode: 'ADD',
+            frequency: -1,
+            alpha: {start: 0.9, end: 0.0},
+        });
+        this.particleEmitter.stop();
     }
 
     update(...args: any[]): void {
@@ -340,6 +358,8 @@ export class Player extends Phaser.GameObjects.Sprite {
     tryDamage(): void {
         this.health--;
         this.healthBar.updateHealth(this.health);
+
+        this.particleEmitter.explode(10, this.x, this.y);
         /*
         if(this.hurtTime == 0) {
             if(this.shieldHealth > 0) {

@@ -74,6 +74,9 @@ export default class Demo extends Phaser.Scene
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
         this.load.tilemapTiledJSON('map', './assets/isoCarCombat.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
+
+        this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
+        //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
     create ()
@@ -298,7 +301,7 @@ export default class Demo extends Phaser.Scene
 
         this.fireWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
-        this.addGamePadListeners();
+        this.addGamePadListeners();        
     }
 
     addGamePadListeners() {
