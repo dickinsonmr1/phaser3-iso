@@ -176,6 +176,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         var weaponHitParticles = this.scene.add.particles('explosion');
         weaponHitParticles.setDepth(4);
+
         this.particleEmitter = weaponHitParticles.createEmitter({
             x: 0,
             y: 0,
@@ -187,7 +188,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             frequency: -1,
             alpha: {start: 0.9, end: 0.0},
         });
-        this.particleEmitter.stop();
+        //this.particleEmitter.stop();
     }
 
     update(...args: any[]): void {
@@ -493,11 +494,14 @@ export class Player extends Phaser.GameObjects.Sprite {
             isometricY: screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
-            key: "playerGunLaser1",//this.currentWeaponBulletName,
+            key: "rocket",//this.currentWeaponBulletName,
             //flipX: this.flipX,
             damage: 1,//this.currentWeaponDamage,
             velocityX: velocityX,
-            velocityY: velocityY
+            velocityY: velocityY,
+            scaleX: 0.5,
+            scaleY: 0.5,
+            angle: -this.arctangent
         });
         bullet.init();
 

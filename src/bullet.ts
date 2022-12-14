@@ -29,12 +29,14 @@ export class Bullet extends Phaser.GameObjects.Sprite {
 
         this.MapPosition = new Phaser.Geom.Point(params.mapPositionX, params.mapPositionY); 
         //this.bulletId = uuidv4();
+        this.rotation = params.angle;
+        this.setScale(params.scaleX, params.scaleY);
 
         this.creationGameTime = this.scene.game.getTime();
 
         this.scene.add.existing(this);
                
-        this.flipX = params.flipX;
+        //this.flipX = params.flipX;
         this.damage = params.damage;       
         this.velocityX = params.velocityX;
         //if(params.velocityY != null)
@@ -46,13 +48,14 @@ export class Bullet extends Phaser.GameObjects.Sprite {
        
         this.setAlpha(1.0);
         this.setDepth(1);//Constants.depthBullets);
+        
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
         this.spotlight = this.scene.lights
             .addLight(this.x, this.y)
             .setRadius(100)
-            .setColor(0xff0000)
-            .setIntensity(1);        
+            .setColor(0xff00ff)
+            .setIntensity(1.5);        
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
         // this.spotlight = this.scene.add.pointlight(this.x, this.y, 0, 20, 1);

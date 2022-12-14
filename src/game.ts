@@ -66,6 +66,7 @@ export default class Demo extends Phaser.Scene
         this.load.image('turboBarRight', './assets/sprites/HUD/barHorizontal_yellow_right.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
+        this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down.png');
 
         // tiles
         this.load.image('tiles', './assets/iso-64x64-outside.png');
@@ -105,7 +106,8 @@ export default class Demo extends Phaser.Scene
 
         this.lights.enable();
         this.lights.setAmbientColor(0xffffff);
-        this.light = this.lights.addLight(400, 300, 100).setIntensity(3);
+        //this.light = this.lights.addLight(400, 300, 100).setIntensity(3);
+        //this.light.setVisible(false);
         //var color = spectrum[colorIndex];
 
         //this.light.color.setTo(color.r, color.g, color.b);
@@ -483,8 +485,8 @@ export default class Demo extends Phaser.Scene
         this.player3.update();
         this.player4.update();
 
-        this.light.x = this.player.x;
-        this.light.y = this.player.y;
+        //this.light.x = this.player.x;
+        //this.light.y = this.player.y;
     }
 }
 
