@@ -91,21 +91,24 @@ export default class Demo extends Phaser.Scene
         var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2');
         var tilesetPickups = map.addTilesetImage('Crates - Metal 64x64', 'crateTilesMetal');
 
-        this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]);
-        this.layerPickups = map.createLayer('Pickups', [ tileset1, tileset2, tilesetPickups ]);
+        // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
+        this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]).setPipeline('Light2D');
+        this.layerPickups = map.createLayer('Pickups', [ tileset1, tileset2, tilesetPickups ]).setPipeline('Light2D');
         //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
         //this.layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
         //this.layer5 = map.createLayer('Tile Layer 5', [ tileset1, tileset2 ]);
 
 
-        let colorIndex = 0;
-        const spectrum = Phaser.Display.Color.ColorSpectrum(128);
+        //let colorIndex = 0;
+        //const spectrum = Phaser.Display.Color.ColorSpectrum(128);
 
-        this.light = this.add.pointlight(400, 300, 0, 20, 1);
-        var color = spectrum[colorIndex];
+        this.lights.enable();
+        this.lights.setAmbientColor(0xffffff);
+        this.light = this.lights.addLight(400, 300, 100).setIntensity(3);
+        //var color = spectrum[colorIndex];
 
-        this.light.color.setTo(color.r, color.g, color.b);
+        //this.light.color.setTo(color.r, color.g, color.b);
         /*
         var tileset = map.addTilesetImage('tiles3', null, 32, 32, 1, 2);
         var layer = map.createLayer(0, tileset, 0, 0).setPipeline('Light2D');
@@ -366,7 +369,7 @@ export default class Demo extends Phaser.Scene
         var otherPlayer = <Player>enemy;
         otherPlayer.tryDamage();
 
-        bullet.destroy();
+        bullet.remove();
         /*         
         var scene = <MainScene>enemy.getScene();
         scene.weaponHitParticleEmitter.explode(10, enemy.x, enemy.y);

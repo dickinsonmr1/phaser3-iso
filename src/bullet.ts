@@ -19,12 +19,18 @@ export class Bullet extends Phaser.GameObjects.Sprite {
 
     public MapPosition: Phaser.Geom.Point;
 
+    public spotlight;//: Phaser.GameObjects.Light;
+
+    private creationGameTime: number;
+
     constructor(params)
     {
         super(params.scene, params.isometricX, params.isometricY, params.key);
 
         this.MapPosition = new Phaser.Geom.Point(params.mapPositionX, params.mapPositionY); 
         //this.bulletId = uuidv4();
+
+        this.creationGameTime = this.scene.game.getTime();
 
         this.scene.add.existing(this);
                
@@ -40,6 +46,19 @@ export class Bullet extends Phaser.GameObjects.Sprite {
        
         this.setAlpha(1.0);
         this.setDepth(1);//Constants.depthBullets);
+
+        // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
+        this.spotlight = this.scene.lights
+            .addLight(this.x, this.y)
+            .setRadius(100)
+            .setColor(0xff0000)
+            .setIntensity(1);        
+
+        // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
+        // this.spotlight = this.scene.add.pointlight(this.x, this.y, 0, 20, 1);
+            //.setRadius(100)
+            //.setColor(0xff0000)
+            //.setIntensity(1);
     }
 
     public getScene(): Scene {
@@ -51,8 +70,13 @@ export class Bullet extends Phaser.GameObjects.Sprite {
     }
 
     preUpdate(time, delta): void {  
+
         if(this.initiated) {  
             super.preUpdate(time, delta);
+
+            if(this.scene.sys.game.loop.time > this.creationGameTime + 3000) {
+                this.remove();
+            }
 
             /*
             var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -66,6 +90,8 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             var isoPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.x = isoPosition.x;
             this.y = isoPosition.y;
+
+            this.spotlight.setPosition(this.x, this.y);
             
             /*
             var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -82,6 +108,15 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             socket.emit('bulletMovement', {bulletId: this.bulletId, x: this.x, y: this.y, velocityX: this.velocityX});                
         }
         */
+    }
+
+    update(...args: any[]): void {
+               
+    }
+
+    remove() {
+        this.scene.lights.removeLight(this.spotlight);
+        this.destroy();
     }
     /*
     getSocket(): Socket {
