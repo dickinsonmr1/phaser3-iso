@@ -3,6 +3,7 @@ import { Constants } from '../constants';
 import { HealthBar, HUDBarType } from './healthBar';
 import { Bullet } from './bullet';
 import { Point, Utility } from '../utility';
+import GameScene from '../scenes/gameScene';
 
 export enum PlayerDrawOrientation {
     N,
@@ -149,6 +150,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.multiplayerNameText.setFontSize(16);
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
+
+    
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
                 font: '24px Courier',
@@ -161,11 +164,15 @@ export class Player extends Phaser.GameObjects.Sprite {
         //playerNameText.setStroke('rgb(0,0,0)', 4);     
         //playerNameText.setFontSize(24); 
         
-        this.debugCoordinatesText = text;
-        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-        this.debugCoordinatesText.setOrigin(0, 0.5);
-        this.debugCoordinatesText.setFontSize(16);
-        this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
+        let gameScene = <GameScene>this.scene;        
+        if(gameScene.showDebug) {
+
+            this.debugCoordinatesText = text;
+            this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+            this.debugCoordinatesText.setOrigin(0, 0.5);
+            this.debugCoordinatesText.setFontSize(16);
+            this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
+        }
         
         this.bullets = this.scene.physics.add.group({
             allowGravity: false
@@ -206,7 +213,11 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-        this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);
+
+        let gameScene = <GameScene>this.scene;        
+        if(gameScene.showDebug) {
+            this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);    
+        }
 
         this.setOrigin(0.5, 0.5);
 
@@ -228,14 +239,24 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     alignDebugText(x: number, y: number) {
         var text = this.debugCoordinatesText;
+
         text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)})
-                        \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
-                        \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
-                        \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})
-                        \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI`)
+                    \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
+                    \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
+                    \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
+                    \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI`)
+
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0.5);
+    }
+
+    showDebugText() {
+        this.debugCoordinatesText.setVisible(true);
+    }
+
+    hideDebugText() {
+        this.debugCoordinatesText.setVisible(false);
     }
 
     tryMoveWithKeyboard(direction: PlayerDrawOrientation) {

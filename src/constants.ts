@@ -28,4 +28,6 @@ export class Constants {
     // down 13
     // left 14
     // right 15
+
+    public static get pickupSpawnTile(): number { return 217; }
 }

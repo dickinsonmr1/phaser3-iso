@@ -13,6 +13,8 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
+    public showDebug: boolean = false;
+
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
     zoomOutKey: Phaser.Input.Keyboard.Key;
@@ -97,6 +99,7 @@ export default class GameScene extends Phaser.Scene
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
         this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ]).setPipeline('Light2D');
         this.layerPickups = map.createLayer('Pickups', [ tileset1, tileset2, tilesetPickups ]).setPipeline('Light2D');
+
         //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
         //this.layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
@@ -108,7 +111,9 @@ export default class GameScene extends Phaser.Scene
 
         this.lights.enable();
         this.lights.setAmbientColor(0xffffff);
-        //this.light = this.lights.addLight(400, 300, 100).setIntensity(3);
+        this.light = this.lights.addLight(0, 0, 100).setIntensity(3);
+    
+
         //this.light.setVisible(false);
         //var color = spectrum[colorIndex];
 
@@ -142,48 +147,47 @@ export default class GameScene extends Phaser.Scene
             //isMultiplayer: this.isMultiplayer
         });        
         this.player.init();        
-
-        //Animations.createAnims(this.anims);        
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-N',
             frames: [{key: 'utilityCars', frame: 'police_N.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-S',
             frames: [{key: 'utilityCars', frame: 'police_S.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-E',
             frames: [{key: 'utilityCars', frame: 'police_E.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-W',
             frames: [{key: 'utilityCars', frame: 'police_W.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-NE',
             frames: [{key: 'utilityCars', frame: 'police_NE.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-NW',
             frames: [{key: 'utilityCars', frame: 'police_NW.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-SE',
             frames: [{key: 'utilityCars', frame: 'police_SE.png'}],
             frameRate: 10,
         });
-        this.player.anims.create({
+        this.anims.create({
             key: 'police-SW',
             frames: [{key: 'utilityCars', frame: 'police_SW.png'}],
             frameRate: 10,
         });
+      
 
         this.player2 = new Player({
             scene: this,
@@ -196,6 +200,47 @@ export default class GameScene extends Phaser.Scene
             //isMultiplayer: this.isMultiplayer
         });        
         this.player2.init();
+        this.player2.anims.create({
+            key: 'garbage-N',
+            frames: [{key: 'utilityCars', frame: 'garbage_N.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-S',
+            frames: [{key: 'utilityCars', frame: 'garbage_S.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-E',
+            frames: [{key: 'utilityCars', frame: 'garbage_E.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-W',
+            frames: [{key: 'utilityCars', frame: 'garbage_W.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-NE',
+            frames: [{key: 'utilityCars', frame: 'garbage_NE.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-NW',
+            frames: [{key: 'utilityCars', frame: 'garbage_NW.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-SE',
+            frames: [{key: 'utilityCars', frame: 'garbage_SE.png'}],
+            frameRate: 10,
+        });
+        this.player2.anims.create({
+            key: 'garbage-SW',
+            frames: [{key: 'utilityCars', frame: 'garbage_SW.png'}],
+            frameRate: 10,
+        });
+
 
         this.player3 = new Player({
             scene: this,
@@ -221,48 +266,6 @@ export default class GameScene extends Phaser.Scene
         });        
         this.player4.init();
 
-        //Animations.createAnims(this.anims);        
-        this.player.anims.create({
-            key: 'garbage-N',
-            frames: [{key: 'utilityCars', frame: 'garbage_N.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-S',
-            frames: [{key: 'utilityCars', frame: 'garbage_S.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-E',
-            frames: [{key: 'utilityCars', frame: 'garbage_E.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-W',
-            frames: [{key: 'utilityCars', frame: 'garbage_W.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-NE',
-            frames: [{key: 'utilityCars', frame: 'garbage_NE.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-NW',
-            frames: [{key: 'utilityCars', frame: 'garbage_NW.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-SE',
-            frames: [{key: 'utilityCars', frame: 'garbage_SE.png'}],
-            frameRate: 10,
-        });
-        this.player.anims.create({
-            key: 'garbage-SW',
-            frames: [{key: 'utilityCars', frame: 'garbage_SW.png'}],
-            frameRate: 10,
-        });
-
 
         var cursors = this.input.keyboard.createCursorKeys();
 
@@ -284,12 +287,31 @@ export default class GameScene extends Phaser.Scene
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
         this.physics.add.overlap(this.player, this.layerPickups);
-        this.layerPickups.setTileIndexCallback(217, this.playerTouchingTileHandler, this);
+        this.layerPickups.setTileIndexCallback(Constants.pickupSpawnTile, this.playerTouchingTileHandler, this);
 
-        var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
-        isoBox.alpha = 0.5;
+        
+        this.layerPickups.forEachTile(tile => {
+            if(tile.index == Constants.pickupSpawnTile) {
+                const x = tile.getCenterX();
+                const y = tile.getCenterY();                
+               
+                //var temp = this.lights.addLight(x, y, 200).setIntensity(3);
 
-        this.physics.add.collider(this.player, isoBox);
+                var text = this.add.text(x, y, 'Pickup here', {
+                    font: 'bold 26px Arial'
+                });
+
+                //this.layerPickups.removeTileAt(tile.x, tile.y);
+
+                var isoBox = this.add.isobox(x, y, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
+                isoBox.alpha = 0.5;
+            }
+        })        
+
+        //var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
+        //isoBox.alpha = 0.5;
+
+        //this.physics.add.collider(this.player, isoBox);
 
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
@@ -406,11 +428,11 @@ export default class GameScene extends Phaser.Scene
         this.events.emit('updateFPS', delta);
 
         if(this.zoomInKey.isDown)
-            this.cameras.main.zoom -= 0.01;
+            this.cameras.main.zoom -= 0.01;  
 
         if(this.zoomOutKey.isDown)
             this.cameras.main.zoom += 0.01;  
-
+       
         var body = <Phaser.Physics.Arcade.Body>this.player.body;
 
         const pad = this.gamepad;
@@ -422,7 +444,7 @@ export default class GameScene extends Phaser.Scene
 
             var leftAxisX = pad.axes[0].getValue();
             var leftAxisY = pad.axes[1].getValue();
-            
+
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
             if(pad.L2) {
@@ -447,7 +469,13 @@ export default class GameScene extends Phaser.Scene
             if(pad.B || pad.R2) {
                 this.player.tryFireBulletWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
-            }            
+            }         
+            
+            if(pad.L1)
+                this.cameras.main.zoom -= 0.01;
+
+            if(pad.R1)
+                this.cameras.main.zoom += 0.01;
         }
         if(pad == null) {
 
