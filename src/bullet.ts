@@ -21,6 +21,8 @@ export class Bullet extends Phaser.GameObjects.Sprite {
 
     public spotlight;//: Phaser.GameObjects.Light;
 
+    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+
     private creationGameTime: number;
 
     constructor(params)
@@ -56,6 +58,29 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             .setRadius(100)
             .setColor(0xff00ff)
             .setIntensity(1.5);        
+
+        var particles = this.scene.add.particles('explosion');
+        particles.setDepth(4);//Constants.depthParticles);
+
+        this.particleEmitter = particles.createEmitter({
+            x: this.x,
+            y: this.y,
+            lifespan: 500,
+            speed: 10, //{ min: 400, max: 400 },
+            accelerationX: params.velocityX,
+            accelerationY: params.velocityY,
+            //rotate: params.angle,
+            //gravityY: 300,
+            tint: 0xff00ff,
+            scaleX: { start: 0.25, end: 0.01 },
+            scaleY: { start: 0.25, end: 0.01 },
+            quantity: 1,
+            blendMode: 'ADD',
+            frequency: 25,
+            alpha: {start: 0.8, end: 0.0},
+            maxParticles: 25
+            //active: false
+        });
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
         // this.spotlight = this.scene.add.pointlight(this.x, this.y, 0, 20, 1);
@@ -95,6 +120,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
             this.y = isoPosition.y;
 
             this.spotlight.setPosition(this.x, this.y);
+            this.particleEmitter.setPosition(this.x, this.y);
             
             /*
             var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -119,6 +145,7 @@ export class Bullet extends Phaser.GameObjects.Sprite {
 
     remove() {
         this.scene.lights.removeLight(this.spotlight);
+        this.particleEmitter.stop();
         this.destroy();
     }
     /*

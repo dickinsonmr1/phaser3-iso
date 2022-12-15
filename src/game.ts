@@ -6,6 +6,8 @@ import { Utility } from './utility';
 
 export default class Demo extends Phaser.Scene
 {
+    fpsText;
+
     //playerSpeed: number = 0.25;
     player: Player;
     player2: Player;
@@ -83,6 +85,9 @@ export default class Demo extends Phaser.Scene
     create ()
     {
         //this.physics.world.setBounds(-200, -200, 400, 400);
+        this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {
+            font: 'bold 26px Arial'
+        });
 
         var map = this.add.tilemap('map');
 
@@ -401,6 +406,9 @@ export default class Demo extends Phaser.Scene
         //player.y -= 1;
         //this.controls.update(delta);
 
+        this.fpsText.setText('FPS: ' + (1000/delta).toFixed(3));// + '\n' +
+        //particles.emitters.first.alive.length + ' Particles');
+
         if(this.zoomInKey.isDown)
             this.cameras.main.zoom -= 0.01;
 
@@ -500,13 +508,15 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            debug: false,
+            /*
             debugShowBody: true,
             debugShowStaticBody: true,
             debugShowVelocity: true,
             debugVelocityColor: 0xffff00,
             debugBodyColor: 0x0000ff,
             debugStaticBodyColor: 0xffffff
+            */
         }
     },
     scene: Demo
