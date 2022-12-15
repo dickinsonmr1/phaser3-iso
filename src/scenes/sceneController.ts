@@ -1,5 +1,5 @@
 import { Game } from "phaser";
-import GameScene from "../game";
+import GameScene from "./gameScene";
 import { HudScene } from "./hudscene";
 
 export class SceneController extends Phaser.Scene {
@@ -22,16 +22,15 @@ export class SceneController extends Phaser.Scene {
     }
 
     create() {
-        //this.hudScene = new HudScene(this);
-        //this.game.scene.add("HudScene", this.hudScene);
-        //this.scene.launch('HudScene');
+        this.hudScene = new HudScene(this);
+        this.game.scene.add("HudScene", this.hudScene);
+        this.scene.launch('HudScene');
 
         this.gameScene = new GameScene(this);
         this.game.scene.add("GameScene", this.gameScene);
         this.scene.launch('GameScene');
-        this.scene.run('GameScene');
 
-        //this.scene.bringToTop("HudScene");
+        this.scene.bringToTop("HudScene");
     }
 
     update(): void {
