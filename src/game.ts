@@ -1,12 +1,14 @@
-import { Player, PlayerDrawOrientation } from './player';
+import { Player, PlayerDrawOrientation } from './gameobjects/player';
 import 'phaser';
-import { Bullet } from './bullet';
+import { Bullet } from './gameobjects/bullet';
 import { Constants } from './constants';
 import { Utility } from './utility';
+import { HudScene } from './scenes/hudscene';
+import { SceneController } from './scenes/sceneController';
 
-export default class Demo extends Phaser.Scene
-{
-    fpsText;
+export default class GameScene extends Phaser.Scene
+{    
+    sceneController: SceneController;
 
     //playerSpeed: number = 0.25;
     player: Player;
@@ -24,7 +26,6 @@ export default class Demo extends Phaser.Scene
     moveRightKey: Phaser.Input.Keyboard.Key;
 
     fireWeaponKey: Phaser.Input.Keyboard.Key;
-
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
     mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
@@ -38,14 +39,15 @@ export default class Demo extends Phaser.Scene
     layer5 : Phaser.Tilemaps.TilemapLayer;
     layerPickups : Phaser.Tilemaps.TilemapLayer;
 
-    constructor ()
+    constructor (sceneController: SceneController)
     {
-        super('demo');
+        super('GameScene');
+
+        this.sceneController = sceneController;
     }
 
     preload ()
     {
-        // hud
         this.load.atlasXML('hudSprites', './assets/sprites/HUD/spritesheet_hud.png', './assets/sprites/HUD/spritesheet_hud.xml');        
         this.load.atlasXML('uiSpaceSprites', './assets/sprites/HUD/uipackSpace_sheet.png', './assets/sprites/HUD/uipackSpace_sheet.xml');        
         this.load.atlasXML('redUISprites', './assets/sprites/HUD/redSheet.png', './assets/sprites/HUD/redSheet.xml');        
@@ -85,9 +87,7 @@ export default class Demo extends Phaser.Scene
     create ()
     {
         //this.physics.world.setBounds(-200, -200, 400, 400);
-        this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {
-            font: 'bold 26px Arial'
-        });
+
 
         var map = this.add.tilemap('map');
 
@@ -363,7 +363,7 @@ export default class Demo extends Phaser.Scene
     }
 
     playerTouchingTileHandler(sprite, tile): boolean {
-        let scene = <Demo>this;//.scene;
+        let scene = <GameScene>this;//.scene;
         scene.layerPickups.removeTileAt(tile.x, tile.y);
 
         return true;
@@ -406,8 +406,7 @@ export default class Demo extends Phaser.Scene
         //player.y -= 1;
         //this.controls.update(delta);
 
-        this.fpsText.setText('FPS: ' + (1000/delta).toFixed(3));// + '\n' +
-        //particles.emitters.first.alive.length + ' Particles');
+        this.events.emit('updateFPS', delta);
 
         if(this.zoomInKey.isDown)
             this.cameras.main.zoom -= 0.01;
@@ -519,7 +518,7 @@ const config = {
             */
         }
     },
-    scene: Demo
+    scene: [SceneController]
 };
 
 const game = new Phaser.Game(config);
