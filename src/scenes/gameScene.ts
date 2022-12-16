@@ -1,5 +1,5 @@
 import { Constants } from "../constants";
-import { Player, PlayerDrawOrientation } from "../gameobjects/player";
+import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
 import { Utility } from "../utility";
 import { SceneController } from "./sceneController";
 
@@ -143,52 +143,12 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'police_W.png',
             playerId: "Police",
+            vehicleType: VehicleType.Police
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
         this.player.init();        
-        this.anims.create({
-            key: 'police-N',
-            frames: [{key: 'utilityCars', frame: 'police_N.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-S',
-            frames: [{key: 'utilityCars', frame: 'police_S.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-E',
-            frames: [{key: 'utilityCars', frame: 'police_E.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-W',
-            frames: [{key: 'utilityCars', frame: 'police_W.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-NE',
-            frames: [{key: 'utilityCars', frame: 'police_NE.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-NW',
-            frames: [{key: 'utilityCars', frame: 'police_NW.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-SE',
-            frames: [{key: 'utilityCars', frame: 'police_SE.png'}],
-            frameRate: 10,
-        });
-        this.anims.create({
-            key: 'police-SW',
-            frames: [{key: 'utilityCars', frame: 'police_SW.png'}],
-            frameRate: 10,
-        });
-      
-
+       
         this.player2 = new Player({
             scene: this,
             mapX: 500,
@@ -196,50 +156,12 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'garbage_W.png',
             playerId: "Trash Man",
+            vehicleType: VehicleType.TrashMan
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
         this.player2.init();
-        this.player2.anims.create({
-            key: 'garbage-N',
-            frames: [{key: 'utilityCars', frame: 'garbage_N.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-S',
-            frames: [{key: 'utilityCars', frame: 'garbage_S.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-E',
-            frames: [{key: 'utilityCars', frame: 'garbage_E.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-W',
-            frames: [{key: 'utilityCars', frame: 'garbage_W.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-NE',
-            frames: [{key: 'utilityCars', frame: 'garbage_NE.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-NW',
-            frames: [{key: 'utilityCars', frame: 'garbage_NW.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-SE',
-            frames: [{key: 'utilityCars', frame: 'garbage_SE.png'}],
-            frameRate: 10,
-        });
-        this.player2.anims.create({
-            key: 'garbage-SW',
-            frames: [{key: 'utilityCars', frame: 'garbage_SW.png'}],
-            frameRate: 10,
-        });
+       
 
 
         this.player3 = new Player({
@@ -249,6 +171,7 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'taxi_NE.png',
             playerId: "Taxi",
+            vehicleType: VehicleType.Taxi
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -261,6 +184,7 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'ambulance_NE.png',
             playerId: "Ambulance",
+            vehicleType: VehicleType.Ambulance
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        

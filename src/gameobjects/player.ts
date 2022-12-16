@@ -27,6 +27,13 @@ export enum PlayerCartesianOrientation {
     SW,
 }
 
+export enum VehicleType {
+    Police,
+    TrashMan,
+    Taxi,
+    Ambulance
+}
+
 export class Player extends Phaser.GameObjects.Sprite {
     getPlayerSpeed() {
         if(this.turboOn) {
@@ -95,6 +102,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     public MapPosition: Phaser.Geom.Point;
     public playerPositionOnTileset: Phaser.Geom.Point;
 
+    public vehicleType: VehicleType;
+    private animPrefix: string;
+
     constructor(params) {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
@@ -107,6 +117,9 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.playerPositionOnTileset = new Phaser.Geom.Point(0,0);
 
         this.playerId = params.playerId;
+
+        this.vehicleType = params.vehicleType;
+        this.createAnims();
 
         this.setDisplayOrigin(0, 100);
 
@@ -198,6 +211,183 @@ export class Player extends Phaser.GameObjects.Sprite {
         //this.particleEmitter.stop();
     }
 
+    createAnims(){
+        switch(this.vehicleType){
+            case VehicleType.Police:
+                this.animPrefix = "police";
+                this.anims.create({
+                    key: 'police-N',
+                    frames: [{key: 'utilityCars', frame: 'police_N.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-S',
+                    frames: [{key: 'utilityCars', frame: 'police_S.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-E',
+                    frames: [{key: 'utilityCars', frame: 'police_E.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-W',
+                    frames: [{key: 'utilityCars', frame: 'police_W.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-NE',
+                    frames: [{key: 'utilityCars', frame: 'police_NE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-NW',
+                    frames: [{key: 'utilityCars', frame: 'police_NW.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-SE',
+                    frames: [{key: 'utilityCars', frame: 'police_SE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'police-SW',
+                    frames: [{key: 'utilityCars', frame: 'police_SW.png'}],
+                    frameRate: 10,
+                });
+                break;
+            case VehicleType.TrashMan:
+                this.animPrefix = "garbage";
+                this.anims.create({
+                    key: 'garbage-N',
+                    frames: [{key: 'utilityCars', frame: 'garbage_N.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-S',
+                    frames: [{key: 'utilityCars', frame: 'garbage_S.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-E',
+                    frames: [{key: 'utilityCars', frame: 'garbage_E.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-W',
+                    frames: [{key: 'utilityCars', frame: 'garbage_W.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-NE',
+                    frames: [{key: 'utilityCars', frame: 'garbage_NE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-NW',
+                    frames: [{key: 'utilityCars', frame: 'garbage_NW.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-SE',
+                    frames: [{key: 'utilityCars', frame: 'garbage_SE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'garbage-SW',
+                    frames: [{key: 'utilityCars', frame: 'garbage_SW.png'}],
+                    frameRate: 10,
+                });
+                break;
+            case VehicleType.Ambulance:
+                this.animPrefix = "ambulance";
+                this.anims.create({
+                    key: 'garbage-N',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_N.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-S',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_S.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-E',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_E.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-W',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_W.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-NE',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_NE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-NW',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_NW.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-SE',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_SE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'ambulance-SW',
+                    frames: [{key: 'utilityCars', frame: 'ambulance_SW.png'}],
+                    frameRate: 10,
+                });
+                break;
+            case VehicleType.Taxi:
+                this.animPrefix = "taxi";
+                this.anims.create({
+                    key: 'taxi-N',
+                    frames: [{key: 'utilityCars', frame: 'taxi_N.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-S',
+                    frames: [{key: 'utilityCars', frame: 'taxi_S.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-E',
+                    frames: [{key: 'utilityCars', frame: 'taxi_E.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-W',
+                    frames: [{key: 'utilityCars', frame: 'taxi_W.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-NE',
+                    frames: [{key: 'utilityCars', frame: 'taxi_NE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-NW',
+                    frames: [{key: 'utilityCars', frame: 'taxi_NW.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-SE',
+                    frames: [{key: 'utilityCars', frame: 'taxi_SE.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'taxi-SW',
+                    frames: [{key: 'utilityCars', frame: 'taxi_SW.png'}],
+                    frameRate: 10,
+                });
+                break;
+        }
+    }
+
     update(...args: any[]): void {
 
         this.MapPosition.x += this.body.velocity.x;
@@ -266,42 +456,42 @@ export class Player extends Phaser.GameObjects.Sprite {
             case PlayerDrawOrientation.N:
                 this.body.velocity.x = -Math.cos(Math.PI / 4) * this.getPlayerSpeed();
                 this.body.velocity.y = -Math.sin(Math.PI / 4) * this.getPlayerSpeed();                            
-                this.anims.play('police-N', true);
+                this.anims.play(`${(this.animPrefix)}-N`, true);
                 break;
             case PlayerDrawOrientation.S:                
                 this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.getPlayerSpeed();
                 this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.getPlayerSpeed(); 
-                this.anims.play('police-S', true);
+                this.anims.play(`${(this.animPrefix)}-S`, true);
                 break;
             case PlayerDrawOrientation.E:
                 this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.getPlayerSpeed();
                 this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.getPlayerSpeed();                                       
-                this.anims.play('police-E', true);
+                this.anims.play(`${(this.animPrefix)}-E`, true);
                 break;
             case PlayerDrawOrientation.W:
                 this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.getPlayerSpeed();
                 this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.getPlayerSpeed();                            
-                this.anims.play('police-W', true);
+                this.anims.play(`${(this.animPrefix)}-W`, true);
                 break;
             case PlayerDrawOrientation.NE:
                 this.body.velocity.x = 0;
                 this.body.velocity.y = -1 * this.getPlayerSpeed();                              
-                this.anims.play('police-NE', true);
+                this.anims.play(`${(this.animPrefix)}-NE`, true);
                 break;
             case PlayerDrawOrientation.SE:                    
                 this.body.velocity.x = 1 * this.getPlayerSpeed();
                 this.body.velocity.y = 0;                
-                this.anims.play('police-SE', true);
+                this.anims.play(`${(this.animPrefix)}-SE`, true);
                 break;
             case PlayerDrawOrientation.NW:
                 this.body.velocity.x = -1 * this.getPlayerSpeed();
                 this.body.velocity.y = 0;                
-                this.anims.play('police-NW', true);   
+                this.anims.play(`${(this.animPrefix)}-NW`, true);   
                 break;
             case PlayerDrawOrientation.SW:    
                 this.body.velocity.x = 0;
                 this.body.velocity.y = 1 * this.getPlayerSpeed();  
-                this.anims.play('police-SW', true);                
+                this.anims.play(`${(this.animPrefix)}-SW`, true);                
                 break;
         }
     }
@@ -320,35 +510,35 @@ export class Player extends Phaser.GameObjects.Sprite {
         //            0  PI
         if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.N;
-            this.anims.play('police-N', true);
+            this.anims.play(`${(this.animPrefix)}-N`, true);
         }
         else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NE;
-            this.anims.play('police-NE', true);
+            this.anims.play(`${(this.animPrefix)}-NE`, true);
         }
         else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.E;
-            this.anims.play('police-E', true);
+            this.anims.play(`${(this.animPrefix)}-E`, true);
         }
         else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SE;
-            this.anims.play('police-SE', true);
+            this.anims.play(`${(this.animPrefix)}-SE`, true);
         }
         else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.S;
-            this.anims.play('police-S', true);
+            this.anims.play(`${(this.animPrefix)}-S`, true);
         }
         else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SW;
-            this.anims.play('police-SW', true);
+            this.anims.play(`${(this.animPrefix)}-SW`, true);
         }
         else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.W;
-            this.anims.play('police-W', true);
+            this.anims.play(`${(this.animPrefix)}-W`, true);
         }
         else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NW;
-            this.anims.play('police-NW', true);
+            this.anims.play(`${(this.animPrefix)}-NW`, true);
         }        
 
         //console.log(temp);
