@@ -167,7 +167,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
-                font: '24px Courier',
+                font: '16px Arial',
                 //fontFamily: 'KenneyRocketSquare',         
                 color:"rgb(255,255,255)",
             });

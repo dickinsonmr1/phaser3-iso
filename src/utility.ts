@@ -14,6 +14,10 @@ export class Utility {
 
     }
 
+    static getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
     static MapToScreen(mapX: number, mapY: number) : Point {
         var TILE_WIDTH_HALF = 32;
         var TILE_HEIGHT_HALF = 16;
