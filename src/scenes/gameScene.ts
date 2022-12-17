@@ -230,12 +230,7 @@ export default class GameScene extends Phaser.Scene
                 var temp = Utility.cartesianToIsometric(new Point(x, y));
                 //var temp = this.lights.addLight(x, y, 200).setIntensity(3);
 
-                /*
-                var text = this.add.text(temp.x, temp.y, `Rockets (${temp.x}, ${temp.y})`, {
-                    font: 'bold 12px Arial'
-                });
-                text.depth = 10;
-                */
+             
             
                 // pink: 0xFF6FCC, 0xFF2DB6, 0xFF5BC6
                 // purple: 0xA26FFF, 0x762DFF, 0x945BFF
@@ -280,11 +275,16 @@ export default class GameScene extends Phaser.Scene
                         break;
                 }
 
-
                 var isoBox = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
                 isoBox.alpha = 0.7;
                 isoBox.setOrigin(0.5, 0.5);
+                isoBox.depth = 20;
                 this.physics.world.enable(isoBox);
+                   
+                //var text = this.add.text(temp.x, temp.y, `Rockets (${temp.x}, ${temp.y})`, {                
+                //    font: 'bold 12px Arial'
+                //});
+                //text.depth = 10;
 
                 this.pickups.push(isoBox);
 
@@ -292,17 +292,15 @@ export default class GameScene extends Phaser.Scene
             }
         })        
 
-        //var isoBox = this.add.isobox(50, 50, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
-        //isoBox.alpha = 0.5;
-
-        //this.physics.add.collider(this.player, isoBox);
-
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
 
         this.physics.add.overlap(this.player, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
+        //this.physics.add.collider(this.player, this.player2);
+        //this.physics.add.collider(this.player, this.player3);
+        //this.physics.add.collider(this.player, this.player4);
 
         this.cameras.main.startFollow(this.player, false, 0.5, 0.5, 0, 0);
 
@@ -410,7 +408,8 @@ export default class GameScene extends Phaser.Scene
     
     playerTouchingPickup(player: any, pickup: any): void {       
 
-        //var selectedPlayer = <Player>player;
+        var selectedPlayer = <Player>player;
+        selectedPlayer.refillTurbo();
         //selectedPlayer.
         //otherPlayer.tryDamage();
 
@@ -551,9 +550,9 @@ export default class GameScene extends Phaser.Scene
         this.player4.update();
 
         if(this.pickupScaleTime > 30)
-            this.pickupScale += 0.005;
+            this.pickupScale += 0.006;
         else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
-            this.pickupScale -= 0.005;
+            this.pickupScale -= 0.006;
         else if(this.pickupScaleTime == 0)
             this.pickupScaleTime = 60;
 
@@ -562,6 +561,7 @@ export default class GameScene extends Phaser.Scene
         this.pickups.forEach(item => {
             let temp = <Phaser.GameObjects.IsoBox>(item);
             temp.setScale(this.pickupScale);
+            //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
         });
 
         //this.light.x = this.player.x;
