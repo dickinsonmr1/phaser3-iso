@@ -15,7 +15,7 @@ export class Utility {
     }
 
     static MapToScreen(mapX: number, mapY: number) : Point {
-        var TILE_WIDTH_HALF = 16;
+        var TILE_WIDTH_HALF = 32;
         var TILE_HEIGHT_HALF = 16;
 
         var screenX = (mapX - mapY) * TILE_WIDTH_HALF;
@@ -24,7 +24,7 @@ export class Utility {
     }
 
     static ScreenToMap(screenX: number, screenY: number) : Point {
-        var TILE_WIDTH_HALF = 16;
+        var TILE_WIDTH_HALF = 32;
         var TILE_HEIGHT_HALF = 16;
 
         var mapX = (screenX / TILE_WIDTH_HALF + screenY / TILE_HEIGHT_HALF) /2;
@@ -54,5 +54,10 @@ export class Utility {
         tempPt.x = Math.floor(cartPt.x / tileHeight);
         tempPt.y = Math.floor(cartPt.y / tileHeight);
         return(tempPt);
+    }
+
+    static TileXYtoCartesianCoordinates(x, y) {
+        var tempPt = new Phaser.Geom.Point(x, y);
+        return tempPt;
     }
 }

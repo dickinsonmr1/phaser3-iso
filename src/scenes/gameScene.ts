@@ -1,6 +1,6 @@
 import { Constants } from "../constants";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
-import { Utility } from "../utility";
+import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 
 export default class GameScene extends Phaser.Scene
@@ -161,9 +161,7 @@ export default class GameScene extends Phaser.Scene
             //isMultiplayer: this.isMultiplayer
         });        
         this.player2.init();
-       
-
-
+    
         this.player3 = new Player({
             scene: this,
             mapX: 100,
@@ -216,19 +214,23 @@ export default class GameScene extends Phaser.Scene
         
         this.layerPickups.forEachTile(tile => {
             if(tile.index == Constants.pickupSpawnTile) {
-                const x = tile.getCenterX();
-                const y = tile.getCenterY();                
+                const x = ((tile.x * tile.width)) / 2; //tile.x;// tile.getCenterX();
+                const y = ((tile.y * tile.height)) / 2; //tile.y;//tile.getCenterY();                
                
+                var temp = Utility.cartesianToIsometric(new Point(x, y));
                 //var temp = this.lights.addLight(x, y, 200).setIntensity(3);
 
-                var text = this.add.text(x, y, 'Pickup here', {
-                    font: 'bold 26px Arial'
+                var text = this.add.text(temp.x, temp.y, 'Rockets', {
+                    font: 'bold 12px Arial'
                 });
+                text.depth = 10;
+
+                
+
+                var isoBox = this.add.isobox(temp.x, temp.y, 24, 12, 0xEEEEEE, 0xFF0000, 0x999999);
+                isoBox.alpha = 0.5;
 
                 //this.layerPickups.removeTileAt(tile.x, tile.y);
-
-                var isoBox = this.add.isobox(x, y, 64, 32, 0xEEEEEE, 0xFF0000, 0x999999);
-                isoBox.alpha = 0.5;
             }
         })        
 
