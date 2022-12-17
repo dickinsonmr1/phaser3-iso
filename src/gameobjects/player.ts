@@ -100,7 +100,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     public bulletTimeInterval: number = 100;
 
     public rocketTime: number = 0;
-    public rocketTimeInterval: number = 200;
+    public rocketTimeInterval: number = 500;
     //private bulletVelocity: number = 7;
 
     public MapPosition: Phaser.Geom.Point;

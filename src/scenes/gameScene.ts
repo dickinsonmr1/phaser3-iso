@@ -288,7 +288,7 @@ export default class GameScene extends Phaser.Scene
 
                 this.pickups.push(isoBox);
 
-                //this.layerPickups.removeTileAt(tile.x, tile.y);
+                this.layerPickups.removeTileAt(tile.x, tile.y);
             }
         })        
 
