@@ -13,7 +13,7 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
-    public showDebug: boolean = true;
+    public showDebug: boolean = false;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -24,7 +24,8 @@ export default class GameScene extends Phaser.Scene
     moveLeftKey: Phaser.Input.Keyboard.Key;
     moveRightKey: Phaser.Input.Keyboard.Key;
 
-    fireWeaponKey: Phaser.Input.Keyboard.Key;
+    firePrimaryWeaponKey: Phaser.Input.Keyboard.Key;
+    fireSecondaryWeaponKey: Phaser.Input.Keyboard.Key;
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
     mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
@@ -74,6 +75,7 @@ export default class GameScene extends Phaser.Scene
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down.png');
+        this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
 
         // tiles
         this.load.image('tiles', './assets/iso-64x64-outside.png');
@@ -228,10 +230,12 @@ export default class GameScene extends Phaser.Scene
                 var temp = Utility.cartesianToIsometric(new Point(x, y));
                 //var temp = this.lights.addLight(x, y, 200).setIntensity(3);
 
+                /*
                 var text = this.add.text(temp.x, temp.y, `Rockets (${temp.x}, ${temp.y})`, {
                     font: 'bold 12px Arial'
                 });
                 text.depth = 10;
+                */
             
                 // pink: 0xFF6FCC, 0xFF2DB6, 0xFF5BC6
                 // purple: 0xA26FFF, 0x762DFF, 0x945BFF
@@ -277,8 +281,8 @@ export default class GameScene extends Phaser.Scene
                 }
 
 
-                var isoBox = this.add.isobox(temp.x, temp.y, 24, 12, topColor, leftColor, rightColor);
-                isoBox.alpha = 0.8;
+                var isoBox = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
+                isoBox.alpha = 0.7;
                 isoBox.setOrigin(0.5, 0.5);
                 this.physics.world.enable(isoBox);
 
@@ -310,8 +314,9 @@ export default class GameScene extends Phaser.Scene
         this.moveRightKey = cursors.right;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.moveLeftKey = cursors.left;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
 
-        this.fireWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    
+        this.firePrimaryWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.fireSecondaryWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
         this.addGamePadListeners();        
     }
 
@@ -484,10 +489,15 @@ export default class GameScene extends Phaser.Scene
                 //this.player.tryStopSpaceShipY();
             }                    
 
-            if(pad.B || pad.R2) {
-                this.player.tryFireBulletWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+            if(pad.R2) {
+                this.player.tryFirePrimaryWeaponWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
-            }         
+            } 
+            
+            if(pad.B) {
+                this.player.tryFireSecondaryWeaponWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
+            }  
             
             if(pad.L1)
                 this.cameras.main.zoom -= 0.01;
@@ -526,8 +536,12 @@ export default class GameScene extends Phaser.Scene
                 //this.player.body.velocity.y = 0;
             }
     
-            if(this.fireWeaponKey.isDown) {
-                this.player.tryFireBullet();
+            if(this.firePrimaryWeaponKey.isDown) {
+                this.player.tryFirePrimaryWeapon();
+            }
+
+            if(this.fireSecondaryWeaponKey.isDown) {
+                this.player.tryFireSecondaryWeapon();
             }
         }
 

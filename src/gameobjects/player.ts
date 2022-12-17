@@ -1,7 +1,7 @@
 import 'phaser'
 import { Constants } from '../constants';
 import { HealthBar, HUDBarType } from './healthBar';
-import { Bullet } from './bullet';
+import { Projectile, ProjectileType } from './projectile';
 import { Point, Utility } from '../utility';
 import GameScene from '../scenes/gameScene';
 
@@ -95,9 +95,13 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     public bullets: Phaser.GameObjects.Group;
     public lastUsedBulletIndex: number;
+    
     public bulletTime: number = 0;
-    public bulletTimeInterval: number = 200;
-    private bulletVelocity: number = 7;
+    public bulletTimeInterval: number = 100;
+
+    public rocketTime: number = 0;
+    public rocketTimeInterval: number = 200;
+    //private bulletVelocity: number = 7;
 
     public MapPosition: Phaser.Geom.Point;
     public playerPositionOnTileset: Phaser.Geom.Point;
@@ -417,6 +421,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         if(this.bulletTime > 0)
             this.bulletTime--;
+
+        if(this.rocketTime > 0)
+            this.rocketTime--;
     }
 
     alignPlayerNameText(x: number, y: number) {
@@ -598,13 +605,24 @@ export class Player extends Phaser.GameObjects.Sprite {
         }*/
     }
 
-    tryFireBullet() {
+    tryFireSecondaryWeapon() {
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.bulletTime) {
             
-            this.createBullet(null, null);//this.playerOrientation);
+            this.createProjectile(null, null, ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
+        }
+    }  
+
+    
+    tryFirePrimaryWeapon() {
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.rocketTime) {
+            
+            this.createProjectile(null, null, ProjectileType.Rocket);//this.playerOrientation);
+            this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
 
@@ -624,56 +642,86 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.turboOn = false;
     }
 
-    tryFireBulletWithGamepad(x, y) {
+    tryFireSecondaryWeaponWithGamepad(x, y) {
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.bulletTime) {
             
-            this.createBullet(x, y);//this.playerOrientation);
+            this.createProjectile(x, y, ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
 
-    private createBullet(x, y) : Bullet {
+    tryFirePrimaryWeaponWithGamepad(x, y) {
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.rocketTime) {
+            
+            this.createProjectile(x, y, ProjectileType.Rocket);//this.playerOrientation);
+            this.rocketTime = gameTime + this.rocketTimeInterval;
+        }
+    }  
+
+    private createProjectile(x, y, projectileType) : Projectile {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
         var velocityY: number;
-    
+
+        var bulletVelocity = 0;
+        var scaleX = 1;
+        var scaleY = 1;
+        var weaponImageKey = "bullet";
+
+        switch(projectileType) {
+            case ProjectileType.Rocket:
+                bulletVelocity = 7;
+                weaponImageKey = "rocket";
+                scaleX = 0.5;
+                scaleY = 0.5;
+                break;
+            case ProjectileType.Bullet:
+                bulletVelocity = 10;    
+                weaponImageKey = "bullet";
+                scaleX = 0.25;
+                scaleY = 0.25;
+                break;
+        }            
+
         if(x == null && y == null) {
             var cartesianOrientation = this.getPlayerIsometricOrientation();
 
             switch(cartesianOrientation){
                 case PlayerCartesianOrientation.N:
                     velocityX = 0;
-                    velocityY = -this.bulletVelocity;
+                    velocityY = -bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.E:
-                    velocityX = this.bulletVelocity;
+                    velocityX = bulletVelocity;
                     velocityY = 0;
                     break;
                 case PlayerCartesianOrientation.S:
                     velocityX = 0;
-                    velocityY = this.bulletVelocity;
+                    velocityY = bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.W:
-                    velocityX = -this.bulletVelocity;
+                    velocityX = -bulletVelocity;
                     velocityY = 0;
                     break;
                 case PlayerCartesianOrientation.NE:
-                    velocityX = this.bulletVelocity;
-                    velocityY = -this.bulletVelocity;
+                    velocityX = bulletVelocity;
+                    velocityY = -bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.SE:
-                    velocityX = this.bulletVelocity;
-                    velocityY = this.bulletVelocity;
+                    velocityX = bulletVelocity;
+                    velocityY = bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.NW:
-                    velocityX = -this.bulletVelocity;
-                    velocityY = -this.bulletVelocity;
+                    velocityX = -bulletVelocity;
+                    velocityY = -bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.SW:
-                    velocityX = -this.bulletVelocity;
-                    velocityY = this.bulletVelocity;
+                    velocityX = -bulletVelocity;
+                    velocityY = bulletVelocity;
                     break;
             }
         }
@@ -682,36 +730,28 @@ export class Player extends Phaser.GameObjects.Sprite {
 
             var temp = this.arctangent + 7 * Math.PI / 4;
 
-            velocityX = Math.cos(temp) * this.bulletVelocity;
-            velocityY = Math.sin(-temp) * this.bulletVelocity;
+            velocityX = Math.cos(temp) * bulletVelocity;
+            velocityY = Math.sin(-temp) * bulletVelocity;
             //velocityX = x * this.bulletVelocity;
             //velocityY = y * this.bulletVelocity;
         }
-        /*
-        if(this.flipX)
-            velocityX = -this.playerBulletVelocityX
-        else
-            velocityX = this.playerBulletVelocityX;
-        */
 
-        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
-        
-        //this.x = screenPosition.x;
-        //this.y = screenPosition.y;
+        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
 
-        var bullet = new Bullet({
+        var bullet = new Projectile({
             scene: this.scene,
+            projectileType: projectileType,
             isometricX: screenPosition.x, //body.x + this.playerBulletOffsetX(),
             isometricY: screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
-            key: "rocket",//this.currentWeaponBulletName,
+            key: weaponImageKey,//this.currentWeaponBulletName,
             //flipX: this.flipX,
             damage: 1,//this.currentWeaponDamage,
             velocityX: velocityX,
             velocityY: velocityY,
-            scaleX: 0.5,
-            scaleY: 0.5,
+            scaleX: scaleX,
+            scaleY: scaleY,
             angle: -this.arctangent
         });
         bullet.init();
