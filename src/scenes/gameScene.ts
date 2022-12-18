@@ -424,20 +424,25 @@ export default class GameScene extends Phaser.Scene
         switch(pickupNumber){
             case PickupType.Turbo:
                 console.log('refill turbo');
+                this.sceneController.hudScene.setInfoText("Turbo refilled", 2000);
                 selectedPlayer.refillTurbo();
                 break;
             case PickupType.Rocket:
                 console.log('refill rockets');
+                this.sceneController.hudScene.setInfoText("Rockets acquired", 2000);
                 break;
             case PickupType.Bullet:
                 console.log('refill bullets');
+                this.sceneController.hudScene.setInfoText("Bullets acquired", 2000);
                 break;
             case PickupType.Health:
                 console.log('refill health');
+                this.sceneController.hudScene.setInfoText("Health restored", 2000);
                 selectedPlayer.refillHealth();
                 break;
             case PickupType.Special:
                 console.log('refill special');
+                this.sceneController.hudScene.setInfoText("Special restored", 2000);
                 break;
         }
         
