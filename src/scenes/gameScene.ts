@@ -1,4 +1,5 @@
 import { Constants } from "../constants";
+import { Pickup, PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
@@ -40,6 +41,7 @@ export default class GameScene extends Phaser.Scene
     layerPickups : Phaser.Tilemaps.TilemapLayer;
 
     pickups : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
+    
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
 
@@ -228,65 +230,73 @@ export default class GameScene extends Phaser.Scene
                 const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
                
                 var temp = Utility.cartesianToIsometric(new Point(x, y));
-                //var temp = this.lights.addLight(x, y, 200).setIntensity(3);
 
-             
-            
-                // pink: 0xFF6FCC, 0xFF2DB6, 0xFF5BC6
-                // purple: 0xA26FFF, 0x762DFF, 0x945BFF
-                // green:
-                // blue:
-                // yellow:
                 var topColor = 0;
                 var leftColor = 0;
                 var rightColor = 0;
 
+                var pickupType = PickupType.Rocket;
                 var rand = Utility.getRandomInt(5);
                 switch(rand) {
                     case 0: // pink
                         topColor = 0xFF6FCC;
                         leftColor = 0xFF2DB6;
                         rightColor = 0xFF5BC6;
+                        pickupType = PickupType.Rocket;
                         break;
                     case 1: // purple
                         topColor = 0xA26FFF;
                         leftColor = 0x762DFF;
                         rightColor = 0x945BFF;
+                        pickupType = PickupType.Rocket;
                         break;
                     case 2: // green
                         topColor = 0xB4FF6F;
                         leftColor = 0x93FF2D;
                         rightColor = 0xABFF5B;
+                        pickupType = PickupType.Health;
                         break;
                     case 3: // blue
                         topColor = 0x6F84FF;
                         leftColor = 0x2D4DFF;
                         rightColor = 0x5B74FF;
+                        pickupType = PickupType.Turbo;
                         break;
                     case 4: // yellow
                         topColor = 0xFFEA6F;
                         leftColor = 0xFFEA6F;
                         rightColor = 0xFFE65B;
+                        pickupType = PickupType.Turbo;
                         break;
                     default: // pink
                         topColor = 0xFF6FCC;
                         leftColor = 0xFF2DB6;
                         rightColor = 0xFF5BC6;
+                        pickupType = PickupType.Rocket;
                         break;
                 }
 
-                var isoBox = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
-                isoBox.alpha = 0.7;
-                isoBox.setOrigin(0.5, 0.5);
-                isoBox.depth = 20;
-                this.physics.world.enable(isoBox);
-                   
-                //var text = this.add.text(temp.x, temp.y, `Rockets (${temp.x}, ${temp.y})`, {                
-                //    font: 'bold 12px Arial'
-                //});
-                //text.depth = 10;
 
-                this.pickups.push(isoBox);
+                var pickup = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
+                
+                /*var pickup = new Pickup({
+                    scene: this,
+                    pickupType: pickupType,
+                    x: temp.x,
+                    y: temp.y,
+                    size: 20,
+                    height: 10,
+                    topColor: topColor,
+                    leftColor: leftColor,
+                    rightColor: rightColor
+                });*/
+                pickup.name = pickupType.toString();
+                
+                pickup.alpha = 0.7;
+                pickup.setOrigin(0.5, 0.5);
+                this.physics.world.enable(pickup);
+
+                this.pickups.push(pickup);
 
                 this.layerPickups.removeTileAt(tile.x, tile.y);
             }
@@ -409,12 +419,33 @@ export default class GameScene extends Phaser.Scene
     playerTouchingPickup(player: any, pickup: any): void {       
 
         var selectedPlayer = <Player>player;
-        selectedPlayer.refillTurbo();
+        //var selectedPickup = <Phaser.GameObjects.IsoBox>pickup;
+        var pickupNumber = Number(pickup.name);
+        switch(pickupNumber){
+            case PickupType.Turbo:
+                console.log('refill turbo');
+                selectedPlayer.refillTurbo();
+                break;
+            case PickupType.Rocket:
+                console.log('refill rockets');
+                break;
+            case PickupType.Bullet:
+                console.log('refill bullets');
+                break;
+            case PickupType.Health:
+                console.log('refill health');
+                selectedPlayer.refillHealth();
+                break;
+            case PickupType.Special:
+                console.log('refill special');
+                break;
+        }
+        
         //selectedPlayer.
         //otherPlayer.tryDamage();
 
         pickup.destroy();
-        console.log('pickup detected');
+        
         
         //bullet.remove();
         /*         

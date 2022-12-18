@@ -667,6 +667,11 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.turboBar.updateHealth(this.turbo);
     }
 
+    refillHealth() {
+        this.health = Player.maxHealth;
+        this.healthBar.updateHealth(this.health);
+    }
+
     private createProjectile(x, y, projectileType) : Projectile {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
