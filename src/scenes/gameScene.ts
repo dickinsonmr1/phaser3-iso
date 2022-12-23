@@ -225,81 +225,7 @@ export default class GameScene extends Phaser.Scene
 
         
         this.layerPickups.forEachTile(tile => {
-            if(tile.index == Constants.pickupSpawnTile) {
-                const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-                const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
-               
-                var temp = Utility.cartesianToIsometric(new Point(x, y));
-
-                var topColor = 0;
-                var leftColor = 0;
-                var rightColor = 0;
-
-                var pickupType = PickupType.Rocket;
-                var rand = Utility.getRandomInt(5);
-                switch(rand) {
-                    case 0: // pink
-                        topColor = 0xFF6FCC;
-                        leftColor = 0xFF2DB6;
-                        rightColor = 0xFF5BC6;
-                        pickupType = PickupType.Rocket;
-                        break;
-                    case 1: // purple
-                        topColor = 0xA26FFF;
-                        leftColor = 0x762DFF;
-                        rightColor = 0x945BFF;
-                        pickupType = PickupType.Rocket;
-                        break;
-                    case 2: // green
-                        topColor = 0xB4FF6F;
-                        leftColor = 0x93FF2D;
-                        rightColor = 0xABFF5B;
-                        pickupType = PickupType.Health;
-                        break;
-                    case 3: // blue
-                        topColor = 0x6F84FF;
-                        leftColor = 0x2D4DFF;
-                        rightColor = 0x5B74FF;
-                        pickupType = PickupType.Turbo;
-                        break;
-                    case 4: // yellow
-                        topColor = 0xFFEA6F;
-                        leftColor = 0xFFEA6F;
-                        rightColor = 0xFFE65B;
-                        pickupType = PickupType.Turbo;
-                        break;
-                    default: // pink
-                        topColor = 0xFF6FCC;
-                        leftColor = 0xFF2DB6;
-                        rightColor = 0xFF5BC6;
-                        pickupType = PickupType.Rocket;
-                        break;
-                }
-
-
-                var pickup = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
-                
-                /*var pickup = new Pickup({
-                    scene: this,
-                    pickupType: pickupType,
-                    x: temp.x,
-                    y: temp.y,
-                    size: 20,
-                    height: 10,
-                    topColor: topColor,
-                    leftColor: leftColor,
-                    rightColor: rightColor
-                });*/
-                pickup.name = pickupType.toString();
-                
-                pickup.alpha = 0.7;
-                pickup.setOrigin(0.5, 0.5);
-                this.physics.world.enable(pickup);
-
-                this.pickups.push(pickup);
-
-                this.layerPickups.removeTileAt(tile.x, tile.y);
-            }
+            this.generatePickup(tile);            
         })        
 
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
@@ -326,6 +252,84 @@ export default class GameScene extends Phaser.Scene
         this.fireSecondaryWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.addGamePadListeners();        
+    }
+
+    generatePickup(tile) {
+        if(tile.index == Constants.pickupSpawnTile) {
+            const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
+            const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+           
+            var temp = Utility.cartesianToIsometric(new Point(x, y));
+
+            var topColor = 0;
+            var leftColor = 0;
+            var rightColor = 0;
+
+            var pickupType = PickupType.Rocket;
+            var rand = Utility.getRandomInt(5);
+            switch(rand) {
+                case 0: // pink
+                    topColor = 0xFF6FCC;
+                    leftColor = 0xFF2DB6;
+                    rightColor = 0xFF5BC6;
+                    pickupType = PickupType.Rocket;
+                    break;
+                case 1: // purple
+                    topColor = 0xA26FFF;
+                    leftColor = 0x762DFF;
+                    rightColor = 0x945BFF;
+                    pickupType = PickupType.Rocket;
+                    break;
+                case 2: // green
+                    topColor = 0xB4FF6F;
+                    leftColor = 0x93FF2D;
+                    rightColor = 0xABFF5B;
+                    pickupType = PickupType.Health;
+                    break;
+                case 3: // blue
+                    topColor = 0x6F84FF;
+                    leftColor = 0x2D4DFF;
+                    rightColor = 0x5B74FF;
+                    pickupType = PickupType.Turbo;
+                    break;
+                case 4: // yellow
+                    topColor = 0xFFEA6F;
+                    leftColor = 0xFFEA6F;
+                    rightColor = 0xFFE65B;
+                    pickupType = PickupType.Turbo;
+                    break;
+                default: // pink
+                    topColor = 0xFF6FCC;
+                    leftColor = 0xFF2DB6;
+                    rightColor = 0xFF5BC6;
+                    pickupType = PickupType.Rocket;
+                    break;
+            }
+
+
+            var pickup = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
+            
+            /*var pickup = new Pickup({
+                scene: this,
+                pickupType: pickupType,
+                x: temp.x,
+                y: temp.y,
+                size: 20,
+                height: 10,
+                topColor: topColor,
+                leftColor: leftColor,
+                rightColor: rightColor
+            });*/
+            pickup.name = pickupType.toString();
+            
+            pickup.alpha = 0.6;
+            pickup.setOrigin(0.5, 0.5);
+            this.physics.world.enable(pickup);
+
+            this.pickups.push(pickup);
+
+            this.layerPickups.removeTileAt(tile.x, tile.y);
+        }
     }
 
     addGamePadListeners() {
@@ -381,9 +385,7 @@ export default class GameScene extends Phaser.Scene
         scene.layerPickups.removeTileAt(tile.x, tile.y);
 
         return true;
-    }
-
-    
+    }  
 
     bulletTouchingEnemyHandler(enemy: any, bullet: any): void {       
 
@@ -414,7 +416,6 @@ export default class GameScene extends Phaser.Scene
         bullet.destroy();
         */
     }
-
     
     playerTouchingPickup(player: any, pickup: any): void {       
 
@@ -476,8 +477,6 @@ export default class GameScene extends Phaser.Scene
         bullet.destroy();
         */
     }
-
-
 
     update(time, delta) {
         //player.y -= 1;
@@ -585,22 +584,38 @@ export default class GameScene extends Phaser.Scene
         this.player3.update();
         this.player4.update();
 
-        if(this.pickupScaleTime > 30)
-            this.pickupScale += 0.006;
-        else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
-            this.pickupScale -= 0.006;
-        else if(this.pickupScaleTime == 0)
-            this.pickupScaleTime = 60;
-
-        this.pickupScaleTime--;
+        var pickupScale = this.updatePickupScaleTime()
 
         this.pickups.forEach(item => {
             let temp = <Phaser.GameObjects.IsoBox>(item);
             temp.setScale(this.pickupScale);
+            
+            let topColor = new Phaser.Display.Color(150, 0, 0);
+            let leftColor = new Phaser.Display.Color(150, 0, 0);
+            let rightColor = new Phaser.Display.Color(150, 0, 0);
+
+            if(this.pickupScaleTime > 30)
+                temp.alpha += 0.01;
+                //temp.y -= 0.1;
+            else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
+                temp.alpha -= 0.01;
+                //temp.y += 0.1;
+            
             //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
         });
 
         //this.light.x = this.player.x;
         //this.light.y = this.player.y;
+    }
+
+    updatePickupScaleTime(): void {
+        if(this.pickupScaleTime > 50)
+            this.pickupScale += 0.006;
+        else if(this.pickupScaleTime < 50 && this.pickupScaleTime > 0)
+            this.pickupScale -= 0.006;
+        else if(this.pickupScaleTime == 0)
+            this.pickupScaleTime = 100;
+
+        this.pickupScaleTime--;
     }
 }
