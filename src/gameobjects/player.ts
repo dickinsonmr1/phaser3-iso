@@ -135,7 +135,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            100, 12, HUDBarType.Health);
+            100, 26, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -415,7 +415,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.setOrigin(0.5, 0.5);
 
-        this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.5);
+        this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
         //this.turboOn = false;
 

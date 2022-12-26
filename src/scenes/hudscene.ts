@@ -1,3 +1,4 @@
+import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 
  
@@ -8,6 +9,8 @@ import { SceneController } from "./sceneController";
     infoText: Phaser.GameObjects.Text;
     infoTextAlpha: number;
     infoTextExpiryGameTime: number;
+
+    playerHUDOverlayComponent: PlayerHUDOverlayComponent[]
 
     private get InfoTextStartX(): number {return this.game.canvas.width / 2; }
     private get InfoTextStartY(): number {return this.game.canvas.height - this.game.canvas.height / 4; }   
@@ -74,6 +77,10 @@ import { SceneController } from "./sceneController";
         this.infoTextExpiryGameTime = this.game.getTime() + infoTextDurationInMs;
 
         this.infoText.setAlpha(this.infoTextAlpha);
+    }
+
+    updatePlayerPosition(): void {
+
     }
     
     update(): void {
