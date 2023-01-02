@@ -10,7 +10,7 @@ import { SceneController } from "./sceneController";
     infoTextAlpha: number;
     infoTextExpiryGameTime: number;
 
-    playerHUDOverlayComponent: PlayerHUDOverlayComponent[]
+    playerHUDOverlayComponents: PlayerHUDOverlayComponent[]
 
     private get InfoTextStartX(): number {return this.game.canvas.width / 2; }
     private get InfoTextStartY(): number {return this.game.canvas.height - this.game.canvas.height / 4; }   
@@ -67,6 +67,13 @@ import { SceneController } from "./sceneController";
             this.setInfoText(text);
         }, this);
 
+        ourGame.events.on('playerPositionUpdated', function(playerName, x, y) {
+            this.updatePlayerPosition(playerName, x, y);
+        }, this);
+
+        this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();
+        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, "Police", 100, 100));
+
         this.scene.setVisible(true);
         this.scene.bringToTop();
     }
@@ -79,8 +86,12 @@ import { SceneController } from "./sceneController";
         this.infoText.setAlpha(this.infoTextAlpha);
     }
 
-    updatePlayerPosition(): void {
+    updatePlayerPosition(name: string, x: number, y: number): void {
 
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null) {
+            selectedPlayerGroup.updateLocation(x, y);
+        }
     }
     
     update(): void {

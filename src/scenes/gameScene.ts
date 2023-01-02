@@ -580,6 +580,16 @@ export default class GameScene extends Phaser.Scene
         }
 
         this.player.update();
+
+        this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);
+
+        //var path = new Phaser.Curves.Path(400, 400).circleTo(5);
+        //this.player2.setPath(path);
+        
+        var temp = Utility.cartesianToIsometric(this.player.MapPosition);
+
+        this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
+
         this.player2.update();
         this.player3.update();
         this.player4.update();

@@ -135,7 +135,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            100, 26, HUDBarType.Health);
+            50, 13, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -456,6 +456,99 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.debugCoordinatesText.setVisible(false);
     }
 
+    calculateAimDirection(x: number, y: number): void {
+        var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+        this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
+        let angle = this.arctangent;
+
+        //       -1 PI     1 PI 
+        //   -0.5PI           0.5 PI
+        //            0  PI
+        if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N;
+            //this.anims.play(`${(this.animPrefix)}-N`, true);
+            //angle = 1;
+        }
+        else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NE;
+            //this.anims.play(`${(this.animPrefix)}-NE`, true);
+            //angle = 3 * Math.PI / 4
+        }
+        else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E;
+            //this.anims.play(`${(this.animPrefix)}-E`, true);
+            //angle = Math.PI / 2;
+        }
+        else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SE;
+            //this.anims.play(`${(this.animPrefix)}-SE`, true);
+            //angle = Math.PI / 4;
+        }
+        else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S;
+            //this.anims.play(`${(this.animPrefix)}-S`, true);
+            //angle = 0;
+        }
+        else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SW;
+            //this.anims.play(`${(this.animPrefix)}-SW`, true);
+            //angle = -Math.PI / 4;
+        }
+        else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W;
+            //this.anims.play(`${(this.animPrefix)}-W`, true);
+            //angle = -Math.PI / 2;
+        }
+        else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NW;
+            //this.anims.play(`${(this.animPrefix)}-NW`, true);
+            //angle = -3 * Math.PI / 4;
+        }       
+        
+        switch(this.playerDrawOrientation) {
+            case PlayerDrawOrientation.N:
+                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.getPlayerSpeed();                            
+                this.anims.play(`${(this.animPrefix)}-N`, true);
+                break;
+            case PlayerDrawOrientation.S:                
+                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.getPlayerSpeed(); 
+                this.anims.play(`${(this.animPrefix)}-S`, true);
+                break;
+            case PlayerDrawOrientation.E:
+                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.getPlayerSpeed();                                       
+                this.anims.play(`${(this.animPrefix)}-E`, true);
+                break;
+            case PlayerDrawOrientation.W:
+                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.getPlayerSpeed();                            
+                this.anims.play(`${(this.animPrefix)}-W`, true);
+                break;
+            case PlayerDrawOrientation.NE:
+                this.body.velocity.x = 0;
+                this.body.velocity.y = -1 * this.getPlayerSpeed();                              
+                this.anims.play(`${(this.animPrefix)}-NE`, true);
+                break;
+            case PlayerDrawOrientation.SE:                    
+                this.body.velocity.x = 1 * this.getPlayerSpeed();
+                this.body.velocity.y = 0;                
+                this.anims.play(`${(this.animPrefix)}-SE`, true);
+                break;
+            case PlayerDrawOrientation.NW:
+                this.body.velocity.x = -1 * this.getPlayerSpeed();
+                this.body.velocity.y = 0;                
+                this.anims.play(`${(this.animPrefix)}-NW`, true);   
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 1 * this.getPlayerSpeed();  
+                this.anims.play(`${(this.animPrefix)}-SW`, true);                
+                break;
+        }
+    }
+
     tryMoveWithKeyboard(direction: PlayerDrawOrientation) {
         this.playerDrawOrientation = direction;
 
@@ -505,8 +598,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryMoveWithGamepad(x: number, y: number) {
 
-        this.body.velocity.x = x * this.getPlayerSpeed();
-        this.body.velocity.y = y * this.getPlayerSpeed(); 
+        //this.body.velocity.x = x * this.getPlayerSpeed();
+        //this.body.velocity.y = y * this.getPlayerSpeed(); 
         
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
@@ -517,36 +610,93 @@ export class Player extends Phaser.GameObjects.Sprite {
         //            0  PI
         if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.N;
-            this.anims.play(`${(this.animPrefix)}-N`, true);
+            //this.anims.play(`${(this.animPrefix)}-N`, true);
+            //angle = 1;
         }
         else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NE;
-            this.anims.play(`${(this.animPrefix)}-NE`, true);
+            //this.anims.play(`${(this.animPrefix)}-NE`, true);
+            //angle = 3 * Math.PI / 4
         }
         else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.E;
-            this.anims.play(`${(this.animPrefix)}-E`, true);
+            //this.anims.play(`${(this.animPrefix)}-E`, true);
+            //angle = Math.PI / 2;
         }
         else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SE;
-            this.anims.play(`${(this.animPrefix)}-SE`, true);
+            //this.anims.play(`${(this.animPrefix)}-SE`, true);
+            //angle = Math.PI / 4;
         }
         else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.S;
-            this.anims.play(`${(this.animPrefix)}-S`, true);
+            //this.anims.play(`${(this.animPrefix)}-S`, true);
+            //angle = 0;
         }
         else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.SW;
-            this.anims.play(`${(this.animPrefix)}-SW`, true);
+            //this.anims.play(`${(this.animPrefix)}-SW`, true);
+            //angle = -Math.PI / 4;
         }
         else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.W;
-            this.anims.play(`${(this.animPrefix)}-W`, true);
+            //this.anims.play(`${(this.animPrefix)}-W`, true);
+            //angle = -Math.PI / 2;
         }
         else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
             this.playerDrawOrientation = PlayerDrawOrientation.NW;
-            this.anims.play(`${(this.animPrefix)}-NW`, true);
+            //this.anims.play(`${(this.animPrefix)}-NW`, true);
+            //angle = -3 * Math.PI / 4;
         }        
+        
+        switch(this.playerDrawOrientation) {
+            case PlayerDrawOrientation.N:
+                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.getPlayerSpeed();                            
+                this.anims.play(`${(this.animPrefix)}-N`, true);
+                break;
+            case PlayerDrawOrientation.S:                
+                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.getPlayerSpeed(); 
+                this.anims.play(`${(this.animPrefix)}-S`, true);
+                break;
+            case PlayerDrawOrientation.E:
+                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.getPlayerSpeed();                                       
+                this.anims.play(`${(this.animPrefix)}-E`, true);
+                break;
+            case PlayerDrawOrientation.W:
+                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.getPlayerSpeed();
+                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.getPlayerSpeed();                            
+                this.anims.play(`${(this.animPrefix)}-W`, true);
+                break;
+            case PlayerDrawOrientation.NE:
+                this.body.velocity.x = 0;
+                this.body.velocity.y = -1 * this.getPlayerSpeed();                              
+                this.anims.play(`${(this.animPrefix)}-NE`, true);
+                break;
+            case PlayerDrawOrientation.SE:                    
+                this.body.velocity.x = 1 * this.getPlayerSpeed();
+                this.body.velocity.y = 0;                
+                this.anims.play(`${(this.animPrefix)}-SE`, true);
+                break;
+            case PlayerDrawOrientation.NW:
+                this.body.velocity.x = -1 * this.getPlayerSpeed();
+                this.body.velocity.y = 0;                
+                this.anims.play(`${(this.animPrefix)}-NW`, true);   
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.body.velocity.x = 0;
+                this.body.velocity.y = 1 * this.getPlayerSpeed();  
+                this.anims.play(`${(this.animPrefix)}-SW`, true);                
+                break;
+        }
+
+        //var snappedAngleX = Math.cos(angle + Math.PI / 2);
+        //var snappedAngleY = Math.sin(angle + Math.PI / 2);
+
+        //this.body.velocity.x = snappedAngleX * this.getPlayerSpeed();
+        //this.body.velocity.y = snappedAngleY * this.getPlayerSpeed(); 
 
         //console.log(temp);
         /*
