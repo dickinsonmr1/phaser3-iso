@@ -58,9 +58,14 @@ import { SceneController } from "./sceneController";
             
         }, this);
 
-        ourGame.events.on('updatePlayerHealth', function (health) {
+        ourGame.events.on('updatePlayerHealth', function (playerName, health) {
             this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
+            this.updatePlayerHealth(playerName, health);
+        }, this);
 
+        ourGame.events.on('updatePlayerTurbo', function (playerName, turbo) {
+            //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
+            this.updatePlayerTurbo(playerName, turbo);
         }, this);
 
         ourGame.events.on('infoTextEmitted', function(text) {
@@ -91,6 +96,22 @@ import { SceneController } from "./sceneController";
         let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
         if(selectedPlayerGroup != null) {
             selectedPlayerGroup.updateLocation(x, y);
+        }
+    }
+
+    updatePlayerHealth(name: string, currentHealth: number): void {
+
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null) {
+            selectedPlayerGroup.updateHealth(currentHealth);
+        }
+    }
+    
+    updatePlayerTurbo(name: string, currentTurbo: number): void {
+
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null) {
+            selectedPlayerGroup.updateTurbo(currentTurbo);
         }
     }
     

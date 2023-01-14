@@ -680,6 +680,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                 
             this.turbo--;
             this.turboBar.updateHealth(this.turbo);
+            this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
         }        
     }
 
@@ -712,11 +713,13 @@ export class Player extends Phaser.GameObjects.Sprite {
     refillTurbo() {
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
+        this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
     }
 
     refillHealth() {
         this.health = Player.maxHealth;
         this.healthBar.updateHealth(this.health);
+        this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
     }
 
     private createProjectile(x, y, projectileType) : Projectile {
