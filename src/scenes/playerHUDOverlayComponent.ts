@@ -1,6 +1,8 @@
 
 import { HealthBar } from "../gameobjects/healthBar";
+import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";
+import { Player } from "../gameobjects/player";
 
 export class PlayerHUDOverlayComponent {
 
@@ -24,9 +26,13 @@ export class PlayerHUDOverlayComponent {
     private get IsoBoxTurboStartX(): number {return this.IsoBoxHealthStartX + 110; }
     private get IsoBoxShieldStartX(): number {return this.IsoBoxTurboStartX + 110; }
 
-    isoBoxHealth: Phaser.GameObjects.IsoBox;
-    isoBoxTurbo: Phaser.GameObjects.IsoBox;
-    isoBoxShield: Phaser.GameObjects.IsoBox;
+    isoBoxHealthBar: IsoBoxHealthBar;
+    isoBoxTurboBar: IsoBoxHealthBar;
+    isoBoxShieldBar: IsoBoxHealthBar;
+
+    //isoBoxHealth: Phaser.GameObjects.IsoBox;
+    //isoBoxTurbo: Phaser.GameObjects.IsoBox;
+    //isoBoxShield: Phaser.GameObjects.IsoBox;
 
     constructor(scene: HudScene, playerName: string, x: number, y: number) {
         this.scene = scene;
@@ -40,61 +46,15 @@ export class PlayerHUDOverlayComponent {
         });
         this.playerNameText.setOrigin(0.5, 0.5);
 
-        let rotation = 0;
+        this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
+        this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);
 
-        let topColor = 0xB4FF6F;
-        let leftColor = 0x93FF2D;
-        let rightColor = 0xABFF5B;
-
-        var isoBoxHealthOutline = this.scene.add.isobox(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, 100, 200);//, params.topColor, params.leftColor, params.rightColor);
-        isoBoxHealthOutline.alpha = 0.1;    
-        isoBoxHealthOutline.rotation = rotation;
-        isoBoxHealthOutline.depth = 0;
-        isoBoxHealthOutline.setOrigin(0.5, 1);
-        //isoBoxHealthOutline.setProjection(90);
-/*
-        var isoBoxHealthOutlineBlack = this.scene.add.isobox(100, 400, 80, 200, 0x000000, 0x000000, 0x000000);//, params.topColor, params.leftColor, params.rightColor);
-        isoBoxHealthOutlineBlack.alpha = 1.0;    
-        isoBoxHealthOutlineBlack.rotation = rotation;
-        isoBoxHealthOutlineBlack.depth = 1;
-        isoBoxHealthOutlineBlack.setOrigin(0.5, 1);
-        //isoBoxHealthOutline.setProjection(90);
-*/      
-        this.isoBoxHealth = this.scene.add.isobox(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, 90, 150, topColor, leftColor, rightColor);//, params.topColor, params.leftColor, params.rightColor);
-        this.isoBoxHealth.alpha = 0.7;    
-        this.isoBoxHealth.rotation = rotation;
-        this.isoBoxHealth.depth = 2;         
+        this.isoBoxTurboBar = new IsoBoxHealthBar(this.scene);
+        this.isoBoxTurboBar.init(this.scene, this.IsoBoxTurboStartX, this.IsoBoxHealthStartY, Player.maxTurbo, 100, 200, IsoHudBarType.Turbo);
          
-        var isoBoxTurboOutline = this.scene.add.isobox(this.IsoBoxTurboStartX, this.IsoBoxHealthStartY, 100, 200);//, params.topColor, params.leftColor, params.rightColor);
-        isoBoxTurboOutline.alpha = 0.1;  
-        isoBoxTurboOutline.rotation = rotation;
-        isoBoxTurboOutline.depth = 2;    
-
-        topColor = 0xFFEA6F;
-        leftColor = 0xFFEA6F;
-        rightColor = 0xFFE65B;
-        
-        this.isoBoxTurbo = this.scene.add.isobox(this.IsoBoxTurboStartX, this.IsoBoxHealthStartY, 90, 25, topColor, leftColor, rightColor);//, params.topColor, params.leftColor, params.rightColor);
-        this.isoBoxTurbo.alpha = 0.7;    
-        this.isoBoxTurbo.rotation = rotation;  
-        this.isoBoxTurbo.depth = 1;
-        //isoBoxTurbo.rotation = Math.PI / 2;  
-        
-        var isoBoxShieldOutline = this.scene.add.isobox(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 200);//, params.topColor, params.leftColor, params.rightColor);
-        isoBoxShieldOutline.alpha = 0.1;  
-        isoBoxShieldOutline.rotation = rotation;
-        isoBoxShieldOutline.depth = 2;    
-        
-        topColor = 0x6F84FF;
-        leftColor = 0x2D4DFF;
-        rightColor = 0x5B74FF;
-
-        this.isoBoxShield = this.scene.add.isobox(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 50, topColor, leftColor, rightColor);//, params.topColor, params.leftColor, params.rightColor);
-        this.isoBoxShield.alpha = 0.7;    
-        this.isoBoxShield.rotation = rotation;  
-        this.isoBoxShield.depth = 1;
-        //isoBoxTurbo.rotation = Math.PI / 2;  
-
+        this.isoBoxShieldBar = new IsoBoxHealthBar(this.scene);
+        this.isoBoxShieldBar.init(this.scene, this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, Player.maxTurbo, 100, 200, IsoHudBarType.Shield);
+              
         //var isotriangle = this.scene.add.isotriangle(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 100, true);//, topColor, leftColor, rightColor);
         //isotriangle.showLeft = false;
         //isotriangle.showRight = false;
@@ -107,10 +67,10 @@ export class PlayerHUDOverlayComponent {
     }
 
     updateHealth(currentHealth: number) {
-        this.isoBoxHealth.height = currentHealth;
+        this.isoBoxHealthBar.updateValue(currentHealth);
     }
 
     updateTurbo(currentTurbo: number) {
-        this.isoBoxTurbo.height = currentTurbo;
+        this.isoBoxTurboBar.updateValue(currentTurbo);
     }
 }
