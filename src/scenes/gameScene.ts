@@ -88,6 +88,7 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
+        this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
@@ -266,7 +267,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(5);
+            var rand = Utility.getRandomInt(6);
             switch(rand) {
                 case 0: // pink
                     topColor = 0xFF6FCC;
@@ -297,6 +298,12 @@ export default class GameScene extends Phaser.Scene
                     leftColor = 0xFFEA6F;
                     rightColor = 0xFFE65B;
                     pickupType = PickupType.Turbo;
+                    break;
+                case 5: // red
+                    topColor = 0xFF726F;
+                    leftColor = 0xFF302D;
+                    rightColor = 0xFF5D5B;
+                    pickupType = PickupType.Rocket;
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;

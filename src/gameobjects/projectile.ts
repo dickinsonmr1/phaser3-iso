@@ -68,10 +68,10 @@ export class Projectile extends Phaser.GameObjects.Sprite {
             this.spotlight = this.scene.lights
                 .addLight(this.x, this.y)
                 .setRadius(100)
-                .setColor(0xff00ff)
+                .setColor(0xFF00FF)
                 .setIntensity(1.5);        
 
-            var particles = this.scene.add.particles('explosion');
+            var particles = this.scene.add.particles('smoke');
             particles.setDepth(4);//Constants.depthParticles);
 
             this.particleEmitter = particles.createEmitter({
@@ -83,13 +83,13 @@ export class Projectile extends Phaser.GameObjects.Sprite {
                 accelerationY: params.velocityY,
                 //rotate: params.angle,
                 //gravityY: 300,
-                tint: 0xff00ff,
+                tint: 0x808080,
                 scaleX: { start: 0.20, end: 0.01 },
                 scaleY: { start: 0.20, end: 0.01 },
                 quantity: 1,
                 blendMode: 'ADD',
                 frequency: 25,
-                alpha: {start: 0.8, end: 0.0},
+                alpha: {start: 1.0, end: 0.5},
                 maxParticles: 25
                 //active: false
             });

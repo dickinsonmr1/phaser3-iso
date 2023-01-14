@@ -30,36 +30,45 @@ export class IsoBoxHealthBar extends Phaser.GameObjects.Group {
 
         this.valueMaxHeightInPixels = boxHeightMaxInPixels;
 
+        var rotation = 0;
+
         this.isoBoxOutline = this.scene.add.isobox(originX, originY, boxSize, boxHeightMaxInPixels);//, params.topColor, params.leftColor, params.rightColor);
         this.isoBoxOutline.alpha = 0.1;    
         this.isoBoxOutline.depth = 0;
         this.isoBoxOutline.setOrigin(0.5, 1);
+        this.isoBoxOutline.rotation = rotation;
+        //this.isoBoxOutline.showTop = false;
 
         let topColor = 0;
         let leftColor = 0;
         let rightColor = 0;
+        let alpha = 1;
 
         switch(isohudBarType){
             case IsoHudBarType.Health:
-                topColor = 0xB4FF6F;
-                leftColor = 0x93FF2D;
-                rightColor = 0xABFF5B;
+                topColor = 0xFF726F;
+                leftColor = 0xFF302D;
+                rightColor = 0xFF5D5B;
+                alpha = 0.9;
                 break;
             case IsoHudBarType.Shield:
                 topColor = 0x6F84FF;
                 leftColor = 0x2D4DFF;
                 rightColor = 0x5B74FF;
+                alpha = 0.5;
                 break;
             case IsoHudBarType.Turbo:
                 topColor = 0xFFEA6F;
                 leftColor = 0xFFEA6F;
                 rightColor = 0xFFE65B;
+                alpha = 0.9;
                 break;
         }
 
         this.isoBox = this.scene.add.isobox(originX, originY, boxSize - 10, boxHeightMaxInPixels, topColor, leftColor, rightColor);//, params.topColor, params.leftColor, params.rightColor);
-        this.isoBox.alpha = 0.7;    
-        //this.isoBox.rotation = rotation;
+        this.isoBox.alpha = alpha;    
+        this.isoBox.rotation = rotation;
+        //this.isoBox.showTop = false;
         this.isoBox.depth = 2;       
     }
 

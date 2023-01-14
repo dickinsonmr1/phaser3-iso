@@ -44,6 +44,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
     private health: number = Player.maxHealth;
     private turbo: number = Player.maxTurbo;
+    private shield: number = Player.maxShield / 2;
 
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -40;}
