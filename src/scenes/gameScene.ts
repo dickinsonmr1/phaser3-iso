@@ -233,6 +233,8 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
 
+        this.physics.add.overlap(this.player, this.player2.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+
         this.physics.add.overlap(this.player, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
         //this.physics.add.collider(this.player, this.player2);
@@ -590,12 +592,23 @@ export default class GameScene extends Phaser.Scene
 
         this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);
 
-        //var path = new Phaser.Curves.Path(400, 400).circleTo(5);
+        var path = new Phaser.Curves.Path(400, 400).circleTo(5);
+
+        //var follower = this.add.foll
         //this.player2.setPath(path);
+        //this.player2.body.gameObject.s
         
         var temp = Utility.cartesianToIsometric(this.player.MapPosition);
 
-        this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
+        //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
+
+        var rand = Utility.getRandomInt(30);
+        if(rand == 0)
+            this.player2.tryFirePrimaryWeapon();
+        if(rand == 1)
+            this.player2.tryFireSecondaryWeapon();
+
+        this.player2.tryMoveToLocation(this.player.x, this.player.y);
 
         this.player2.update();
         this.player3.update();
