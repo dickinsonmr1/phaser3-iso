@@ -149,6 +149,7 @@ export default class GameScene extends Phaser.Scene
 
         this.player = new Player({
             scene: this,
+            isCpuPlayer: false,
             mapX: 200,
             mapY: 200,
             //mapX: 10,
@@ -164,6 +165,7 @@ export default class GameScene extends Phaser.Scene
        
         this.player2 = new Player({
             scene: this,
+            isCpuPlayer: true,
             mapX: 500,
             mapY: 500,
             key: "utilityCars",
@@ -177,6 +179,7 @@ export default class GameScene extends Phaser.Scene
     
         this.player3 = new Player({
             scene: this,
+            isCpuPlayer: false,
             mapX: 100,
             mapY: 400,
             key: "utilityCars",
@@ -190,6 +193,7 @@ export default class GameScene extends Phaser.Scene
 
         this.player4 = new Player({
             scene: this,
+            isCpuPlayer: false,
             mapX: 300,
             mapY: 50,
             key: "utilityCars",
@@ -602,13 +606,7 @@ export default class GameScene extends Phaser.Scene
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
 
-        var rand = Utility.getRandomInt(30);
-        if(rand == 0)
-            this.player2.tryFirePrimaryWeapon();
-        if(rand == 1)
-            this.player2.tryFireSecondaryWeapon();
-
-        this.player2.tryMoveToLocation(this.player.x, this.player.y);
+        this.player2.updateCpuBehavior(this.player.x, this.player.y);
 
         this.player2.update();
         this.player3.update();

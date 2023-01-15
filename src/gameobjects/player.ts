@@ -34,6 +34,14 @@ export enum VehicleType {
     Ambulance
 }
 
+enum CpuPlayerPattern {
+    Follow,
+    FollowAndAttack,
+    Stop,
+    StopAndAttack,
+    Flee
+}
+
 export class Player extends Phaser.GameObjects.Sprite {
     getPlayerSpeed(): number {
         if(this.turboOn) {
@@ -103,6 +111,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     public playerId: string;
 
+    private cpuPlayerPattern: CpuPlayerPattern = CpuPlayerPattern.Follow;
+
     playerDrawOrientation: PlayerDrawOrientation;
     getPlayerIsometricOrientation(): PlayerCartesianOrientation {
         switch(this.playerDrawOrientation)
@@ -142,8 +152,12 @@ export class Player extends Phaser.GameObjects.Sprite {
     public vehicleType: VehicleType;
     private animPrefix: string;
 
+    private isCpuPlayer: boolean;
+
     constructor(params) {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
+
+        this.isCpuPlayer = params.isCpuPlayer;
 
         var utilities = new Utility();
         //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
@@ -425,8 +439,55 @@ export class Player extends Phaser.GameObjects.Sprite {
         }
     }
 
-    update(...args: any[]): void {
+    updateCpuBehavior(playerX: number, playerY: number): void {
+        if(this.isCpuPlayer) {
+         
+            var changeBehaviorRand = Utility.getRandomInt(500);
+                if(changeBehaviorRand == 0)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Flee;
+                if(changeBehaviorRand == 1)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Follow;
+                if(changeBehaviorRand == 2)
+                    this.cpuPlayerPattern = CpuPlayerPattern.FollowAndAttack;
+                if(changeBehaviorRand == 3)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+                if(changeBehaviorRand == 4)
+                    this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
 
+            // movement
+            switch(this.cpuPlayerPattern){
+                case CpuPlayerPattern.Flee:
+                    this.tryStopMove(); // TODO: try move AWAY from location
+                    break;
+                case CpuPlayerPattern.FollowAndAttack:
+                    this.tryMoveToLocation(playerX, playerY);
+                    break;
+                case CpuPlayerPattern.Follow:
+                    this.tryMoveToLocation(playerX, playerY);
+                    break;
+                case CpuPlayerPattern.StopAndAttack:
+                    this.tryStopMove();
+                    this.tryAimAtLocation(playerX, playerY);
+                    break;
+                case CpuPlayerPattern.Stop:
+                    this.tryStopMove();
+                    break;
+                default:
+                    break;
+            }       
+            
+            // weapon behavior
+            if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
+                || this.cpuPlayerPattern == CpuPlayerPattern.StopAndAttack) {
+                    var weaponRand = Utility.getRandomInt(30);
+                    if(weaponRand == 0) this.tryFirePrimaryWeapon();
+                    if(weaponRand == 1) this.tryFireSecondaryWeapon();
+            }
+        }
+    }
+
+    update(...args: any[]): void {
+    
         this.MapPosition.x += this.body.velocity.x;
         this.MapPosition.y += this.body.velocity.y;
 
@@ -699,6 +760,38 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
+
+        switch(this.playerDrawOrientation) {
+            case PlayerDrawOrientation.N:                    
+                this.anims.play(`${(this.animPrefix)}-N`, true);
+                break;
+            case PlayerDrawOrientation.S:                
+                this.anims.play(`${(this.animPrefix)}-S`, true);
+                break;
+            case PlayerDrawOrientation.E:                                    
+                this.anims.play(`${(this.animPrefix)}-E`, true);
+                break;
+            case PlayerDrawOrientation.W:                       
+                this.anims.play(`${(this.animPrefix)}-W`, true);
+                break;
+            case PlayerDrawOrientation.NE:                          
+                this.anims.play(`${(this.animPrefix)}-NE`, true);
+                break;
+            case PlayerDrawOrientation.SE:                    
+                this.anims.play(`${(this.animPrefix)}-SE`, true);
+                break;
+            case PlayerDrawOrientation.NW:
+                this.anims.play(`${(this.animPrefix)}-NW`, true);   
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.anims.play(`${(this.animPrefix)}-SW`, true);                
+                break;
+        }    
+    }
+
+    tryAimAtLocation(destinationX: number, destinationY: number) {
+
+        this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
         switch(this.playerDrawOrientation) {
             case PlayerDrawOrientation.N:                    
