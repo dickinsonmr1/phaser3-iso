@@ -35,12 +35,12 @@ export enum VehicleType {
 }
 
 export class Player extends Phaser.GameObjects.Sprite {
-    getPlayerSpeed() {
+    getPlayerSpeed(): number {
         if(this.turboOn) {
-            return Player.maxTurboSpeed;
+            return this.maxTurboSpeed();
         }
         else 
-            return Player.maxSpeed;
+            return this.maxSpeed();
     }
     private health: number = Player.maxHealth;
     private turbo: number = Player.maxTurbo;
@@ -53,9 +53,35 @@ export class Player extends Phaser.GameObjects.Sprite {
     public static get maxShield(): number { return 4; }
     public static get maxTurbo(): number { return 100; }
 
-    public static get maxSpeed(): number { return 3; }
-    public static get maxTurboSpeed(): number { return 5; }
+    private maxSpeed(): number {
 
+        switch(this.vehicleType) {
+            case VehicleType.Police:
+                return 3.5;
+            case VehicleType.Ambulance:
+                return 2.5;
+            case VehicleType.TrashMan:
+                return 2;
+            case VehicleType.Taxi:                
+                return 3;
+            default:
+                return 1;
+        }
+    }
+    private maxTurboSpeed(): number { 
+        switch(this.vehicleType) {
+            case VehicleType.Police:
+                return 3.5 * 1.5;
+            case VehicleType.Ambulance:
+                return 2.5 * 1.5;
+            case VehicleType.TrashMan:
+                return 2 * 1.5;
+            case VehicleType.Taxi:
+                return 3 * 1.5;
+            default:
+                return 1;                
+        }
+    }
 
     private get GetTextOffsetY(): number { return -100; }
 
@@ -710,6 +736,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     tryDamage(): void {
         this.health--;
         this.healthBar.updateHealth(this.health);
+        this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
 
         this.particleEmitter.explode(10, this.x, this.y);
         /*
