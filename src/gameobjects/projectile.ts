@@ -10,7 +10,8 @@ import {v4 as uuidv4} from 'uuid';
 */
 
 export enum ProjectileType {
-    Rocket,
+    HomingRocket,
+    FireRocket,
     Bullet
 }
 
@@ -63,12 +64,23 @@ export class Projectile extends Phaser.GameObjects.Sprite {
         
         
 
-        if(this.projectileType == ProjectileType.Rocket) {
+        if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
             // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
+
+            var rocketColor = 0xFFFFFF;
+            switch(this.projectileType) {
+                case ProjectileType.HomingRocket:
+                    rocketColor = 0xFF00FF;
+                    break;
+                case ProjectileType.FireRocket:
+                    rocketColor = 0x808080;
+                    break;
+            }
+
             this.spotlight = this.scene.lights
                 .addLight(this.x, this.y)
                 .setRadius(100)
-                .setColor(0xFF00FF)
+                .setColor(rocketColor)
                 .setIntensity(1.5);        
 
             var particles = this.scene.add.particles('smoke');
@@ -83,7 +95,7 @@ export class Projectile extends Phaser.GameObjects.Sprite {
                 accelerationY: params.velocityY,
                 //rotate: params.angle,
                 //gravityY: 300,
-                tint: 0x808080,
+                tint: rocketColor, // gray: 808080
                 scaleX: { start: 0.20, end: 0.01 },
                 scaleY: { start: 0.20, end: 0.01 },
                 quantity: 1,
@@ -132,7 +144,7 @@ export class Projectile extends Phaser.GameObjects.Sprite {
             this.x = isoPosition.x;
             this.y = isoPosition.y;
 
-            if(this.projectileType == ProjectileType.Rocket) {
+            if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
                 this.spotlight.setPosition(this.x, this.y);
                 this.particleEmitter.setPosition(this.x, this.y);
             }
@@ -159,7 +171,7 @@ export class Projectile extends Phaser.GameObjects.Sprite {
     }
 
     remove() {
-        if(this.projectileType == ProjectileType.Rocket) {
+        if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
             this.scene.lights.removeLight(this.spotlight);
             this.particleEmitter.stop();
         }

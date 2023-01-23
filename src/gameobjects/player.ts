@@ -234,7 +234,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.debugCoordinatesText = text;
             this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
             this.debugCoordinatesText.setOrigin(0, 0.5);
-            this.debugCoordinatesText.setFontSize(16);
+            this.debugCoordinatesText.setFontSize(12);
             this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
         }
         
@@ -457,7 +457,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             // movement
             switch(this.cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
-                    this.tryStopMove(); // TODO: try move AWAY from location
+                    this.tryMoveWithKeyboard(PlayerDrawOrientation.E); // TODO: try move AWAY from location
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
                     this.tryMoveToLocation(playerX, playerY);
@@ -531,15 +531,16 @@ export class Player extends Phaser.GameObjects.Sprite {
     alignDebugText(x: number, y: number) {
         var text = this.debugCoordinatesText;
 
-        text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)})
-                    \nIso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
+        text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)}) 
+                    Iso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
                     \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
-                    \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI`)
+                    \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI
+                    \n Behavior: ${this.cpuPlayerPattern.toString()}`)
 
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
-        text.setOrigin(0, 0.5);
+        text.setOrigin(0, 0);
     }
 
     showDebugText() {
@@ -596,7 +597,6 @@ export class Player extends Phaser.GameObjects.Sprite {
         //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(deltaX, deltaY);
 
-
         //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         //this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
         let angle = this.arctangent;
@@ -632,8 +632,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.calculateAimDirection(this.playerDrawOrientation);
     }
-
-
+    
     calculateAimDirection(playerDrawOrientation: PlayerDrawOrientation): void{        
         switch(playerDrawOrientation) {
             case PlayerDrawOrientation.N:
@@ -874,7 +873,12 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            this.createProjectile(null, null, ProjectileType.Rocket);//this.playerOrientation);
+            var changeBehaviorRand = Utility.getRandomInt(2);
+            if(changeBehaviorRand == 0)
+                this.createProjectile(null, null, ProjectileType.HomingRocket);//this.playerOrientation);
+            else
+                this.createProjectile(null, null, ProjectileType.FireRocket);//this.playerOrientation);
+
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
@@ -911,7 +915,12 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            this.createProjectile(this.aimX, this.aimY, ProjectileType.Rocket);//this.playerOrientation);
+            var changeBehaviorRand = Utility.getRandomInt(2);
+            if(changeBehaviorRand == 0)
+                this.createProjectile(null, null, ProjectileType.HomingRocket);//this.playerOrientation);
+            else
+                this.createProjectile(null, null, ProjectileType.FireRocket);//this.playerOrientation);
+                                
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
@@ -939,7 +948,13 @@ export class Player extends Phaser.GameObjects.Sprite {
         var weaponImageKey = "bullet";
 
         switch(projectileType) {
-            case ProjectileType.Rocket:
+            case ProjectileType.HomingRocket:
+                bulletVelocity = 7;
+                weaponImageKey = "rocket";
+                scaleX = 0.5;
+                scaleY = 0.5;
+                break;
+            case ProjectileType.FireRocket:
                 bulletVelocity = 7;
                 weaponImageKey = "rocket";
                 scaleX = 0.5;
