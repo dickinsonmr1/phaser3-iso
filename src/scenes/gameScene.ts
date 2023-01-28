@@ -14,11 +14,12 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
-    public showDebug: boolean = true;
+    public showDebug: boolean = false;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
     zoomOutKey: Phaser.Input.Keyboard.Key;
+    toggleDebugKey: Phaser.Input.Keyboard.Key;
 
     moveUpKey: Phaser.Input.Keyboard.Key;
     moveDownKey: Phaser.Input.Keyboard.Key;
@@ -179,7 +180,7 @@ export default class GameScene extends Phaser.Scene
     
         this.player3 = new Player({
             scene: this,
-            isCpuPlayer: false,
+            isCpuPlayer: true,
             mapX: 100,
             mapY: 400,
             key: "utilityCars",
@@ -193,7 +194,7 @@ export default class GameScene extends Phaser.Scene
 
         this.player4 = new Player({
             scene: this,
-            isCpuPlayer: false,
+            isCpuPlayer: true,
             mapX: 300,
             mapY: 50,
             key: "utilityCars",
@@ -238,8 +239,13 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
 
         this.physics.add.overlap(this.player, this.player2.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+        this.physics.add.overlap(this.player, this.player3.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+        this.physics.add.overlap(this.player, this.player4.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
 
         this.physics.add.overlap(this.player, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        this.physics.add.overlap(this.player2, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        this.physics.add.overlap(this.player3, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        this.physics.add.overlap(this.player4, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
         //this.physics.add.collider(this.player, this.player2);
         //this.physics.add.collider(this.player, this.player3);
@@ -249,6 +255,7 @@ export default class GameScene extends Phaser.Scene
 
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.toggleDebugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
 
         this.moveUpKey = cursors.up;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.moveDownKey = cursors.down; //this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -438,25 +445,25 @@ export default class GameScene extends Phaser.Scene
         switch(pickupNumber){
             case PickupType.Turbo:
                 console.log('refill turbo');
-                this.sceneController.hudScene.setInfoText("Turbo refilled", 2000);
+                this.sceneController.hudScene.setInfoText("Turbo refilled - " + selectedPlayer.playerId, 2000);
                 selectedPlayer.refillTurbo();
                 break;
             case PickupType.Rocket:
                 console.log('refill rockets');
-                this.sceneController.hudScene.setInfoText("Rockets acquired", 2000);
+                this.sceneController.hudScene.setInfoText("Rockets acquired - " + selectedPlayer.playerId, 2000);
                 break;
             case PickupType.Bullet:
                 console.log('refill bullets');
-                this.sceneController.hudScene.setInfoText("Bullets acquired", 2000);
+                this.sceneController.hudScene.setInfoText("Bullets acquired - " + selectedPlayer.playerId, 2000);
                 break;
             case PickupType.Health:
                 console.log('refill health');
-                this.sceneController.hudScene.setInfoText("Health restored", 2000);
+                this.sceneController.hudScene.setInfoText("Health restored - " + selectedPlayer.playerId, 2000);
                 selectedPlayer.refillHealth();
                 break;
             case PickupType.Special:
                 console.log('refill special');
-                this.sceneController.hudScene.setInfoText("Special restored", 2000);
+                this.sceneController.hudScene.setInfoText("Special restored - " + selectedPlayer.playerId, 2000);
                 break;
         }
         
@@ -551,6 +558,22 @@ export default class GameScene extends Phaser.Scene
 
             if(pad.R1)
                 this.cameras.main.zoom += 0.01;
+
+            if(pad.Y) {
+                this.showDebug = !this.showDebug;
+                if(this.showDebug) {
+                    this.player.showDebugText();
+                    this.player2.showDebugText();
+                    this.player3.showDebugText();
+                    this.player4.showDebugText();
+                }
+                if(!this.showDebug) {
+                    this.player.hideDebugText();
+                    this.player2.hideDebugText();
+                    this.player3.hideDebugText();
+                    this.player4.hideDebugText();
+                }
+            }
         }
         if(pad == null) {
 
@@ -607,9 +630,12 @@ export default class GameScene extends Phaser.Scene
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
 
         this.player2.updateCpuBehavior(this.player.x, this.player.y);
-
         this.player2.update();
+
+        this.player3.updateCpuBehavior(this.player.x, this.player.y);
         this.player3.update();
+
+        this.player4.updateCpuBehavior(this.player.x, this.player.y);
         this.player4.update();
 
         var pickupScale = this.updatePickupScaleTime()

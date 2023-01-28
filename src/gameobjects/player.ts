@@ -229,14 +229,17 @@ export class Player extends Phaser.GameObjects.Sprite {
         //playerNameText.setFontSize(24); 
         
         let gameScene = <GameScene>this.scene;        
-        if(gameScene.showDebug) {
-
+        
             this.debugCoordinatesText = text;
             this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
             this.debugCoordinatesText.setOrigin(0, 0.5);
             this.debugCoordinatesText.setFontSize(12);
             this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
+            
+        if(!gameScene.showDebug) {
+            this.hideDebugText();
         }
+
         
         this.bullets = this.scene.physics.add.group({
             allowGravity: false
@@ -441,7 +444,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     updateCpuBehavior(playerX: number, playerY: number): void {
         if(this.isCpuPlayer) {
-         
+        
             var changeBehaviorRand = Utility.getRandomInt(500);
                 if(changeBehaviorRand == 0)
                     this.cpuPlayerPattern = CpuPlayerPattern.Flee;
@@ -453,6 +456,25 @@ export class Player extends Phaser.GameObjects.Sprite {
                     this.cpuPlayerPattern = CpuPlayerPattern.Stop;
                 if(changeBehaviorRand == 4)
                     this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
+            
+            var turboRand = Utility.getRandomInt(25);
+                if(turboRand == 0 &&
+                    (this.cpuPlayerPattern == CpuPlayerPattern.Flee
+                    || this.cpuPlayerPattern == CpuPlayerPattern.Follow
+                    || this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack)) {
+                        this.tryTurboBoostOn();
+                    }
+                        
+            // distance behavior
+            if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
+                && Phaser.Math.Distance.Between(playerX, playerY, this.x, this.y) < 100) {
+                this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
+            }   
+
+            if(this.cpuPlayerPattern == CpuPlayerPattern.Follow
+                && Phaser.Math.Distance.Between(playerX, playerY, this.x, this.y) < 100) {
+                this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+            }
 
             // movement
             switch(this.cpuPlayerPattern){
