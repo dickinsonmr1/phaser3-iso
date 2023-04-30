@@ -29,5 +29,5 @@ export class Constants {
     // left 14
     // right 15
 
-    public static get pickupSpawnTile(): number { return 217; }
+    public static get pickupSpawnTile(): number { return 31; }
 }

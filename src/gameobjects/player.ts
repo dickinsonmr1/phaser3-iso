@@ -112,6 +112,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     public playerId: string;
 
     private cpuPlayerPattern: CpuPlayerPattern = CpuPlayerPattern.Follow;
+    
+    private cpuFleeDirection: PlayerDrawOrientation = PlayerDrawOrientation.E;
+
 
     playerDrawOrientation: PlayerDrawOrientation;
     getPlayerIsometricOrientation(): PlayerCartesianOrientation {
@@ -235,7 +238,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.debugCoordinatesText.setOrigin(0, 0.5);
             this.debugCoordinatesText.setFontSize(12);
             this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
-            
+
         if(!gameScene.showDebug) {
             this.hideDebugText();
         }
@@ -446,8 +449,11 @@ export class Player extends Phaser.GameObjects.Sprite {
         if(this.isCpuPlayer) {
         
             var changeBehaviorRand = Utility.getRandomInt(500);
-                if(changeBehaviorRand == 0)
+                if(changeBehaviorRand == 0) {
                     this.cpuPlayerPattern = CpuPlayerPattern.Flee;
+
+                    this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(8));
+                }
                 if(changeBehaviorRand == 1)
                     this.cpuPlayerPattern = CpuPlayerPattern.Follow;
                 if(changeBehaviorRand == 2)
@@ -479,7 +485,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             // movement
             switch(this.cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
-                    this.tryMoveWithKeyboard(PlayerDrawOrientation.E); // TODO: try move AWAY from location
+                    this.tryMoveWithKeyboard(this.cpuFleeDirection); // TODO: try move AWAY from location
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
                     this.tryMoveToLocation(playerX, playerY);

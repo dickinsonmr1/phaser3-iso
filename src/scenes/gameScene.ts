@@ -81,11 +81,15 @@ export default class GameScene extends Phaser.Scene
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
 
         // tiles
-        this.load.image('tiles', './assets/iso-64x64-outside.png');
-        this.load.image('tiles2', './assets/iso-64x64-building.png');
+        //this.load.image('tiles', './assets/iso-64x64-outside.png');
+        //this.load.image('tiles2', './assets/iso-64x64-building.png');
+        this.load.image('groundTiles', './assets/Overworld - Terrain 1 - Flat 128x64.png');
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
-        this.load.tilemapTiledJSON('map', './assets/isoCarCombat.json');
+        this.load.image('roadTiles', './assets/Road_Toon_01-128x64.png');        
+        this.load.image('outlineTile', './assets/Grid Type A - 128x64.png');   
+
+        this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
@@ -102,15 +106,22 @@ export default class GameScene extends Phaser.Scene
 
         console.log(map);
 
-        var tileset1 = map.addTilesetImage('iso-64x64-outside', 'tiles');
-        var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2');
-        var tilesetPickups = map.addTilesetImage('Crates - Metal 64x64', 'crateTilesMetal');
+        //var tileset1 = map.addTilesetImage('iso-64x64-outside', 'tiles');
+        //v
+        //var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2')
+
+        var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles')
+        var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles')
+        var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
-        this.layer1 = map.createLayer('Tile Layer 1', [ tileset1, tileset2 ])
+        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround ])
+            .setDisplayOrigin(0.5, 0.5)              
+            .setPipeline('Light2D');
+        this.layer2 = map.createLayer('RoadsLayer', [ tilesetRoads ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D');
-        this.layerPickups = map.createLayer('Pickups', [ tileset1, tileset2, tilesetPickups ])
+        this.layerPickups = map.createLayer('PickupsLayer', [ tilesetPickups ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
