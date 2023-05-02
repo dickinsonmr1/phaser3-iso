@@ -84,6 +84,7 @@ export default class GameScene extends Phaser.Scene
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
         //this.load.image('tiles2', './assets/iso-64x64-building.png');
         this.load.image('groundTiles', './assets/Overworld - Terrain 1 - Flat 128x64.png');
+        this.load.image('waterTiles', './assets/Overworld - Water - Flat 128x64.png');
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
         this.load.image('roadTiles', './assets/Road_Toon_01-128x64.png');        
@@ -110,17 +111,25 @@ export default class GameScene extends Phaser.Scene
         //v
         //var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2')
 
-        var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles')
-        var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles')
+        var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles');      
+        var tilesetWater = map.addTilesetImage('Overworld - Water - Flat 128x64', 'waterTiles');
+        var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles');
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
-        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround ])
+        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
             .setDisplayOrigin(0.5, 0.5)              
             .setPipeline('Light2D');
-        this.layer2 = map.createLayer('RoadsLayer', [ tilesetRoads ])
+
+        this.layer2 = map.createLayer('WaterLayer', [ tilesetWater ])
+            .setDisplayOrigin(0.5, 0.5)    
+            .setPipeline('Light2D')
+            .setAlpha(0.8);
+                        
+        this.layer3 = map.createLayer('RoadsLayer', [ tilesetRoads ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D');
+
         this.layerPickups = map.createLayer('PickupsLayer', [ tilesetPickups ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
