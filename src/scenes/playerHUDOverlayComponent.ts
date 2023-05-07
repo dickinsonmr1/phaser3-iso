@@ -79,13 +79,13 @@ export class PlayerHUDOverlayComponent {
         this.isoBoxTurboBar = new IsoBoxHealthBar(this.scene);
         this.isoBoxTurboBar.init(this.scene, this.IsoBoxTurboStartX, this.IsoBoxHealthStartY, Player.maxTurbo, 50, 200, IsoHudBarType.Turbo);
          
-        //this.isoBoxShieldBar = new IsoBoxHealthBar(this.scene);
-        //this.isoBoxShieldBar.init(this.scene, this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, Player.maxShield, 150, 200, IsoHudBarType.Shield);
+        this.isoBoxShieldBar = new IsoBoxHealthBar(this.scene);
+        this.isoBoxShieldBar.init(this.scene, this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, Player.maxShield, 150, 200, IsoHudBarType.Shield);
               
-        //var isotriangle = this.scene.add.isotriangle(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 100, true);//, topColor, leftColor, rightColor);
-        //isotriangle.showLeft = false;
-        //isotriangle.showRight = false;
-        //isotriangle.showTop = true;
+        var isotriangle = this.scene.add.isotriangle(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 100, true);//, topColor, leftColor, rightColor);
+        isotriangle.showLeft = false;
+        isotriangle.showRight = false;
+        isotriangle.showTop = true;
     }
 
     updateLocation(x: number, y: number) {

@@ -14,7 +14,7 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
-    public showDebug: boolean = false;
+    public showDebug: boolean = true;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -45,6 +45,8 @@ export default class GameScene extends Phaser.Scene
     
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
+
+    debugGraphics: Phaser.GameObjects.Graphics;
 
     constructor (sceneController: SceneController)
     {
@@ -89,6 +91,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
         this.load.image('roadTiles', './assets/Road_Toon_01-128x64.png');        
         this.load.image('outlineTile', './assets/Grid Type A - 128x64.png');   
+        this.load.image('treeTile', './assets/baum-tree.png');   
 
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
@@ -102,8 +105,11 @@ export default class GameScene extends Phaser.Scene
     {
         //this.physics.world.setBounds(-200, -200, 400, 400);
 
+        this.debugGraphics = this.add.graphics();
+        this.debugGraphics.setScale(2);
 
         var map = this.add.tilemap('map');
+        // https://labs.phaser.io/edit.html?src=src/tilemap/debug%20colliding%20tiles.js
 
         console.log(map);
 
@@ -115,6 +121,7 @@ export default class GameScene extends Phaser.Scene
         var tilesetWater = map.addTilesetImage('Overworld - Water - Flat 128x64', 'waterTiles');
         var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles');
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
+        var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
         this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
@@ -131,6 +138,10 @@ export default class GameScene extends Phaser.Scene
             .setPipeline('Light2D');
 
         this.layerPickups = map.createLayer('PickupsLayer', [ tilesetPickups ])
+            .setDisplayOrigin(0.5, 0.5)
+            .setPipeline('Light2D');
+
+        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
@@ -254,6 +265,12 @@ export default class GameScene extends Phaser.Scene
             this.generatePickup(tile);            
         })        
 
+        this.physics.add.overlap(this.player, this.layer4);
+        this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerTouchingObjectTileHandler, this);
+
+        //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
+        //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
+
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
@@ -285,7 +302,24 @@ export default class GameScene extends Phaser.Scene
         this.firePrimaryWeaponKey = cursors.space;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.fireSecondaryWeaponKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.addGamePadListeners();        
+        this.addGamePadListeners();   
+        
+        this.debugGraphics.clear();
+
+        var showTiles = true;
+        var showCollidingTiles = true;
+        var showFaces = true;
+
+        const tileColor = showTiles ? new Phaser.Display.Color(105, 210, 231, 200) : null;
+        const colldingTileColor = showCollidingTiles ? new Phaser.Display.Color(243, 134, 48, 200) : null;
+        const faceColor = showFaces ? new Phaser.Display.Color(40, 39, 37, 255) : null;
+
+        // Pass in null for any of the style options to disable drawing that component
+        map.renderDebug(this.debugGraphics, {
+            tileColor: tileColor, // Non-colliding tiles
+            collidingTileColor: colldingTileColor, // Colliding tiles
+            faceColor: faceColor // Interesting faces, i.e. colliding edges
+        });
     }
 
     generatePickup(tile) {
@@ -426,6 +460,14 @@ export default class GameScene extends Phaser.Scene
 
         return true;
     }  
+
+    playerTouchingObjectTileHandler(sprite, tile): boolean {
+        let scene = <GameScene>this;//.scene;
+        scene.layer4.removeTileAt(tile.x, tile.y);
+
+        return true;
+    }  
+
 
     bulletTouchingEnemyHandler(enemy: any, bullet: any): void {       
 

@@ -30,4 +30,6 @@ export class Constants {
     // right 15
 
     public static get pickupSpawnTile(): number { return 31; }
+
+    public static get treeObjectTile(): number { return 50; }
 }
