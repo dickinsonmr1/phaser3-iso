@@ -96,6 +96,8 @@ export default class GameScene extends Phaser.Scene
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
 
+        this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
+
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
@@ -186,10 +188,11 @@ export default class GameScene extends Phaser.Scene
             mapY: 200,
             //mapX: 10,
             //mapY: 10,
-            key: "utilityCars",
-            frame: 'police_W.png',
-            playerId: "Police",
-            vehicleType: VehicleType.Police
+            key: "blueCars",
+            frame: 'raceCarBlue-W',
+            playerId: "RaceCar",
+            drawScale: 0.5,
+            vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        

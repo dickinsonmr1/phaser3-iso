@@ -1,0 +1,19 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-bluecars-all.png">
+    <SubTexture name="c02_s128_iso_0271.png" x="1935" y="1806" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0272.png" x="1935" y="1935" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0273.png" x="0" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0274.png" x="129" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0275.png" x="258" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0276.png" x="387" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0277.png" x="516" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0278.png" x="645" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0279.png" x="774" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0280.png" x="903" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0281.png" x="1032" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0282.png" x="1161" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0283.png" x="1290" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0284.png" x="1419" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0285.png" x="1548" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0286.png" x="1677" y="2064" width="128" height="128"/>
+    <SubTexture name="c02_s128_iso_0287.png" x="1806" y="2064" width="128" height="128"/>
+</TextureAtlas>

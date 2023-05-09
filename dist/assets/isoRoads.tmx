@@ -18,6 +18,9 @@
  <tileset firstgid="50" name="baum-tree" tilewidth="128" tileheight="64" tilecount="1" columns="1">
   <image source="baum-tree.png" width="128" height="64"/>
  </tileset>
+ <tileset firstgid="51" name="iso-64x64-building" tilewidth="64" tileheight="64" tilecount="80" columns="10">
+  <image source="iso-64x64-building.png" trans="000000" width="640" height="512"/>
+ </tileset>
  <layer id="1" name="GroundLayer" width="40" height="40">
   <data encoding="csv">
 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,

@@ -31,7 +31,8 @@ export enum VehicleType {
     Police,
     TrashMan,
     Taxi,
-    Ambulance
+    Ambulance,
+    RaceCar
 }
 
 enum CpuPlayerPattern {
@@ -72,6 +73,8 @@ export class Player extends Phaser.GameObjects.Sprite {
                 return 2;
             case VehicleType.Taxi:                
                 return 3;
+            case VehicleType.RaceCar:
+                return 3.75 * 1.5;
             default:
                 return 1;
         }
@@ -86,6 +89,8 @@ export class Player extends Phaser.GameObjects.Sprite {
                 return 2 * 1.5;
             case VehicleType.Taxi:
                 return 3 * 1.5;
+            case VehicleType.Taxi:
+                return 3.75 * 1.5;
             default:
                 return 1;                
         }
@@ -108,6 +113,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private arctangent: number = 0;
     private aimX: number = 0;
     private aimY: number = 0;
+    private drawScale: number = 1;
 
     public playerId: string;
 
@@ -173,6 +179,9 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.playerId = params.playerId;
 
         this.vehicleType = params.vehicleType;
+        this.drawScale = params.drawScale ?? 1;
+        this.scale = this.drawScale;
+        
         this.createAnims();
 
         this.setDisplayOrigin(0, 100);
@@ -439,6 +448,114 @@ export class Player extends Phaser.GameObjects.Sprite {
                 this.anims.create({
                     key: 'taxi-SW',
                     frames: [{key: 'utilityCars', frame: 'taxi_SW.png'}],
+                    frameRate: 10,
+                });
+                break;
+            case VehicleType.RaceCar:
+                this.animPrefix = "raceCarBlue";
+                
+                // https://en.wikipedia.org/wiki/Points_of_the_compass
+
+                // 0272 - SSW
+                // 0273 - SW
+                // 0274 - WSW
+                // 0275 - W
+
+                // 0276 - WNW
+                // 0277 - NW
+                // 0278 - NNW
+                // 0279 - N
+
+                // 0280 - NNE
+                // 0281 - NE
+                // 0282 - ENE
+                // 0283 - E
+
+                // 0284 - ESE
+                // 0285 - SE
+                // 0286 - SSE
+                // 0287 - S
+                this.anims.create({
+                    key: 'raceCarBlue-SSW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0272.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-SW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0273.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-WSW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0274.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-W',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0275.png'}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: 'raceCarBlue-WNW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0276.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-NW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0277.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-NNW',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0278.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-N',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0279.png'}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: 'raceCarBlue-NNE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0280.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-NE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0281.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-ENE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0282.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-E',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0283.png'}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: 'raceCarBlue-ESE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0284.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-SE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0285.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-SSE',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0286.png'}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: 'raceCarBlue-S',
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0287.png'}],
                     frameRate: 10,
                 });
                 break;
