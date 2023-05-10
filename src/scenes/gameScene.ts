@@ -191,7 +191,7 @@ export default class GameScene extends Phaser.Scene
             key: "blueCars",
             frame: 'raceCarBlue-W',
             playerId: "RaceCar",
-            drawScale: 0.5,
+            drawScale: 0.33,
             vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
