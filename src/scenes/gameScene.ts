@@ -97,6 +97,7 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
 
         this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
+        this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
@@ -191,7 +192,7 @@ export default class GameScene extends Phaser.Scene
             key: "blueCars",
             frame: 'raceCarBlue-W',
             playerId: "RaceCar",
-            drawScale: 0.33,
+            drawScale: 0.4,
             vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
@@ -206,7 +207,8 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'garbage_W.png',
             playerId: "Trash Man",
-            vehicleType: VehicleType.TrashMan
+            drawScale: 0.4,
+            vehicleType: VehicleType.PickupTruck
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -220,7 +222,8 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'taxi_NE.png',
             playerId: "Taxi",
-            vehicleType: VehicleType.Taxi
+            drawScale: 0.4,
+            vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -234,7 +237,8 @@ export default class GameScene extends Phaser.Scene
             key: "utilityCars",
             frame: 'ambulance_NE.png',
             playerId: "Ambulance",
-            vehicleType: VehicleType.Ambulance
+            drawScale: 0.4,
+            vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        

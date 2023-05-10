@@ -52,7 +52,8 @@ export enum VehicleType {
     TrashMan,
     Taxi,
     Ambulance,
-    RaceCar
+    RaceCar,
+    PickupTruck
 }
 
 enum CpuPlayerPattern {
@@ -300,6 +301,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     createAnims(){
         switch(this.vehicleType){
             case VehicleType.Police:
+
+                this.animPrefix = "raceCarBlue";
+
                 this.animPrefix = "police";
                 this.anims.create({
                     key: 'police-N',
@@ -495,90 +499,180 @@ export class Player extends Phaser.GameObjects.Sprite {
                 // 0285 - SE
                 // 0286 - SSE
                 // 0287 - S
+                
+                var startIndex = 272;
 
                 this.anims.create({
                     key: this.animPrefix + '-SSW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0272'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-SW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0273'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-WSW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0274'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-W',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0275'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
 
                 this.anims.create({
                     key: this.animPrefix + '-WNW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0276'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-NW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0277'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-NNW',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0278'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-N',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0279'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
 
                 this.anims.create({
                     key: this.animPrefix + '-NNE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0280'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-NE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0281'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-ENE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0282'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-E',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0283'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
 
                 this.anims.create({
                     key: this.animPrefix + '-ESE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0284'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-SE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0285'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-SSE',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0286'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({
                     key: this.animPrefix + '-S',
-                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0287'}],
+                    frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
+                break;
+            case VehicleType.PickupTruck:
+                this.animPrefix = "pickupTruckOrange";
+                var startIndex = 161;
+               
+                this.anims.create({
+                    key: this.animPrefix + '-SW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-WSW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-W',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-WNW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NNW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-N',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-NNE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-ENE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-E',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-ESE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SSE',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-S',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });            
+                this.anims.create({
+                    key: this.animPrefix + '-SSW',
+                    frames: [{key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });    
                 break;
         }
     }
