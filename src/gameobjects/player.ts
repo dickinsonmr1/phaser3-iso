@@ -14,16 +14,14 @@ export enum PlayerDrawOrientation {
     SE,
     NW,
     SW,
-    /*
-    SSW,
-    WSW,
-    WNW,
-    NNW,
-    NNE,
-    ENE,
-    ESE,
-    SSE
-    */
+    S_SW,
+    W_SW,
+    W_NW,
+    N_NW,
+    N_NE,
+    E_NE,
+    E_SE,
+    S_SE
 }
 
 export enum PlayerCartesianOrientation {
@@ -35,16 +33,14 @@ export enum PlayerCartesianOrientation {
     SE,
     NW,
     SW,
-    /*
-    SSW,
-    WSW,
-    WNW,
-    NNW,
-    NNE,
-    ENE,
-    ESE,
-    SSE
-    */
+    S_SW,
+    W_SW,
+    W_NW,
+    N_NW,
+    N_NE,
+    E_NE,
+    E_SE,
+    S_SE
 }
 
 export enum VehicleType {
@@ -163,6 +159,23 @@ export class Player extends Phaser.GameObjects.Sprite {
                 return PlayerCartesianOrientation.NE;
             case PlayerDrawOrientation.NE:
                 return PlayerCartesianOrientation.N;
+
+            case PlayerDrawOrientation.N_NW:
+                return PlayerCartesianOrientation.W_NW;
+            case PlayerDrawOrientation.W_NW:
+                return PlayerCartesianOrientation.W_SW;
+            case PlayerDrawOrientation.W_SW:
+                return PlayerCartesianOrientation.S_SW;
+            case PlayerDrawOrientation.S_SW:
+                return PlayerCartesianOrientation.S_SE;
+            case PlayerDrawOrientation.S_SE:
+                return PlayerCartesianOrientation.E_SE;
+            case PlayerDrawOrientation.E_SE:
+                return PlayerCartesianOrientation.E_NE;
+            case PlayerDrawOrientation.E_NE:
+                return PlayerCartesianOrientation.N_NE;
+            case PlayerDrawOrientation.N_NE:
+                return PlayerCartesianOrientation.N_NW;
         }
     }
 
@@ -821,30 +834,61 @@ export class Player extends Phaser.GameObjects.Sprite {
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
         //         0 PI  0 PI
-        if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
+        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.N;
         }
-        else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
+
+        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NE;
+        }
+        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.NE;
         }
-        else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
+        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_NE;
+        }
+
+        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.E;
         }
-        else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
+
+        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_SE;
+        }
+        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.SE;
         }
-        else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
+        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SE;
+        }
+
+        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.S;
         }
-        else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
+
+        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SW;
+        }
+        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.SW;
         }
-        else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
+        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_SW;
+        }
+
+        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.W;
         }
-        else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
+
+        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_NW;
+        }
+        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.NW;
-        }       
+        } 
+        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NW;
+        } 
 
         this.calculateAimDirection(this.playerDrawOrientation);
     }
@@ -865,30 +909,61 @@ export class Player extends Phaser.GameObjects.Sprite {
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
         //         0 PI  0 PI
-        if(angle >= 7 * Math.PI / 8 || angle < - 7 * Math.PI / 8) {
+        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.N;
         }
-        else if(angle >= 5 * Math.PI / 8 && angle < 7 * Math.PI / 8) {
+
+        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NE;
+        }
+        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.NE;
         }
-        else if(angle >= 3 * Math.PI / 8 && angle < 5 * Math.PI / 8) {
+        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_NE;
+        }
+
+        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.E;
         }
-        else if(angle >= Math.PI / 8 && angle < 3 * Math.PI / 8) {
+
+        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_SE;
+        }
+        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.SE;
         }
-        else if(angle >= -Math.PI / 8 && angle < Math.PI / 8) {
+        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SE;
+        }
+
+        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.S;
         }
-        else if(angle >= -3 * Math.PI / 8 && angle < -Math.PI / 8) {
+
+        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SW;
+        }
+        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.SW;
         }
-        else if(angle >= -5 * Math.PI / 8 && angle < -3 * Math.PI / 8) {
+        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_SW;
+        }
+
+        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.W;
         }
-        else if(angle >= -7 * Math.PI / 8 && angle < -5 * Math.PI / 8) {
+
+        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_NW;
+        }
+        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
             this.playerDrawOrientation = PlayerDrawOrientation.NW;
-        }       
+        } 
+        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NW;
+        } 
 
         this.calculateAimDirection(this.playerDrawOrientation);
     }
@@ -899,33 +974,72 @@ export class Player extends Phaser.GameObjects.Sprite {
                 this.aimX = -Math.cos(Math.PI / 4);
                 this.aimY = -Math.sin(Math.PI / 4);                        
                 break;
-            case PlayerDrawOrientation.S:                
-                this.aimX = -Math.cos(5 * Math.PI / 4);
-                this.aimY = -Math.sin(5 * Math.PI / 4);                
-                break;
-            case PlayerDrawOrientation.E:
-                this.aimX = -Math.cos(3 * Math.PI / 4);
-                this.aimY = -Math.sin(3 * Math.PI / 4);                                      
-                break;
-            case PlayerDrawOrientation.W:
-                this.aimX = -Math.cos(7 * Math.PI / 4);
-                this.aimY = -Math.sin(7 * Math.PI / 4);                           
+
+            case PlayerDrawOrientation.N_NE:
+                this.aimX = -Math.cos(Math.PI / 8);
+                this.aimY = -Math.sin(Math.PI / 8);                        
                 break;
             case PlayerDrawOrientation.NE:
                 this.aimX = 0;
                 this.aimY = -1;                           
                 break;
+            case PlayerDrawOrientation.E_NE:
+                this.aimX = -Math.cos(3 * Math.PI / 8);
+                this.aimY = -Math.sin(3 * Math.PI / 8);                                      
+                break;
+
+            case PlayerDrawOrientation.E:
+                this.aimX = -Math.cos(3 * Math.PI / 4);
+                this.aimY = -Math.sin(3 * Math.PI / 4);                                      
+                break;
+
+            case PlayerDrawOrientation.E_SE:
+                this.aimX = -Math.cos(3 * Math.PI / 8);
+                this.aimY = -Math.sin(3 * Math.PI / 8);                                      
+                break;
             case PlayerDrawOrientation.SE:                    
                 this.aimX = 1;
                 this.aimY = 0;                
+                break;
+            case PlayerDrawOrientation.S_SE:                
+                this.aimX = -Math.cos(5 * Math.PI / 8);
+                this.aimY = -Math.sin(5 * Math.PI / 8);                
+                break;
+
+            case PlayerDrawOrientation.S:                
+                this.aimX = -Math.cos(5 * Math.PI / 4);
+                this.aimY = -Math.sin(5 * Math.PI / 4);                
+                break;
+                
+            case PlayerDrawOrientation.S_SW:                
+                this.aimX = -Math.cos(5 * Math.PI / 4);
+                this.aimY = -Math.sin(5 * Math.PI / 4);                
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.aimX = 0;
+                this.aimY = 1;
+                break;
+            case PlayerDrawOrientation.W_SW:
+                this.aimX = -Math.cos(7 * Math.PI / 8);
+                this.aimY = -Math.sin(7 * Math.PI / 8);                           
+                break;
+
+            case PlayerDrawOrientation.W:
+                this.aimX = -Math.cos(7 * Math.PI / 4);
+                this.aimY = -Math.sin(7 * Math.PI / 4);                           
+                break;
+
+            case PlayerDrawOrientation.W_NW:
+                this.aimX = -Math.cos(Math.PI / 4);
+                this.aimY = -Math.sin(Math.PI / 4);                        
                 break;
             case PlayerDrawOrientation.NW:
                 this.aimX = -1;
                 this.aimY = 0;                
                 break;
-            case PlayerDrawOrientation.SW:    
-                this.aimX = 0;
-                this.aimY = 1;
+            case PlayerDrawOrientation.N_NW:
+                this.aimX = -Math.cos(Math.PI / 8);
+                this.aimY = -Math.sin(Math.PI / 8);                        
                 break;
         }
     }
@@ -985,32 +1099,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
 
-        switch(this.playerDrawOrientation) {
-            case PlayerDrawOrientation.N:                    
-                this.anims.play(`${(this.animPrefix)}-N`, true);
-                break;
-            case PlayerDrawOrientation.S:                
-                this.anims.play(`${(this.animPrefix)}-S`, true);
-                break;
-            case PlayerDrawOrientation.E:                                    
-                this.anims.play(`${(this.animPrefix)}-E`, true);
-                break;
-            case PlayerDrawOrientation.W:                       
-                this.anims.play(`${(this.animPrefix)}-W`, true);
-                break;
-            case PlayerDrawOrientation.NE:                          
-                this.anims.play(`${(this.animPrefix)}-NE`, true);
-                break;
-            case PlayerDrawOrientation.SE:                    
-                this.anims.play(`${(this.animPrefix)}-SE`, true);
-                break;
-            case PlayerDrawOrientation.NW:
-                this.anims.play(`${(this.animPrefix)}-NW`, true);   
-                break;
-            case PlayerDrawOrientation.SW:    
-                this.anims.play(`${(this.animPrefix)}-SW`, true);                
-                break;
-        }    
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
     }
 
     tryMoveToLocation(destinationX: number, destinationY: number) {
@@ -1020,62 +1109,73 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
 
-        switch(this.playerDrawOrientation) {
-            case PlayerDrawOrientation.N:                    
-                this.anims.play(`${(this.animPrefix)}-N`, true);
-                break;
-            case PlayerDrawOrientation.S:                
-                this.anims.play(`${(this.animPrefix)}-S`, true);
-                break;
-            case PlayerDrawOrientation.E:                                    
-                this.anims.play(`${(this.animPrefix)}-E`, true);
-                break;
-            case PlayerDrawOrientation.W:                       
-                this.anims.play(`${(this.animPrefix)}-W`, true);
-                break;
-            case PlayerDrawOrientation.NE:                          
-                this.anims.play(`${(this.animPrefix)}-NE`, true);
-                break;
-            case PlayerDrawOrientation.SE:                    
-                this.anims.play(`${(this.animPrefix)}-SE`, true);
-                break;
-            case PlayerDrawOrientation.NW:
-                this.anims.play(`${(this.animPrefix)}-NW`, true);   
-                break;
-            case PlayerDrawOrientation.SW:    
-                this.anims.play(`${(this.animPrefix)}-SW`, true);                
-                break;
-        }    
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
     }
 
     tryAimAtLocation(destinationX: number, destinationY: number) {
 
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
-        switch(this.playerDrawOrientation) {
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
+       
+    }
+
+    playAnimFromPlayerDrawOrientation(drawOrientation: PlayerDrawOrientation) {
+        switch(drawOrientation) {
             case PlayerDrawOrientation.N:                    
                 this.anims.play(`${(this.animPrefix)}-N`, true);
                 break;
-            case PlayerDrawOrientation.S:                
-                this.anims.play(`${(this.animPrefix)}-S`, true);
-                break;
-            case PlayerDrawOrientation.E:                                    
-                this.anims.play(`${(this.animPrefix)}-E`, true);
-                break;
-            case PlayerDrawOrientation.W:                       
-                this.anims.play(`${(this.animPrefix)}-W`, true);
+
+            case PlayerDrawOrientation.N_NE:                    
+                this.anims.play(`${(this.animPrefix)}-NNE`, true);
                 break;
             case PlayerDrawOrientation.NE:                          
                 this.anims.play(`${(this.animPrefix)}-NE`, true);
                 break;
+            case PlayerDrawOrientation.E_NE:                                    
+                this.anims.play(`${(this.animPrefix)}-ENE`, true);
+                break;
+
+            case PlayerDrawOrientation.E:                                    
+                this.anims.play(`${(this.animPrefix)}-E`, true);
+                break;
+
+            case PlayerDrawOrientation.E_SE:                    
+                this.anims.play(`${(this.animPrefix)}-ESE`, true);
+                break;
             case PlayerDrawOrientation.SE:                    
                 this.anims.play(`${(this.animPrefix)}-SE`, true);
+                break;
+            case PlayerDrawOrientation.S_SE:                    
+                this.anims.play(`${(this.animPrefix)}-SSE`, true);
+                break;
+
+            case PlayerDrawOrientation.S:                
+                this.anims.play(`${(this.animPrefix)}-S`, true);
+                break;      
+
+            case PlayerDrawOrientation.S_SW:    
+                this.anims.play(`${(this.animPrefix)}-SSW`, true);                
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.anims.play(`${(this.animPrefix)}-SW`, true);                
+                break;
+            case PlayerDrawOrientation.W_SW:    
+                this.anims.play(`${(this.animPrefix)}-WSW`, true);                
+                break;
+
+            case PlayerDrawOrientation.W:                       
+                this.anims.play(`${(this.animPrefix)}-W`, true);
+                break;
+
+            case PlayerDrawOrientation.W_NW:
+                this.anims.play(`${(this.animPrefix)}-WNW`, true);   
                 break;
             case PlayerDrawOrientation.NW:
                 this.anims.play(`${(this.animPrefix)}-NW`, true);   
                 break;
-            case PlayerDrawOrientation.SW:    
-                this.anims.play(`${(this.animPrefix)}-SW`, true);                
+            case PlayerDrawOrientation.N_NW:
+                this.anims.play(`${(this.animPrefix)}-NNW`, true);   
                 break;
         }    
     }
