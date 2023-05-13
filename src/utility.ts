@@ -64,4 +64,65 @@ export class Utility {
         var tempPt = new Phaser.Geom.Point(x, y);
         return tempPt;
     }
+
+    static SnapTo16DirectionAngle(angle) {      
+        //        -1 PI  1 PI 
+        //   -0.5PI           0.5 PI
+        //         0 PI  0 PI
+        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
+            return 1;
+        }
+
+        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
+            return 14 * Math.PI / 16;
+        }
+        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
+            return 12 * Math.PI / 16;
+        }
+        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
+            return 10 * Math.PI / 16;
+        }
+
+        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
+            return 8 * Math.PI / 16;
+        }
+
+        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
+            return 6 * Math.PI / 16;
+        }
+        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
+            return 4 * Math.PI / 16;
+        }
+        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
+            return 2 * Math.PI / 16;
+        }
+
+        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
+            return 0;
+        }
+
+        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
+            return -2 * Math.PI / 16;
+        }
+        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
+            return -4 * Math.PI / 16;
+        }
+        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
+            return -6 * Math.PI / 16;
+        }
+
+        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
+            return -8 * Math.PI / 16;
+        }
+
+        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
+            return -10 * Math.PI / 16;
+        }
+        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
+            return -12 * Math.PI / 16;
+        } 
+        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
+            return -14 * Math.PI / 16;
+        } 
+    }
 }

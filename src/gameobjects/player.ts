@@ -828,9 +828,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     calculateAimDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
-        this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        //let angle = this.arctangent;
-        //let angle2 = this.arctangent % (Math.PI / 4);
+        var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
+        this.arctangent = Utility.SnapTo16DirectionAngle(arctangent);
 
         this.setPlayerDrawOrientation();
 
@@ -843,7 +842,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         var deltaY = destinationY - this.y;
 
         //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
-        this.arctangent = Math.atan2(deltaX, deltaY);
+        var arctangent =  Math.atan2(deltaX, deltaY);
+        this.arctangent = Utility.SnapTo16DirectionAngle(arctangent);
 
         this.setPlayerDrawOrientation();
 
@@ -1019,6 +1019,10 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
        
+    }
+
+    snapToAngle() {
+
     }
 
     setPlayerDrawOrientation() {
