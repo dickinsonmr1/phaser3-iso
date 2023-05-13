@@ -809,6 +809,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                     \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
                     \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI
+                    \n Aim (${(this.aimX / Math.PI).toFixed(2)} PI, ${(this.aimY / Math.PI).toFixed(2)} PI)
                     \n Behavior: ${this.cpuPlayerPattern.toString()}`)
 
         text.setX(x);
@@ -828,67 +829,10 @@ export class Player extends Phaser.GameObjects.Sprite {
     calculateAimDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        let angle = this.arctangent;
-        let angle2 = this.arctangent % (Math.PI / 4);
+        //let angle = this.arctangent;
+        //let angle2 = this.arctangent % (Math.PI / 4);
 
-        //        -1 PI  1 PI 
-        //   -0.5PI           0.5 PI
-        //         0 PI  0 PI
-        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N;
-        }
-
-        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N_NE;
-        }
-        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.NE;
-        }
-        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E_NE;
-        }
-
-        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E;
-        }
-
-        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E_SE;
-        }
-        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.SE;
-        }
-        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S_SE;
-        }
-
-        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S;
-        }
-
-        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S_SW;
-        }
-        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.SW;
-        }
-        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W_SW;
-        }
-
-        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W;
-        }
-
-        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W_NW;
-        }
-        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.NW;
-        } 
-        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N_NW;
-        } 
+        this.setPlayerDrawOrientation();
 
         this.calculateAimDirection(this.playerDrawOrientation);
     }
@@ -901,147 +845,104 @@ export class Player extends Phaser.GameObjects.Sprite {
         //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         this.arctangent = Math.atan2(deltaX, deltaY);
 
-        //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
-        //this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        let angle = this.arctangent;
-        //let angle2 = this.arctangent % (Math.PI / 4);
-
-        //        -1 PI  1 PI 
-        //   -0.5PI           0.5 PI
-        //         0 PI  0 PI
-        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N;
-        }
-
-        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N_NE;
-        }
-        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.NE;
-        }
-        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E_NE;
-        }
-
-        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E;
-        }
-
-        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.E_SE;
-        }
-        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.SE;
-        }
-        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S_SE;
-        }
-
-        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S;
-        }
-
-        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.S_SW;
-        }
-        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.SW;
-        }
-        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W_SW;
-        }
-
-        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W;
-        }
-
-        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.W_NW;
-        }
-        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.NW;
-        } 
-        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
-            this.playerDrawOrientation = PlayerDrawOrientation.N_NW;
-        } 
+        this.setPlayerDrawOrientation();
 
         this.calculateAimDirection(this.playerDrawOrientation);
     }
     
     calculateAimDirection(playerDrawOrientation: PlayerDrawOrientation): void{        
+
+        let angle2 = -this.arctangent + (Math.PI / 2) + (3 * Math.PI / 4);
+        //let angle2 = this.arctangent + (Math.PI / 2) - (3 * Math.PI / 4);
+        this.aimX = -Math.cos(angle2);
+        this.aimY = -Math.sin(angle2);
+        return;
+
+        /*
+        
         switch(playerDrawOrientation) {
+            /////////////////////////////////////////////
             case PlayerDrawOrientation.N:
                 this.aimX = -Math.cos(Math.PI / 4);
                 this.aimY = -Math.sin(Math.PI / 4);                        
                 break;
+            /////////////////////////////////////////////
 
-            case PlayerDrawOrientation.N_NE:
-                this.aimX = -Math.cos(Math.PI / 8);
-                this.aimY = -Math.sin(Math.PI / 8);                        
-                break;
+                case PlayerDrawOrientation.N_NE:
+                    this.aimX = -Math.cos(Math.PI / 2);
+                    this.aimY = -Math.sin(Math.PI / 2);                        
+                    break;
             case PlayerDrawOrientation.NE:
                 this.aimX = 0;
                 this.aimY = -1;                           
                 break;
-            case PlayerDrawOrientation.E_NE:
-                this.aimX = -Math.cos(3 * Math.PI / 8);
-                this.aimY = -Math.sin(3 * Math.PI / 8);                                      
-                break;
+                case PlayerDrawOrientation.E_NE:
+                    this.aimX = -Math.cos(3 * Math.PI / 8);
+                    this.aimY = -Math.sin(3 * Math.PI / 8);                                      
+                    break;
 
+            /////////////////////////////////////////////
             case PlayerDrawOrientation.E:
                 this.aimX = -Math.cos(3 * Math.PI / 4);
                 this.aimY = -Math.sin(3 * Math.PI / 4);                                      
                 break;
+            /////////////////////////////////////////////
 
-            case PlayerDrawOrientation.E_SE:
-                this.aimX = -Math.cos(3 * Math.PI / 8);
-                this.aimY = -Math.sin(3 * Math.PI / 8);                                      
-                break;
+                case PlayerDrawOrientation.E_SE:
+                    this.aimX = Math.cos(3 * Math.PI / 8);
+                    this.aimY = Math.sin(3 * Math.PI / 8);                                      
+                    break;
             case PlayerDrawOrientation.SE:                    
                 this.aimX = 1;
                 this.aimY = 0;                
                 break;
-            case PlayerDrawOrientation.S_SE:                
-                this.aimX = -Math.cos(5 * Math.PI / 8);
-                this.aimY = -Math.sin(5 * Math.PI / 8);                
-                break;
+                case PlayerDrawOrientation.S_SE:                
+                    this.aimX = -Math.cos(5 * Math.PI / 8);
+                    this.aimY = -Math.sin(5 * Math.PI / 8);                
+                    break;
 
+            /////////////////////////////////////////////
             case PlayerDrawOrientation.S:                
                 this.aimX = -Math.cos(5 * Math.PI / 4);
                 this.aimY = -Math.sin(5 * Math.PI / 4);                
                 break;
-                
-            case PlayerDrawOrientation.S_SW:                
-                this.aimX = -Math.cos(5 * Math.PI / 4);
-                this.aimY = -Math.sin(5 * Math.PI / 4);                
-                break;
+            /////////////////////////////////////////////
+
+                case PlayerDrawOrientation.S_SW:                
+                    this.aimX = -Math.cos(5 * Math.PI / 4);
+                    this.aimY = Math.sin(5 * Math.PI / 4);                
+                    break;
             case PlayerDrawOrientation.SW:    
                 this.aimX = 0;
                 this.aimY = 1;
                 break;
-            case PlayerDrawOrientation.W_SW:
-                this.aimX = -Math.cos(7 * Math.PI / 8);
-                this.aimY = -Math.sin(7 * Math.PI / 8);                           
-                break;
+                case PlayerDrawOrientation.W_SW:
+                    this.aimX = -Math.cos(7 * Math.PI / 8);
+                    this.aimY = -Math.sin(7 * Math.PI / 8);                           
+                    break;
 
+            /////////////////////////////////////////////
             case PlayerDrawOrientation.W:
                 this.aimX = -Math.cos(7 * Math.PI / 4);
                 this.aimY = -Math.sin(7 * Math.PI / 4);                           
                 break;
+            /////////////////////////////////////////////
 
-            case PlayerDrawOrientation.W_NW:
-                this.aimX = -Math.cos(Math.PI / 4);
-                this.aimY = -Math.sin(Math.PI / 4);                        
-                break;
-            case PlayerDrawOrientation.NW:
-                this.aimX = -1;
-                this.aimY = 0;                
-                break;
-            case PlayerDrawOrientation.N_NW:
-                this.aimX = -Math.cos(Math.PI / 8);
-                this.aimY = -Math.sin(Math.PI / 8);                        
-                break;
+                case PlayerDrawOrientation.W_NW:
+                    this.aimX = -Math.cos(Math.PI / 4);
+                    this.aimY = -Math.sin(Math.PI / 4);                        
+                    break;
+                case PlayerDrawOrientation.NW:
+                    this.aimX = -1;
+                    this.aimY = 0;                
+                    break;
+                case PlayerDrawOrientation.N_NW: // correct
+                    this.aimX = -Math.cos(Math.PI / 8);
+                    this.aimY = -Math.sin(Math.PI / 8);                        
+                    break;
         }
+
+        */
     }
 
     tryMoveWithKeyboard(direction: PlayerDrawOrientation) {
@@ -1118,6 +1019,72 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
        
+    }
+
+    setPlayerDrawOrientation() {
+        //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+        //this.arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
+        let angle = this.arctangent;
+        //let angle2 = this.arctangent % (Math.PI / 4);
+
+        //        -1 PI  1 PI 
+        //   -0.5PI           0.5 PI
+        //         0 PI  0 PI
+        if(angle >= 15 * Math.PI / 16 || angle < - 15 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N;
+        }
+
+        else if(angle >= 13 * Math.PI / 16 && angle < 15 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NE;
+        }
+        else if(angle >= 11 * Math.PI / 16 && angle < 13 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NE;
+        }
+        else if(angle >= 9 * Math.PI / 16 && angle < 11 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_NE;
+        }
+
+        else if(angle >= 7 * Math.PI / 16 && angle < 9 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E;
+        }
+
+        else if(angle >= 5 * Math.PI / 16 && angle < 7 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.E_SE;
+        }
+        else if(angle >= 3 * Math.PI / 16 && angle < 5 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SE;
+        }
+        else if(angle >= Math.PI / 16 && angle < 3 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SE;
+        }
+
+        else if(angle >= -Math.PI / 16 && angle < Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S;
+        }
+
+        else if(angle >= -3 * Math.PI / 16 && angle < -Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.S_SW;
+        }
+        else if(angle >= -5 * Math.PI / 16 && angle < -3 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.SW;
+        }
+        else if(angle >= -7 * Math.PI / 16 && angle < -5 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_SW;
+        }
+
+        else if(angle >= -9 * Math.PI / 16 && angle < -7 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W;
+        }
+
+        else if(angle >= -11 * Math.PI / 16 && angle < -9 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.W_NW;
+        }
+        else if(angle >= -13 * Math.PI / 16 && angle < -11 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.NW;
+        } 
+        else if(angle >= -15 * Math.PI / 16 && angle < -13 * Math.PI / 16) {
+            this.playerDrawOrientation = PlayerDrawOrientation.N_NW;
+        } 
     }
 
     playAnimFromPlayerDrawOrientation(drawOrientation: PlayerDrawOrientation) {
@@ -1222,7 +1189,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         if(gameTime > this.bulletTime) {
             
-            this.createProjectile(null, null, ProjectileType.Bullet);//this.playerOrientation);
+            this.createProjectile(this.aimX, this.aimY, ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
@@ -1235,9 +1202,9 @@ export class Player extends Phaser.GameObjects.Sprite {
             
             var changeBehaviorRand = Utility.getRandomInt(2);
             if(changeBehaviorRand == 0)
-                this.createProjectile(null, null, ProjectileType.HomingRocket);//this.playerOrientation);
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.HomingRocket);//this.playerOrientation);
             else
-                this.createProjectile(null, null, ProjectileType.FireRocket);//this.playerOrientation);
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.FireRocket);//this.playerOrientation);
 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1277,9 +1244,9 @@ export class Player extends Phaser.GameObjects.Sprite {
             
             var changeBehaviorRand = Utility.getRandomInt(2);
             if(changeBehaviorRand == 0)
-                this.createProjectile(null, null, ProjectileType.HomingRocket);//this.playerOrientation);
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.HomingRocket);//this.playerOrientation);
             else
-                this.createProjectile(null, null, ProjectileType.FireRocket);//this.playerOrientation);
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.FireRocket);//this.playerOrientation);
                                 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1328,6 +1295,12 @@ export class Player extends Phaser.GameObjects.Sprite {
                 break;
         }            
 
+        /*
+        velocityX = this.aimX * bulletVelocity;
+        velocityY = this.aimY * bulletVelocity;
+        return;
+        */
+
         if(x == null && y == null) {
             var cartesianOrientation = this.getPlayerIsometricOrientation();
 
@@ -1336,34 +1309,47 @@ export class Player extends Phaser.GameObjects.Sprite {
                     velocityX = 0;
                     velocityY = -bulletVelocity;
                     break;
+                //case PlayerCartesianOrientation.N_NE:
+                    //velocityX = bulletVelocity / 2;
+                    //velocityY = -bulletVelocity / 2;
+                    //break;
+                case PlayerCartesianOrientation.NE:
+                    velocityX = bulletVelocity;
+                    velocityY = -bulletVelocity;
+                    break;
+                //case PlayerCartesianOrientation.E_NE:
+                    //velocityX = bulletVelocity / 2;
+                    //velocityY = -bulletVelocity / 2;
+                    //break;
                 case PlayerCartesianOrientation.E:
                     velocityX = bulletVelocity;
                     velocityY = 0;
+                    break;                 
+                //case PlayerCartesianOrientation.E_SE:
+                    //velocityX = bulletVelocity / 2;
+                    //velocityY = bulletVelocity / 2;
+                    //break;   
+                case PlayerCartesianOrientation.SE:
+                    velocityX = bulletVelocity;
+                    velocityY = bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.S:
                     velocityX = 0;
+                    velocityY = bulletVelocity;
+                    break;
+                case PlayerCartesianOrientation.SW:
+                    velocityX = -bulletVelocity;
                     velocityY = bulletVelocity;
                     break;
                 case PlayerCartesianOrientation.W:
                     velocityX = -bulletVelocity;
                     velocityY = 0;
                     break;
-                case PlayerCartesianOrientation.NE:
-                    velocityX = bulletVelocity;
-                    velocityY = -bulletVelocity;
-                    break;
-                case PlayerCartesianOrientation.SE:
-                    velocityX = bulletVelocity;
-                    velocityY = bulletVelocity;
-                    break;
                 case PlayerCartesianOrientation.NW:
                     velocityX = -bulletVelocity;
                     velocityY = -bulletVelocity;
                     break;
-                case PlayerCartesianOrientation.SW:
-                    velocityX = -bulletVelocity;
-                    velocityY = bulletVelocity;
-                    break;
+
             }
         }
         else {
@@ -1381,7 +1367,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         //var angle = Math.atan2(this.aimY, this.aimX) + 5 * Math.PI / 4;
 
-        var angle = 0;
+        var drawAngle = 0;
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
         //         0 PI  0 PI
@@ -1393,36 +1379,78 @@ export class Player extends Phaser.GameObjects.Sprite {
             angle = -(Math.abs(this.arctangent) - Math.abs(this.arctangent % (Math.PI / 4)));
         */
         
-        var angle = 0;
+        var drawAngle = 0;
         switch(this.playerDrawOrientation) {
             case PlayerDrawOrientation.N:
-                angle = Math.PI;
+                drawAngle = Math.PI;
                 break;
-            case PlayerDrawOrientation.S:                
-                angle = 0;
-                break;
-            case PlayerDrawOrientation.E:
-                angle = Math.PI / 2;
-                break;
-            case PlayerDrawOrientation.W:
-                angle = -Math.PI / 2;
+
+            case PlayerDrawOrientation.N_NE:                
+                drawAngle = 9 * Math.PI / 12;                            
                 break;
             case PlayerDrawOrientation.NE:                
                 //angle = 3 * Math.PI / 4;  
-                angle = 2 * Math.PI / 3;                            
+                drawAngle = 8 * Math.PI / 12;                            
                 break;
+            case PlayerDrawOrientation.E_NE:                
+                drawAngle = 7 * Math.PI / 12;                            
+                break;
+
+            case PlayerDrawOrientation.E:
+                drawAngle = 6 * Math.PI / 12;
+                break;
+
+            case PlayerDrawOrientation.NE:                
+                //angle = 3 * Math.PI / 4;  
+                drawAngle = 5 * Math.PI / 12;                            
+                break;
+
             case PlayerDrawOrientation.SE:                    
                 //angle = 3 * Math.PI / 4;
-                angle = Math.PI / 3;               
+                drawAngle = 4 * Math.PI / 12;               
                 break;
-            case PlayerDrawOrientation.NW:
-                //angle = -3 * Math.PI / 4;
-                angle = -2 * Math.PI / 3;               
+
+            case PlayerDrawOrientation.S_SE:                    
+                //angle = 3 * Math.PI / 4;
+                drawAngle = 3 * Math.PI / 12;               
                 break;
+
+            case PlayerDrawOrientation.S:                
+                drawAngle = 0;
+                break;
+
+            case PlayerDrawOrientation.S_SW:    
+                //angle = -Math.PI / 4;      
+                drawAngle = -Math.PI / 3;                  
+                break;
+
             case PlayerDrawOrientation.SW:    
                 //angle = -Math.PI / 4;      
-                angle = -Math.PI / 3;                  
+                drawAngle = -4 * Math.PI / 12;                  
                 break;
+
+            case PlayerDrawOrientation.W_SW:    
+                //angle = -Math.PI / 4;      
+                drawAngle = -5 * Math.PI / 12;                  
+                break;
+
+            case PlayerDrawOrientation.W:
+                drawAngle = -6 * Math.PI / 12;
+                break;        
+            
+            case PlayerDrawOrientation.W_NW:
+                drawAngle = -7 * Math.PI / 12;
+                break;       
+
+            case PlayerDrawOrientation.NW:
+                //angle = -3 * Math.PI / 4;
+                drawAngle = -8 * Math.PI / 12;               
+                break;
+
+            case PlayerDrawOrientation.N_NW:
+                drawAngle = -9 * Math.PI / 12;
+                break;       
+    
         }
 
         var bullet = new Projectile({
@@ -1439,7 +1467,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             velocityY: velocityY,
             scaleX: scaleX,
             scaleY: scaleY,
-            angle: -angle
+            angle: -drawAngle
         });
         bullet.init();
 
