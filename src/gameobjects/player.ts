@@ -313,6 +313,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     createAnims(){
         switch(this.vehicleType){
+            /*
             case VehicleType.Police:
 
                 this.animPrefix = "raceCarBlue";
@@ -488,6 +489,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                     frameRate: 10,
                 });
                 break;
+            */
             case VehicleType.RaceCar:
                 this.animPrefix = "raceCarBlue";
                 
@@ -687,6 +689,186 @@ export class Player extends Phaser.GameObjects.Sprite {
                     frameRate: 10,
                 });    
                 break;
+            case VehicleType.Ambulance:
+                var sourceFrameKey = "whiteCars";
+                this.animPrefix = "vanWhite";
+                var startIndex = 130;
+                
+                this.anims.create({
+                    key: this.animPrefix + '-SW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-WSW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-W',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-WNW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NNW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-N',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-NNE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-ENE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-E',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-ESE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SSE',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-S',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });            
+                this.anims.create({
+                    key: this.animPrefix + '-SSW',
+                    frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
+                    frameRate: 10,
+                });    
+                break;
+            case VehicleType.Taxi:
+                var sourceFrameKey = "yellowCars";
+                this.animPrefix = "taxiYellow";
+                
+                var colorString = 'c10'               
+                var startIndex = 1;
+                                
+                this.anims.create({
+                    key: this.animPrefix + '-SW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-WSW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-W',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-WNW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NNW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-N',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-NNE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-NE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_000' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-ENE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-E',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });
+
+                this.anims.create({
+                    key: this.animPrefix + '-ESE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-SSE',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });
+                this.anims.create({
+                    key: this.animPrefix + '-S',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });            
+                this.anims.create({
+                    key: this.animPrefix + '-SSW',
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frameRate: 10,
+                });    
+                break;                
         }
     }
 
@@ -829,7 +1011,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     calculateAimDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        this.arctangent = Utility.SnapTo16DirectionAngle(arctangent);
+        this.arctangent = arctangent;//Utility.SnapTo16DirectionAngle(arctangent);
 
         this.setPlayerDrawOrientation();
 
@@ -1404,7 +1586,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                 drawAngle = 6 * Math.PI / 12;
                 break;
 
-            case PlayerDrawOrientation.NE:                
+            case PlayerDrawOrientation.E_SE:                
                 //angle = 3 * Math.PI / 4;  
                 drawAngle = 5 * Math.PI / 12;                            
                 break;

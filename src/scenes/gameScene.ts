@@ -98,6 +98,8 @@ export default class GameScene extends Phaser.Scene
 
         this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
+        this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
+        this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
@@ -204,9 +206,9 @@ export default class GameScene extends Phaser.Scene
             isCpuPlayer: true,
             mapX: 500,
             mapY: 500,
-            key: "utilityCars",
-            frame: 'garbage_W.png',
-            playerId: "Trash Man",
+            key: "orangeCars",
+            frame: 'c11_s128_iso_0',
+            playerId: "Guerilla",
             drawScale: 0.4,
             vehicleType: VehicleType.PickupTruck
             //isMyPlayer: true,
@@ -219,11 +221,11 @@ export default class GameScene extends Phaser.Scene
             isCpuPlayer: true,
             mapX: 100,
             mapY: 400,
-            key: "utilityCars",
-            frame: 'taxi_NE.png',
-            playerId: "Taxi",
+            key: "whiteCars",
+            frame: 'vanWhite-NW',
+            playerId: "Ambulance",
             drawScale: 0.4,
-            vehicleType: VehicleType.RaceCar
+            vehicleType: VehicleType.Ambulance
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
@@ -234,11 +236,11 @@ export default class GameScene extends Phaser.Scene
             isCpuPlayer: true,
             mapX: 300,
             mapY: 50,
-            key: "utilityCars",
-            frame: 'ambulance_NE.png',
-            playerId: "Ambulance",
+            key: "yellowCars",
+            frame: 'taxiYellow-W',
+            playerId: "Sideswipe",
             drawScale: 0.4,
-            vehicleType: VehicleType.RaceCar
+            vehicleType: VehicleType.Taxi
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
