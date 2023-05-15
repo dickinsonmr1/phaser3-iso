@@ -100,6 +100,7 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
+        this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
@@ -231,6 +232,7 @@ export default class GameScene extends Phaser.Scene
         });        
         this.player3.init();
 
+        /*
         this.player4 = new Player({
             scene: this,
             isCpuPlayer: true,
@@ -241,6 +243,22 @@ export default class GameScene extends Phaser.Scene
             playerId: "Sideswipe",
             drawScale: 0.4,
             vehicleType: VehicleType.Taxi
+            //isMyPlayer: true,
+            //isMultiplayer: this.isMultiplayer
+        });        
+        this.player4.init();
+        */
+
+        this.player4 = new Player({
+            scene: this,
+            isCpuPlayer: true,
+            mapX: 300,
+            mapY: 50,
+            key: "blackCars",
+            frame: 'hearseBlack-W',
+            playerId: "Funeral Director",
+            drawScale: 0.4,
+            vehicleType: VehicleType.Hearse
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
