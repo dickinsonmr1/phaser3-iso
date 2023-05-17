@@ -14,7 +14,7 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
-    public showDebug: boolean = true;
+    public showDebug: boolean = false;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -46,7 +46,10 @@ export default class GameScene extends Phaser.Scene
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
 
+    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+
     debugGraphics: Phaser.GameObjects.Graphics;
+
 
     constructor (sceneController: SceneController)
     {
@@ -194,7 +197,7 @@ export default class GameScene extends Phaser.Scene
             //mapY: 10,
             key: "blueCars",
             frame: 'raceCarBlue-W',
-            playerId: "RaceCar",
+            playerId: "Speed Demon",
             drawScale: 0.4,
             vehicleType: VehicleType.RaceCar
             //isMyPlayer: true,
@@ -209,7 +212,7 @@ export default class GameScene extends Phaser.Scene
             mapY: 500,
             key: "orangeCars",
             frame: 'c11_s128_iso_0',
-            playerId: "Guerilla",
+            playerId: "Redneck",
             drawScale: 0.4,
             vehicleType: VehicleType.PickupTruck
             //isMyPlayer: true,
@@ -224,7 +227,7 @@ export default class GameScene extends Phaser.Scene
             mapY: 400,
             key: "whiteCars",
             frame: 'vanWhite-NW',
-            playerId: "Ambulance",
+            playerId: "Work Van",
             drawScale: 0.4,
             vehicleType: VehicleType.Ambulance
             //isMyPlayer: true,
@@ -256,7 +259,7 @@ export default class GameScene extends Phaser.Scene
             mapY: 50,
             key: "blackCars",
             frame: 'hearseBlack-W',
-            playerId: "Funeral Director",
+            playerId: "Undertaker",
             drawScale: 0.4,
             vehicleType: VehicleType.Hearse
             //isMyPlayer: true,
@@ -283,6 +286,21 @@ export default class GameScene extends Phaser.Scene
         */
 
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
+
+        var tileExplosionParticles = this.add.particles('explosion');
+        tileExplosionParticles.setDepth(4);
+
+        this.particleEmitter = tileExplosionParticles.createEmitter({
+            x: 0,
+            y: 0,
+            lifespan: 750,
+            speed: { min: -50, max: 50 },
+            //tint: 0xff0000, 
+            scale: {start: 0.5, end: 1.0},
+            blendMode: 'ADD',
+            frequency: -1,
+            alpha: {start: 0.9, end: 0.0},
+        });
 
         this.physics.add.overlap(this.player, this.layerPickups);
         this.layerPickups.setTileIndexCallback(Constants.pickupSpawnTile, this.playerTouchingTileHandler, this);
@@ -490,8 +508,12 @@ export default class GameScene extends Phaser.Scene
 
     playerTouchingObjectTileHandler(sprite, tile): boolean {
         let scene = <GameScene>this;//.scene;
-        scene.layer4.removeTileAt(tile.x, tile.y);
 
+        var point = scene.layer3.tileToWorldXY(tile.x+1, tile.y);
+        this.particleEmitter.explode(5, point.x, point.y);
+
+        scene.layer4.removeTileAt(tile.x, tile.y);   
+                
         return true;
     }  
 

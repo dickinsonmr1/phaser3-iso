@@ -122,7 +122,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     healthBar: HealthBar;
     private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
-    private get GetPlayerNameOffsetX(): number { return -20; }
+    private get GetPlayerNameOffsetX(): number { return 0; }
     private get GetPlayerNameOffsetY(): number { return -40; }
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
@@ -257,8 +257,9 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.multiplayerNameText = playerNameText;
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-        this.multiplayerNameText.setOrigin(0, 0.5);
-        this.multiplayerNameText.setFontSize(16);
+        this.multiplayerNameText.setOrigin(0.5, 0.5);
+        this.multiplayerNameText.setAlign('center');
+        this.multiplayerNameText.setFontSize(20);
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
 
@@ -693,7 +694,7 @@ export class Player extends Phaser.GameObjects.Sprite {
             case VehicleType.Ambulance:
                 var sourceFrameKey = "whiteCars";
                 this.animPrefix = "vanWhite";
-                var startIndex = 130;
+                var startIndex = 129;
                 
                 this.anims.create({
                     key: this.animPrefix + '-SW',
@@ -1073,7 +1074,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         text.setText(`${this.playerId}`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
-        text.setOrigin(0, 0.5);
+        text.setOrigin(0.5, 0.5);
+        //text.setAlign('center');
     }
 
     alignDebugText(x: number, y: number) {
