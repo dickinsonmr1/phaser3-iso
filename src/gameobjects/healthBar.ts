@@ -40,7 +40,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
 
     init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, hudBarType: HUDBarType): void {
         
-        var shadowAlpha = 0.2; //isShield ? 0.2 : 0.2;
+        var shadowAlpha = 0.4; //isShield ? 0.2 : 0.2;
 
         let barAlpha = 0;
         switch(hudBarType){

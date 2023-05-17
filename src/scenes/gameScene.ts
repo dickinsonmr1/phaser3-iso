@@ -316,6 +316,10 @@ export default class GameScene extends Phaser.Scene
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
         //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
 
+        this.physics.add.collider(this.player, this.player2);
+        this.physics.add.collider(this.player, this.player3);
+        this.physics.add.collider(this.player, this.player4);
+
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
@@ -507,9 +511,9 @@ export default class GameScene extends Phaser.Scene
     }  
 
     playerTouchingObjectTileHandler(sprite, tile): boolean {
-        let scene = <GameScene>this;//.scene;
+        let scene = <GameScene>this;
 
-        var point = scene.layer3.tileToWorldXY(tile.x+1, tile.y);
+        var point = scene.layer3.tileToWorldXY(tile.x + 1, tile.y);
         this.particleEmitter.explode(5, point.x, point.y);
 
         scene.layer4.removeTileAt(tile.x, tile.y);   

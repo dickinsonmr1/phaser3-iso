@@ -123,7 +123,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
     private get GetPlayerNameOffsetX(): number { return 0; }
-    private get GetPlayerNameOffsetY(): number { return -40; }
+    private get GetPlayerNameOffsetY(): number { return -50; }
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
     private get emitterOffsetY(): number {return 30;}
@@ -229,7 +229,7 @@ export class Player extends Phaser.GameObjects.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 13, HUDBarType.Health);
+            50, 9, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -249,7 +249,7 @@ export class Player extends Phaser.GameObjects.Sprite {
                 //fontFamily: 'KenneyRocketSquare',         
                 //color:"rgb(255,255,255)",
             });
-        playerNameText.setAlpha(0.5);
+        playerNameText.setAlpha(1.0);
         playerNameText.setOrigin(0, 0.5);
         playerNameText.setDepth(7);
         //playerNameText.setStroke('rgb(0,0,0)', 4);     
@@ -266,7 +266,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
-                font: '16px Arial',
+                font: 'bold 18px Arial',
                 //fontFamily: 'KenneyRocketSquare',         
                 color:"rgb(255,255,255)",
             });
