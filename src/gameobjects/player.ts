@@ -61,6 +61,12 @@ enum CpuPlayerPattern {
     Flee
 }
 
+enum PlayerAliveStatus {
+    Alive,
+    PendingRespawn,
+    PermaDead
+}
+
 export class Player extends Phaser.GameObjects.Sprite {
     getPlayerSpeed(): number {
         if(this.turboOn) {
@@ -191,6 +197,8 @@ export class Player extends Phaser.GameObjects.Sprite {
     public rocketTime: number = 0;
     public rocketTimeInterval: number = 500;
     //private bulletVelocity: number = 7;
+
+    public deadUntilRespawnTime: number = 0;
 
     public MapPosition: Phaser.Geom.Point;
     public playerPositionOnTileset: Phaser.Geom.Point;
@@ -1055,30 +1063,39 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     update(...args: any[]): void {
     
-        this.MapPosition.x += this.body.velocity.x;
-        this.MapPosition.y += this.body.velocity.y;
+        if(this.deadUntilRespawnTime <= 0) 
+        {
 
-        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
-        this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, 32);
+            this.MapPosition.x += this.body.velocity.x;
+            this.MapPosition.y += this.body.velocity.y;
 
-        this.x = screenPosition.x;
-        this.y = screenPosition.y;
-        //this.body.position.x = screenPosition.x;
-        //this.body.position.y = screenPosition.y;
+            var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
+            this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
 
-        this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
-        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+            this.x = screenPosition.x;
+            this.y = screenPosition.y;
+            //this.body.position.x = screenPosition.x;
+            //this.body.position.y = screenPosition.y;
 
-        let gameScene = <GameScene>this.scene;        
-        if(gameScene.showDebug) {
-            this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);    
+            this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
+            this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+
+            let gameScene = <GameScene>this.scene;        
+            if(gameScene.showDebug) {
+                this.alignDebugText(this.x + this.GetPlayerNameOffsetX, this.y + 2 * this.GetPlayerNameOffsetY);    
+            }
+
+            this.setOrigin(0.5, 0.5);
+
+            this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
+
+            //this.turboOn = false;
         }
-
-        this.setOrigin(0.5, 0.5);
-
-        this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
-
-        //this.turboOn = false;
+        else {
+            this.deadUntilRespawnTime--;
+            if(this.deadUntilRespawnTime == 0)
+                this.tryRespawn();
+        }
 
         if(this.bulletTime > 0)
             this.bulletTime--;
@@ -1241,6 +1258,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     tryMoveWithKeyboard(direction: PlayerDrawOrientation) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         this.playerDrawOrientation = direction;
 
         this.calculateAimDirection(direction);
@@ -1290,6 +1310,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     tryMoveWithGamepad(x: number, y: number) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         this.calculateAimDirectionWithGamePad(x, y);
         
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
@@ -1299,6 +1322,8 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     tryMoveToLocation(destinationX: number, destinationY: number) {
+
+        if(this.deadUntilRespawnTime > 0) return;
 
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
@@ -1310,10 +1335,58 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryAimAtLocation(destinationX: number, destinationY: number) {
 
+       
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
        
+    }
+
+    tryKill() {
+        this.deadUntilRespawnTime = Constants.respawnTime;
+
+        this.setVisible(false);
+
+        this.turbo = 0;
+        this.turboBar.updateHealth(this.turbo);
+
+        this.turboBar.setVisible(false);
+        this.healthBar.setVisible(false);
+        this.multiplayerNameText.setVisible(false);
+
+        this.particleEmitterExplosion.explode(20, this.x, this.y);
+    }
+
+    tryRespawn() {
+
+        this.MapPosition.x = Utility.getRandomInt(200);
+        this.MapPosition.y = Utility.getRandomInt(200);
+
+        //this.body.position.x = this.MapPosition.x;
+        //this.body.position.y = this.MapPosition.y;
+
+        //this.MapPosition.x += this.body.velocity.x;
+        //this.MapPosition.y += this.body.velocity.y;
+
+        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
+        this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
+
+        this.x = screenPosition.x;
+        this.y = screenPosition.y;
+
+        this.health = Player.maxHealth;
+        this.healthBar.updateHealth(this.health);
+
+        this.turbo = Player.maxTurbo;
+        this.turboBar.updateHealth(this.turbo);
+
+        this.deadUntilRespawnTime = 0;
+
+        this.setVisible(true);
+        
+        this.turboBar.setVisible(true);
+        this.healthBar.setVisible(true);
+        this.multiplayerNameText.setVisible(true);
     }
 
     snapToAngle() {
@@ -1470,6 +1543,10 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.healthBar.updateHealth(this.health);
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
 
+        if(this.health <= 0){
+            this.tryKill();
+        }
+
 
         /*
         if(this.hurtTime == 0) {
@@ -1498,6 +1575,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     }
 
     tryFireSecondaryWeapon() {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.bulletTime) {
@@ -1509,6 +1589,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     
     tryFirePrimaryWeapon() {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.rocketTime) {
@@ -1525,6 +1608,8 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     tryTurboBoostOn(): void {
         
+        if(this.deadUntilRespawnTime > 0) return;
+
         if(this.turbo > 0) {
             this.turboOn = true;
                 
@@ -1536,11 +1621,17 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     
     tryTurboBoostOff(): void {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         if(this.turboOn)
             this.turboOn = false;
     }
 
     tryFireSecondaryWeaponWithGamepad() { //x, y) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.bulletTime) {
@@ -1551,6 +1642,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     }  
 
     tryFirePrimaryWeaponWithGamepad() { //x, y) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.rocketTime) {

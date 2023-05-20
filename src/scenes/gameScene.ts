@@ -529,9 +529,10 @@ export default class GameScene extends Phaser.Scene
         var otherPlayer = <Player>enemy;
         var projectile = <Projectile>bullet;
         
-        otherPlayer.tryDamage(projectile.projectileType);
-
-        bullet.remove();
+        if(otherPlayer.deadUntilRespawnTime <= 0) {
+            otherPlayer.tryDamage(projectile.projectileType);
+            bullet.remove();
+        }
         /*         
         var scene = <MainScene>enemy.getScene();
         scene.weaponHitParticleEmitter.explode(10, enemy.x, enemy.y);
