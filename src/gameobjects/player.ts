@@ -900,10 +900,10 @@ export class Player extends Phaser.GameObjects.Sprite {
                 
             case VehicleType.Hearse:
                 var sourceFrameKey = "blackCars";
-                this.animPrefix = "hearseYellow";
+                this.animPrefix = "hearseBlack";
                 
                 var colorString = 'c07'               
-                var startIndex = 96;
+                var startIndex = 97;
                                 
                 this.anims.create({
                     key: this.animPrefix + '-SW',
@@ -1355,6 +1355,10 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.multiplayerNameText.setVisible(false);
 
         this.particleEmitterExplosion.explode(20, this.x, this.y);
+
+        let gameScene = <GameScene>this.scene;  
+
+        gameScene.sceneController.hudScene.setInfoText(this.playerId + " died", 2000);
     }
 
     tryRespawn() {

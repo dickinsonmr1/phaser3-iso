@@ -313,7 +313,18 @@ export default class GameScene extends Phaser.Scene
         })        
 
         this.physics.add.overlap(this.player, this.layer4);
-        this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerTouchingObjectTileHandler, this);
+        this.physics.add.overlap(this.player2, this.layer4);
+        this.physics.add.overlap(this.player3, this.layer4);
+        this.physics.add.overlap(this.player4, this.layer4);
+
+        this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
+
+        this.physics.add.overlap(this.player.bullets, this.layer4);
+        this.physics.add.overlap(this.player2.bullets, this.layer4);
+        this.physics.add.overlap(this.player3.bullets, this.layer4);
+        this.physics.add.overlap(this.player4.bullets, this.layer4);
+
+        this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
         //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
@@ -512,13 +523,19 @@ export default class GameScene extends Phaser.Scene
         return true;
     }  
 
-    playerTouchingObjectTileHandler(sprite, tile): boolean {
+    playerOrWeaponTouchingObjectTileHandler(sprite, tile): boolean {
         let scene = <GameScene>this;
 
         var point = scene.layer3.tileToWorldXY(tile.x + 1, tile.y);
         this.particleEmitter.explode(2, point.x, point.y);
 
         scene.layer4.removeTileAt(tile.x, tile.y);   
+
+        if(sprite instanceof Projectile)
+        {
+            var projectile = <Projectile>sprite;
+            projectile.remove();
+        }
                 
         return true;
     }  
