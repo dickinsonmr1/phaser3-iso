@@ -125,7 +125,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     private get GetPlayerNameOffsetX(): number { return 0; }
     private get GetPlayerNameOffsetY(): number { return -50; }
 
-    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -266,7 +268,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
-                font: 'bold 18px Arial',
+                font: 'bold 1px Arial',
                 //fontFamily: 'KenneyRocketSquare',         
                 color:"rgb(255,255,255)",
             });
@@ -299,10 +301,26 @@ export class Player extends Phaser.GameObjects.Sprite {
         var weaponHitParticles = this.scene.add.particles('explosion');
         weaponHitParticles.setDepth(4);
 
-        this.particleEmitter = weaponHitParticles.createEmitter({
+        this.particleEmitterExplosion = weaponHitParticles.createEmitter({
             x: 0,
             y: 0,
             lifespan: 750,
+            speed: { min: -50, max: 50 },
+            //tint: 0xff0000, 
+            scale: {start: 0.5, end: 1.0},
+            blendMode: 'ADD',
+            frequency: -1,
+            alpha: {start: 0.9, end: 0.0},
+        });
+
+        
+        var secondaryWeaponHitParticles = this.scene.add.particles('sparks');
+        secondaryWeaponHitParticles.setDepth(4);
+
+        this.particleEmitterSparks = secondaryWeaponHitParticles.createEmitter({
+            x: 0,
+            y: 0,
+            lifespan: 300,
             speed: { min: -50, max: 50 },
             //tint: 0xff0000, 
             scale: {start: 0.5, end: 1.0},
@@ -1433,12 +1451,26 @@ export class Player extends Phaser.GameObjects.Sprite {
         this.body.velocity.y = 0;
     }
 
-    tryDamage(): void {
-        this.health--;
+   
+    tryDamage(projectileType: ProjectileType): void {
+
+        switch(projectileType)
+        {
+            case ProjectileType.Bullet:
+                this.health--;
+                this.particleEmitterSparks.explode(5, this.x, this.y);
+                break;
+            case ProjectileType.FireRocket:
+            case ProjectileType.HomingRocket:
+                this.health -= 5;
+                this.particleEmitterExplosion.explode(10, this.x, this.y);
+                break;
+        }
+        
         this.healthBar.updateHealth(this.health);
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
 
-        this.particleEmitter.explode(10, this.x, this.y);
+
         /*
         if(this.hurtTime == 0) {
             if(this.shieldHealth > 0) {

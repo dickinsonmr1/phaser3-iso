@@ -1,6 +1,7 @@
 import { Constants } from "../constants";
 import { Pickup, PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
+import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 
@@ -107,6 +108,7 @@ export default class GameScene extends Phaser.Scene
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
+        this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
@@ -514,7 +516,7 @@ export default class GameScene extends Phaser.Scene
         let scene = <GameScene>this;
 
         var point = scene.layer3.tileToWorldXY(tile.x + 1, tile.y);
-        this.particleEmitter.explode(5, point.x, point.y);
+        this.particleEmitter.explode(2, point.x, point.y);
 
         scene.layer4.removeTileAt(tile.x, tile.y);   
                 
@@ -525,7 +527,9 @@ export default class GameScene extends Phaser.Scene
     bulletTouchingEnemyHandler(enemy: any, bullet: any): void {       
 
         var otherPlayer = <Player>enemy;
-        otherPlayer.tryDamage();
+        var projectile = <Projectile>bullet;
+        
+        otherPlayer.tryDamage(projectile.projectileType);
 
         bullet.remove();
         /*         

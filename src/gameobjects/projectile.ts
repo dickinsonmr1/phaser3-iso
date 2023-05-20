@@ -31,7 +31,7 @@ export class Projectile extends Phaser.GameObjects.Sprite {
 
     private creationGameTime: number;
 
-    private projectileType: ProjectileType;
+    public projectileType: ProjectileType;
 
     constructor(params)
     {
