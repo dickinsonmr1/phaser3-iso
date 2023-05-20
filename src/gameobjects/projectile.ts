@@ -131,18 +131,19 @@ export class Projectile extends Phaser.GameObjects.Sprite {
                 this.remove();
             }
 
-            /*
+            
             var body = <Phaser.Physics.Arcade.Body>this.body;
-            body.setVelocityX(this.velocityX);
-            body.setVelocityY(this.velocityY);
-            */
+            if(body != null && this.velocityX != null && this.velocityY != null) {
+                body.setVelocityX(this.velocityX);
+                body.setVelocityY(this.velocityY);
+            }
+                        
+            //this.MapPosition.x += this.velocityX;
+            //this.MapPosition.y += this.velocityY;
             
-            this.MapPosition.x += this.velocityX;
-            this.MapPosition.y += this.velocityY;
-            
-            var isoPosition = Utility.cartesianToIsometric(this.MapPosition);
-            this.x = isoPosition.x;
-            this.y = isoPosition.y;
+            //var isoPosition = Utility.cartesianToIsometric(this.MapPosition);
+            //this.x = isoPosition.x;
+            //this.y = isoPosition.y;
 
             if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
                 this.spotlight.setPosition(this.x, this.y);
@@ -172,7 +173,9 @@ export class Projectile extends Phaser.GameObjects.Sprite {
 
     remove() {
         if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
-            this.scene.lights.removeLight(this.spotlight);
+            if(this.scene != null && this.spotlight != null)
+                this.scene.lights.removeLight(this.spotlight);
+
             this.particleEmitter.stop();
         }
         this.destroy();

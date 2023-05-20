@@ -67,7 +67,7 @@ enum PlayerAliveStatus {
     PermaDead
 }
 
-export class Player extends Phaser.GameObjects.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite {
     getPlayerSpeed(): number {
         if(this.turboOn) {
             return this.maxTurboSpeed();
@@ -90,33 +90,33 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         switch(this.vehicleType) {
             case VehicleType.Police:
-                return 3.5;
+                return 200;
             case VehicleType.Ambulance:
-                return 2.5;
+                return 200;
             case VehicleType.TrashMan:
-                return 2;
+                return 200;
             case VehicleType.Taxi:                
-                return 3;
+                return 200;
             case VehicleType.RaceCar:
-                return 3.75;
+                return 200;
             default:
-                return 1;
+                return 10;
         }
     }
     private maxTurboSpeed(): number { 
         switch(this.vehicleType) {
             case VehicleType.Police:
-                return 3.5 * 1.5;
+                return this.maxSpeed() * 1.5;
             case VehicleType.Ambulance:
-                return 2.5 * 1.5;
+                return this.maxSpeed() * 1.5;
             case VehicleType.TrashMan:
-                return 2 * 1.5;
+                return this.maxSpeed() * 1.5;
             case VehicleType.Taxi:
-                return 3 * 1.5;
+                return this.maxSpeed() * 1.5;
             case VehicleType.RaceCar:
-                return 3.75 * 1.5;
+                return this.maxSpeed() * 1.5;
             default:
-                return 1;                
+                return this.maxSpeed() * 1.5;                
         }
     }
 
@@ -1069,11 +1069,13 @@ export class Player extends Phaser.GameObjects.Sprite {
             this.MapPosition.x += this.body.velocity.x;
             this.MapPosition.y += this.body.velocity.y;
 
+            this.setBounce(1,1);
+
             var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
 
-            this.x = screenPosition.x;
-            this.y = screenPosition.y;
+            //this.x = screenPosition.x;
+            //this.y = screenPosition.y;
             //this.body.position.x = screenPosition.x;
             //this.body.position.y = screenPosition.y;
 
@@ -1164,10 +1166,13 @@ export class Player extends Phaser.GameObjects.Sprite {
     
     calculateAimDirection(playerDrawOrientation: PlayerDrawOrientation): void{        
 
-        let angle2 = -this.arctangent + (Math.PI / 2) + (3 * Math.PI / 4);
+        //let angle2 = -this.arctangent + (Math.PI / 2) + (3 * Math.PI / 4);
+
+        let angle2 = -this.arctangent + (Math.PI / 2);// + (3 * Math.PI / 4);
+
         //let angle2 = this.arctangent + (Math.PI / 2) - (3 * Math.PI / 4);
-        this.aimX = -Math.cos(angle2);
-        this.aimY = -Math.sin(angle2);
+        this.aimX = Math.cos(angle2);
+        this.aimY = Math.sin(angle2);
         return;
 
         /*
@@ -1687,19 +1692,19 @@ export class Player extends Phaser.GameObjects.Sprite {
 
         switch(projectileType) {
             case ProjectileType.HomingRocket:
-                bulletVelocity = 7;
+                bulletVelocity = 400;
                 weaponImageKey = "rocket";
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
             case ProjectileType.FireRocket:
-                bulletVelocity = 7;
+                bulletVelocity = 400;
                 weaponImageKey = "rocket";
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
             case ProjectileType.Bullet:
-                bulletVelocity = 10;    
+                bulletVelocity = 500;    
                 weaponImageKey = "bullet";
                 scaleX = 0.25;
                 scaleY = 0.25;
@@ -1867,8 +1872,8 @@ export class Player extends Phaser.GameObjects.Sprite {
         var bullet = new Projectile({
             scene: this.scene,
             projectileType: projectileType,
-            isometricX: screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            isometricY: screenPosition.y, //body.y + this.getBulletOffsetY(),
+            isometricX: this.x, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            isometricY: this.y, //screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
             key: weaponImageKey,//this.currentWeaponBulletName,
