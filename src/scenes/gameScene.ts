@@ -83,7 +83,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('turboBarRight', './assets/sprites/HUD/barHorizontal_yellow_right.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
-        this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down.png');
+        this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square.png');
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
 
         // tiles

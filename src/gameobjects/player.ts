@@ -68,6 +68,10 @@ enum PlayerAliveStatus {
 }
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
+
+    private bodyDrawSize: number = 64;
+    private bodyDrawOffset: number = 0;
+
     getPlayerSpeed(): number {
         if(this.turboOn) {
             return this.maxTurboSpeed();
@@ -77,7 +81,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     private health: number = Player.maxHealth;
     private turbo: number = Player.maxTurbo;
-    private shield: number = Player.maxShield / 2;
+    private shield: number = Player.maxShield / 2;   
 
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -40;}
@@ -229,7 +233,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.createAnims();
 
-        this.setDisplayOrigin(0, 100);
+        this.setDisplayOrigin(0, 0);
 
         this.scene.add.existing(this);
 
@@ -305,6 +309,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     init() {
         this.scene.physics.world.enable(this);
+
+        
+        var body = <Phaser.Physics.Arcade.Body>this.body;
+
+        //body.maxVelocity.x = 500;
+        //body.maxVelocity.y = 500;
+        //body
+          //  .setSize(this.bodyDrawSize, this.bodyDrawSize)
+            //.setOffset(-this.bodyDrawOffset, -this.bodyDrawOffset);
+
+        this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
+
 
         var weaponHitParticles = this.scene.add.particles('explosion');
         weaponHitParticles.setDepth(4);
@@ -1351,6 +1367,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.deadUntilRespawnTime = Constants.respawnTime;
 
         this.setVisible(false);
+        
+        this.setVelocity(0,0);
 
         this.turbo = 0;
         this.turboBar.updateHealth(this.turbo);

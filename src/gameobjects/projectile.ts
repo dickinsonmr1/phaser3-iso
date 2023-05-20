@@ -15,7 +15,7 @@ export enum ProjectileType {
     Bullet
 }
 
-export class Projectile extends Phaser.GameObjects.Sprite {
+export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     public damage: number;
     public velocityX: number;
@@ -33,6 +33,13 @@ export class Projectile extends Phaser.GameObjects.Sprite {
 
     public projectileType: ProjectileType;
 
+    private getBodyDrawSize(): number {
+        if(this.projectileType == ProjectileType.Bullet)
+            return 15;
+        else return 24;
+    }
+    private bodyDrawOffset: number = 0;
+
     constructor(params)
     {
         super(params.scene, params.isometricX, params.isometricY, params.key);
@@ -42,7 +49,9 @@ export class Projectile extends Phaser.GameObjects.Sprite {
         this.MapPosition = new Phaser.Geom.Point(params.mapPositionX, params.mapPositionY); 
         //this.bulletId = uuidv4();
         this.rotation = params.angle;
-        this.setScale(params.scaleX, params.scaleY);       
+        this.setScale(params.scaleX, params.scaleY);   
+        
+        this.setOrigin(0.5, 0.5);
 
         this.creationGameTime = this.scene.game.getTime();
 
@@ -57,6 +66,8 @@ export class Projectile extends Phaser.GameObjects.Sprite {
             //this.velocityY = 0;
 
         this.scene.physics.world.enable(this);
+
+        this.setCircle(this.getBodyDrawSize(), -this.bodyDrawOffset, -this.bodyDrawOffset)
        
         this.setAlpha(1.0);
         this.setDepth(1);//Constants.depthBullets);
