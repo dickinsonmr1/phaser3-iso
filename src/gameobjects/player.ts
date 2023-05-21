@@ -218,6 +218,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private isCpuPlayer: boolean;
 
+    deathIcon: Phaser.GameObjects.Image;
+    deathIconScale: number = 0.5;
+    private static get deathIconOffsetX(): number {return 0;}
+    private static get deathIconOffsetY(): number {return 0;}
+
     constructor(params) {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
@@ -279,10 +284,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
         this.multiplayerNameText.setOrigin(0.5, 0.5);
         this.multiplayerNameText.setAlign('center');
-        this.multiplayerNameText.setFontSize(20);
+        this.multiplayerNameText.setFontSize(18);
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
-
+        this.deathIcon = this.scene.add.image(
+            this.x,
+            this.y,
+            'deathIcon');
+        this.deathIcon.setOrigin(0.5, 0.5);
+        this.deathIcon.setScale(this.deathIconScale);
+        //this.deathIcon.setDisplayOrigin(0,0);
+        this.deathIcon.alpha = 1;    
+        this.deathIcon.setDepth(Constants.depthHealthBar);
+        this.deathIcon.setVisible(false);
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
@@ -1441,6 +1455,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.particleEmitterExplosion.explode(20, this.x, this.y);
 
+        this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
+        this.deathIcon.setVisible(true);
+
         let gameScene = <GameScene>this.scene;  
 
         gameScene.sceneController.hudScene.setInfoText(this.playerId + " died", 2000);
@@ -1470,6 +1487,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.updateHealth(this.turbo);
 
         this.deadUntilRespawnTime = 0;
+
+        this.deathIcon.setVisible(false);
 
         this.setVisible(true);
         
