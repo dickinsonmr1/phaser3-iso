@@ -1,6 +1,8 @@
 export class Constants {
     public static get depthHealthBar(): number {return 7;}
 
+    public static get depthTurboParticles(): number {return 3;}
+
     public static get gamepadIndexSelect (): number {return 0;}   
     public static get gamepadIndexInteract (): number {return 2;}   
     public static get gamepadIndexLeft (): number {return 14;}   

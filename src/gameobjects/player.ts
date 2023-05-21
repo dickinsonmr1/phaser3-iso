@@ -94,15 +94,20 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         switch(this.vehicleType) {
             case VehicleType.Police:
-                return 200;
+                return 220;
             case VehicleType.Ambulance:
-                return 200;
+                return 210;
             case VehicleType.TrashMan:
-                return 200;
+                return 210;
             case VehicleType.Taxi:                
-                return 200;
+                return 210;
+
             case VehicleType.RaceCar:
-                return 200;
+                return 250;
+            case VehicleType.PickupTruck:
+                return 230;
+            case VehicleType.Hearse:
+                return 220;
             default:
                 return 10;
         }
@@ -137,6 +142,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -265,7 +271,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             });
         playerNameText.setAlpha(1.0);
         playerNameText.setOrigin(0, 0.5);
-        playerNameText.setDepth(7);
+        playerNameText.setDepth(Constants.depthTurboParticles);
         //playerNameText.setStroke('rgb(0,0,0)', 4);     
         //playerNameText.setFontSize(24); 
         
@@ -352,7 +358,32 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             frequency: -1,
             alpha: {start: 0.9, end: 0.0},
         });
-        //this.particleEmitter.stop();
+
+        var turboParticles = this.scene.add.particles('smoke');
+        turboParticles.setDepth(4);
+
+        // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js
+        this.particleEmitterTurbo = turboParticles.createEmitter({
+            x: this.x,
+            y: this.y,
+            lifespan: 180,
+            speed: 10, //{ min: 400, max: 400 },
+            //accelerationX: params.velocityX,
+            //accelerationY: params.velocityY,
+            //rotate: params.angle,
+            //gravityY: 300,
+            tint: 0x808080, // gray: 808080
+            scaleX: { start: 0.20, end: 0.01 },
+            scaleY: { start: 0.20, end: 0.01 },
+            quantity: 1,
+            blendMode: 'ADD',
+            frequency: 25,
+            alpha: {start: 1.0, end: 0.5},
+            //maxParticles: 25,
+            //active: false
+        });
+        this.particleEmitterTurbo.stop();
+        this.particleEmitterTurbo.setVisible(false);
     }
 
     createAnims(){
@@ -1107,6 +1138,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
+            this.particleEmitterTurbo.setPosition(this.x, this.y);
+
             //this.turboOn = false;
         }
         else {
@@ -1549,6 +1582,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     tryStopMove(): void {
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
+
+        this.tryTurboBoostOff();
     }
 
    
@@ -1643,6 +1678,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.turbo--;
             this.turboBar.updateHealth(this.turbo);
             this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
+
+            //this.particleEmitterTurbo.setSpeedX = -this.aimX;
+            //this.particleEmitterTurbo.accelerationX = -this.aimX;
+            //if(!this.particleEmitterTurbo.active)
+                this.particleEmitterTurbo.start();
+                this.particleEmitterTurbo.setVisible(true);
         }        
     }
 
@@ -1651,8 +1692,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTime > 0) return;
 
-        if(this.turboOn)
-            this.turboOn = false;
+        if(this.turboOn) {
+            this.turboOn = false;            
+        }
+
+        //if(this.particleEmitterTurbo.active)
+            this.particleEmitterTurbo.stop();
     }
 
     tryFireSecondaryWeaponWithGamepad() { //x, y) {
@@ -1710,19 +1755,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         switch(projectileType) {
             case ProjectileType.HomingRocket:
-                bulletVelocity = 400;
+                bulletVelocity = 550;
                 weaponImageKey = "rocket";
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
             case ProjectileType.FireRocket:
-                bulletVelocity = 400;
+                bulletVelocity = 550;
                 weaponImageKey = "rocket";
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
             case ProjectileType.Bullet:
-                bulletVelocity = 500;    
+                bulletVelocity = 700;    
                 weaponImageKey = "bullet";
                 scaleX = 0.25;
                 scaleY = 0.25;
