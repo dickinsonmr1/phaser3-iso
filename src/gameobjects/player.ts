@@ -1046,7 +1046,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 if(changeBehaviorRand == 0) {
                     this.cpuPlayerPattern = CpuPlayerPattern.Flee;
 
-                    this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(8));
+                    this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
                 }
                 if(changeBehaviorRand == 1)
                     this.cpuPlayerPattern = CpuPlayerPattern.Follow;
@@ -1079,13 +1079,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             // movement
             switch(this.cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
-                    this.tryMoveWithKeyboard(this.cpuFleeDirection); // TODO: try move AWAY from location
+                    this.tryMoveWithGamepad(playerX, playerY); // TODO: try move AWAY from location
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
                     this.tryMoveToLocation(playerX, playerY);
+                    this.tryAimAtLocation(playerX, playerY);
                     break;
                 case CpuPlayerPattern.Follow:
                     this.tryMoveToLocation(playerX, playerY);
+                    this.tryAimAtLocation(playerX, playerY);
                     break;
                 case CpuPlayerPattern.StopAndAttack:
                     this.tryStopMove();
@@ -1315,49 +1317,64 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTime > 0) return;
 
+        switch(direction) {
+            case PlayerDrawOrientation.N:
+                this.arctangent = Math.PI;
+                break;
+            case PlayerDrawOrientation.NE:
+                this.arctangent = 3 * Math.PI / 4;
+                break;
+            case PlayerDrawOrientation.E:
+                this.arctangent = 2 * Math.PI / 4;
+                break;
+            case PlayerDrawOrientation.SE:                    
+                this.arctangent = Math.PI / 4;
+                break;
+            case PlayerDrawOrientation.S:                
+                this.arctangent = 0;
+                break;
+            case PlayerDrawOrientation.SW:    
+                this.arctangent = - 1 * Math.PI / 4;              
+                break;
+            case PlayerDrawOrientation.W:
+                this.arctangent = - 2 * Math.PI / 4;
+                break;
+            case PlayerDrawOrientation.NW:
+                this.arctangent = - 3 * Math.PI / 4;  
+                break;
+            
+        }
+
         this.playerDrawOrientation = direction;
 
         this.calculateAimDirection(direction);
 
+        this.body.velocity.x = this.aimX * this.getPlayerSpeed();
+        this.body.velocity.y = this.aimY * this.getPlayerSpeed();         
+
         switch(direction) {
-            case PlayerDrawOrientation.N:
-                this.body.velocity.x = -Math.cos(Math.PI / 4) * this.getPlayerSpeed();
-                this.body.velocity.y = -Math.sin(Math.PI / 4) * this.getPlayerSpeed();                            
+            case PlayerDrawOrientation.N:                     
                 this.anims.play(`${(this.animPrefix)}-N`, true);
                 break;
             case PlayerDrawOrientation.S:                
-                this.body.velocity.x = -Math.cos(5 * Math.PI / 4) * this.getPlayerSpeed();
-                this.body.velocity.y = -Math.sin(5 * Math.PI / 4) * this.getPlayerSpeed(); 
                 this.anims.play(`${(this.animPrefix)}-S`, true);
                 break;
-            case PlayerDrawOrientation.E:
-                this.body.velocity.x = -Math.cos(3 * Math.PI / 4) * this.getPlayerSpeed();
-                this.body.velocity.y = -Math.sin(3 * Math.PI / 4) * this.getPlayerSpeed();                                       
+            case PlayerDrawOrientation.E:                                      
                 this.anims.play(`${(this.animPrefix)}-E`, true);
                 break;
             case PlayerDrawOrientation.W:
-                this.body.velocity.x = -Math.cos(7 * Math.PI / 4) * this.getPlayerSpeed();
-                this.body.velocity.y = -Math.sin(7 * Math.PI / 4) * this.getPlayerSpeed();                            
                 this.anims.play(`${(this.animPrefix)}-W`, true);
                 break;
             case PlayerDrawOrientation.NE:
-                this.body.velocity.x = 0;
-                this.body.velocity.y = -1 * this.getPlayerSpeed();                              
                 this.anims.play(`${(this.animPrefix)}-NE`, true);
                 break;
             case PlayerDrawOrientation.SE:                    
-                this.body.velocity.x = 1 * this.getPlayerSpeed();
-                this.body.velocity.y = 0;                
                 this.anims.play(`${(this.animPrefix)}-SE`, true);
                 break;
             case PlayerDrawOrientation.NW:
-                this.body.velocity.x = -1 * this.getPlayerSpeed();
-                this.body.velocity.y = 0;                
                 this.anims.play(`${(this.animPrefix)}-NW`, true);   
                 break;
             case PlayerDrawOrientation.SW:    
-                this.body.velocity.x = 0;
-                this.body.velocity.y = 1 * this.getPlayerSpeed();  
                 this.anims.play(`${(this.animPrefix)}-SW`, true);                
                 break;
         }
@@ -1383,6 +1400,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
+
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
+    }
+
+    tryMoveAwayFromLocation(destinationX: number, destinationY: number) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        this.calculateAimDirectionByTarget(destinationX, destinationY);        
+
+        this.body.velocity.x = -this.aimX * this.getPlayerSpeed();
+        this.body.velocity.y = -this.aimY * this.getPlayerSpeed();   
 
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
     }

@@ -738,6 +738,12 @@ export default class GameScene extends Phaser.Scene
             else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
                 this.player.tryMoveWithKeyboard(PlayerDrawOrientation.SW);
             }
+            else if(!this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown && !this.moveRightKey.isDown) 
+            {
+                this.player.tryStopMove();
+                //this.player.body.velocity.x = 0;
+                //this.player.body.velocity.y = 0;
+            }
             else {
                 //this.player.body.velocity.x = 0;
                 //this.player.body.velocity.y = 0;
@@ -749,6 +755,22 @@ export default class GameScene extends Phaser.Scene
 
             if(this.fireSecondaryWeaponKey.isDown) {
                 this.player.tryFireSecondaryWeapon();
+            }
+
+            if(this.toggleDebugKey.isDown) {
+                this.showDebug = !this.showDebug;
+                if(this.showDebug) {
+                    this.player.showDebugText();
+                    this.player2.showDebugText();
+                    this.player3.showDebugText();
+                    this.player4.showDebugText();
+                }
+                if(!this.showDebug) {
+                    this.player.hideDebugText();
+                    this.player2.hideDebugText();
+                    this.player3.hideDebugText();
+                    this.player4.hideDebugText();
+                }
             }
         }
 
@@ -797,6 +819,9 @@ export default class GameScene extends Phaser.Scene
 
         //this.light.x = this.player.x;
         //this.light.y = this.player.y;
+
+        if(this.showDebug)
+            this.debugGraphics.clear().fillStyle(0).fillRectShape(this.physics.world.bounds);
     }
 
     updatePickupScaleTime(): void {

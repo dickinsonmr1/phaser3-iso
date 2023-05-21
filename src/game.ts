@@ -24,7 +24,8 @@ const config = {
             debugShowVelocity: true,
             debugVelocityColor: 0xffff00,
             debugBodyColor: 0x0000ff,
-            debugStaticBodyColor: 0xffffff
+            debugStaticBodyColor: 0xffffff,
+            x: 0, y: 0, width: 500, height: 200,
         }
     },
     scene: [SceneController]
