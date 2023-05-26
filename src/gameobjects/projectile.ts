@@ -1,5 +1,5 @@
 // https://labs.phaser.io/edit.html?src=src\games\topdownShooter\topdown_combatMechanics.js
-import "phaser";
+import * as Phaser from 'phaser';
 import { Scene } from "phaser";
 import { Utility } from "../utility";
 /*
@@ -94,10 +94,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 .setColor(rocketColor)
                 .setIntensity(1.5);        
 
-            var particles = this.scene.add.particles('smoke');
-            particles.setDepth(4);//Constants.depthParticles);
-
-            this.particleEmitter = particles.createEmitter({
+            this.particleEmitter =  this.scene.add.particles(0, 0, 'smoke', {
                 x: this.x,
                 y: this.y,
                 lifespan: 500,

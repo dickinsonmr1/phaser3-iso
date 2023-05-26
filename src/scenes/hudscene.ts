@@ -1,3 +1,5 @@
+import * as Phaser from 'phaser';
+
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 

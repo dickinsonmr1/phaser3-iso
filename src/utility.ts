@@ -1,5 +1,5 @@
 
-import 'phaser';
+import * as Phaser from 'phaser';
 
 export class Point {
     x: number;

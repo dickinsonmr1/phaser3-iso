@@ -1,4 +1,4 @@
-import 'phaser'
+import * as Phaser from 'phaser';
 import { Constants } from '../constants';
 import { HealthBar, HUDBarType } from './healthBar';
 import { Projectile, ProjectileType } from './projectile';
@@ -83,8 +83,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private turbo: number = Player.maxTurbo;
     private shield: number = Player.maxShield / 2;   
 
+    private numberDeaths: number = 0;
+
     private get healthBarOffsetX(): number {return -30;}
-    private get healthBarOffsetY(): number {return -40;}
+    private get healthBarOffsetY(): number {return -45;}
 
     public static get maxHealth(): number { return 20; }
     public static get maxShield(): number { return 4; }
@@ -138,11 +140,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
     private get GetPlayerNameOffsetX(): number { return 0; }
-    private get GetPlayerNameOffsetY(): number { return -50; }
+    private get GetPlayerNameOffsetY(): number { return -60; }
 
     private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
+
+    private particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -254,15 +258,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 9, HUDBarType.Health);
+            50, 10, HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
 
         this.turboBar = new HealthBar(this.scene)        
-        this.turboBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.5,
+        this.turboBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.3,
             this.turbo, 
-            50, 6, HUDBarType.Turbo);
+            50, 5, HUDBarType.Turbo);
         
         this.turboBar.setDepth(Constants.depthHealthBar);
         this.turboBar.show();
@@ -270,6 +274,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // multiplayer player name text
         var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
             {
+                font: '16px Verdana'
                 //font: '16px Courier',
                 //fontFamily: 'KenneyRocketSquare',         
                 //color:"rgb(255,255,255)",
@@ -284,7 +289,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
         this.multiplayerNameText.setOrigin(0.5, 0.5);
         this.multiplayerNameText.setAlign('center');
-        this.multiplayerNameText.setFontSize(18);
+        this.multiplayerNameText.setFontSize(16);
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
         this.deathIcon = this.scene.add.image(
@@ -342,10 +347,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
 
 
-        var weaponHitParticles = this.scene.add.particles('explosion');
-        weaponHitParticles.setDepth(4);
-
-        this.particleEmitterExplosion = weaponHitParticles.createEmitter({
+        this.particleEmitterExplosion = this.scene.add.particles(0, 0,'explosion',{
             x: 0,
             y: 0,
             lifespan: 750,
@@ -356,12 +358,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             frequency: -1,
             alpha: {start: 0.9, end: 0.0},
         });
+        //weaponHitParticles.setDepth(4);
 
-        
-        var secondaryWeaponHitParticles = this.scene.add.particles('sparks');
-        secondaryWeaponHitParticles.setDepth(4);
+        //weaponHitParticles.createEmitter();
 
-        this.particleEmitterSparks = secondaryWeaponHitParticles.createEmitter({
+       
+        var particleEmitterSparks = this.scene.add.particles( 0, 0, 'sparks', {
             x: 0,
             y: 0,
             lifespan: 300,
@@ -373,11 +375,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
         });
 
-        var turboParticles = this.scene.add.particles('smoke');
-        turboParticles.setDepth(4);
-
-        // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js
-        this.particleEmitterTurbo = turboParticles.createEmitter({
+        this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
             x: this.x,
             y: this.y,
             lifespan: 180,
@@ -398,6 +396,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         });
         this.particleEmitterTurbo.stop();
         this.particleEmitterTurbo.setVisible(false);
+
+        // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js
+    
+        this.particleEmitterFlamethrower = this.scene.add.particles(150, 550, 'smoke',
+        {
+            frame: 'white',
+            color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
+            colorEase: 'quad.out',
+            lifespan: 2400,
+            angle: { min: -100, max: -80 },
+            scale: { start: 0.70, end: 0, ease: 'sine.out' },
+            speed: 100,
+            advance: 2000,
+            blendMode: 'ADD'
+        });
     }
 
     createAnims(){
@@ -1457,10 +1470,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
+        
+        this.numberDeaths++;
 
         let gameScene = <GameScene>this.scene;  
 
-        gameScene.sceneController.hudScene.setInfoText(this.playerId + " died", 2000);
+        gameScene.sceneController.hudScene.setInfoText(this.playerId + " died (" + this.numberDeaths + " total)", 2000);
+
     }
 
     tryRespawn() {

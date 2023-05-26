@@ -1,5 +1,6 @@
+import * as Phaser from 'phaser';
 import { Constants } from "../constants";
-import { Pickup, PickupType } from "../gameobjects/pickup";
+import { PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
 import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
@@ -293,11 +294,8 @@ export default class GameScene extends Phaser.Scene
         */
 
         //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
-
-        var tileExplosionParticles = this.add.particles('explosion');
-        tileExplosionParticles.setDepth(4);
-
-        this.particleEmitter = tileExplosionParticles.createEmitter({
+        
+        this.particleEmitter = this.add.particles(0, 0, 'explosion', {
             x: 0,
             y: 0,
             lifespan: 750,

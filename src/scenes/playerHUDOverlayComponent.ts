@@ -1,4 +1,4 @@
-
+import 'phaser';
 import { HealthBar } from "../gameobjects/healthBar";
 import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";

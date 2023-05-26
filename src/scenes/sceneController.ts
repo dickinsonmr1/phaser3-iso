@@ -1,4 +1,4 @@
-import { Game } from "phaser";
+import * as Phaser from 'phaser';
 import GameScene from "./gameScene";
 import { HudScene } from "./hudscene";
 

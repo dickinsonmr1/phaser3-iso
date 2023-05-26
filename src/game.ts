@@ -5,7 +5,7 @@
  */
 
 
-import 'phaser';
+import * as Phaser from 'phaser';
 import { SceneController } from './scenes/sceneController';
 
 const config = {

@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { Constants } from "../constants";
 
 export enum HUDBarType {

@@ -1,5 +1,6 @@
 import { Constants } from "../constants";
 import { HudScene } from "../scenes/hudscene";
+import * as Phaser from 'phaser';
 
 export enum IsoHudBarType {
     Health,

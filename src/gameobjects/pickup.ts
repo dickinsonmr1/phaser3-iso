@@ -1,3 +1,5 @@
+import 'phaser';
+
 export enum PickupType {
     Turbo,
     Health,
@@ -6,6 +8,7 @@ export enum PickupType {
     Special
 }
 
+/*
 // not being used yet
 export class Pickup extends Phaser.GameObjects.IsoBox {
 
@@ -40,3 +43,4 @@ export class Pickup extends Phaser.GameObjects.IsoBox {
         //this.isoBox.setScale(scale);
     //}
 }
+*/
