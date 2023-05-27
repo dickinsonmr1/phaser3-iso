@@ -2,6 +2,7 @@
 import * as Phaser from 'phaser';
 import { Scene } from "phaser";
 import { Utility } from "../utility";
+import { Constants } from '../constants';
 /*
 import { Constants } from "../client/constants";
 import { MainScene } from "../client/scenes/mainScene";
@@ -94,13 +95,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 .setColor(rocketColor)
                 .setIntensity(1.5);        
 
-            this.particleEmitter =  this.scene.add.particles(0, 0, 'smoke', {
-                x: this.x,
-                y: this.y,
+            this.particleEmitter =  this.scene.add.particles(this.x, this.y, 'smoke', {
                 lifespan: 500,
-                speed: 10, //{ min: 400, max: 400 },
-                accelerationX: params.velocityX,
-                accelerationY: params.velocityY,
+                speed: 5, //{ min: 400, max: 400 },
+                accelerationX: -params.velocityX,
+                accelerationY: -params.velocityY,
                 //rotate: params.angle,
                 //gravityY: 300,
                 tint: rocketColor, // gray: 808080
@@ -110,9 +109,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 blendMode: 'ADD',
                 frequency: 25,
                 alpha: {start: 1.0, end: 0.5},
-                maxParticles: 25
+                maxParticles: 25,                
                 //active: false
             });
+            this.particleEmitter.setDepth(Constants.depthTurboParticles)
         }
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
@@ -155,6 +155,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
             if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
                 this.spotlight.setPosition(this.x, this.y);
+                this.particleEmitter.setDepth(4)
                 this.particleEmitter.setPosition(this.x, this.y);
             }
             

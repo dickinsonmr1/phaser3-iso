@@ -161,6 +161,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     
     private cpuFleeDirection: PlayerDrawOrientation = PlayerDrawOrientation.E;
 
+    private getMaxFlamethrowerDistance(): number {return 100;}
+    private flamethrowerDistance: number = 0;
+
 
     playerDrawOrientation: PlayerDrawOrientation;
     getPlayerIsometricOrientation(): PlayerCartesianOrientation {
@@ -347,9 +350,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
 
 
-        this.particleEmitterExplosion = this.scene.add.particles(0, 0,'explosion',{
-            x: 0,
-            y: 0,
+        this.particleEmitterExplosion = this.scene.add.particles(this.x, this.y, 'explosion', {
             lifespan: 750,
             speed: { min: -50, max: 50 },
             //tint: 0xff0000, 
@@ -363,9 +364,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         //weaponHitParticles.createEmitter();
 
        
-        var particleEmitterSparks = this.scene.add.particles( 0, 0, 'sparks', {
-            x: 0,
-            y: 0,
+        this.particleEmitterSparks = this.scene.add.particles(this.x, this.y, 'sparks', {            
             lifespan: 300,
             speed: { min: -50, max: 50 },
             //tint: 0xff0000, 
@@ -375,11 +374,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
         });
 
-        this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
-            x: this.x,
-            y: this.y,
+        this.particleEmitterTurbo = this.scene.add.particles(this.x, this.y, 'smoke', {
             lifespan: 180,
-            speed: 10, //{ min: 400, max: 400 },
+            speed: 100, //{ min: 400, max: 400 },
             //accelerationX: params.velocityX,
             //accelerationY: params.velocityY,
             //rotate: params.angle,
@@ -399,17 +396,24 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js
     
-        this.particleEmitterFlamethrower = this.scene.add.particles(150, 550, 'smoke',
+        
+        this.particleEmitterFlamethrower = this.scene.add.particles(0, 0, 'smoke',
         {
-            frame: 'white',
+            //x: this.x,
+            //y: this.y,
+            //frame: 'white',
+            //accelerationX: 10,
+            //accelerationY: 10,
             color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
             colorEase: 'quad.out',
-            lifespan: 2400,
+            lifespan: 400,
+            //angle: { min: -280, max: -260 },
             angle: { min: -100, max: -80 },
-            scale: { start: 0.70, end: 0, ease: 'sine.out' },
+            scale: { start: 0.40, end: 0, ease: 'sine.out' },
             speed: 100,
-            advance: 2000,
-            blendMode: 'ADD'
+            //advance: 2000,
+            blendMode: 'ADD',
+            emitting: false
         });
     }
 
@@ -1168,6 +1172,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
             this.particleEmitterTurbo.setPosition(this.x, this.y);
+            this.particleEmitterTurbo.emitParticleAt(this.x, this.y, 1);
+            this.particleEmitterTurbo.setRotation(-this.arctangent);
+
+            //this.particleEmitterFlamethrower.setPosition(this.x, this.y);
+            //this.particleEmitterFlamethrower.setRotation(-this.arctangent + Math.PI / 2);
+        
+            //this.particleEmitterTurbo.setEmitterAngle(90);
+            //this.particleEmitterTurbo.set (-this.aimX * 10, -this.aimY * 10);
 
             //this.turboOn = false;
         }
@@ -1182,6 +1194,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.rocketTime > 0)
             this.rocketTime--;
+
     }
 
     alignPlayerNameText(x: number, y: number) {
@@ -1461,12 +1474,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.turbo = 0;
         this.turboBar.updateHealth(this.turbo);
+        this.particleEmitterTurbo.stop();
 
         this.turboBar.setVisible(false);
         this.healthBar.setVisible(false);
         this.multiplayerNameText.setVisible(false);
 
-        this.particleEmitterExplosion.explode(20, this.x, this.y);
+        this.particleEmitterExplosion.setPosition(this.x, this.y);
+        this.particleEmitterExplosion.explode(20);//, this.x, this.y);
 
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
@@ -1475,7 +1490,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         let gameScene = <GameScene>this.scene;  
 
-        gameScene.sceneController.hudScene.setInfoText(this.playerId + " died (" + this.numberDeaths + " total)", 2000);
+        gameScene.sceneController.hudScene.setInfoText(this.playerId + " destroyed (" + this.numberDeaths + " total)", 2000);
 
     }
 
@@ -1501,6 +1516,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
+        this.tryTurboBoostOff();
+        this.particleEmitterTurbo.setPosition(this.x, this.y);
 
         this.deadUntilRespawnTime = 0;
 
@@ -1657,12 +1674,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         {
             case ProjectileType.Bullet:
                 this.health--;
-                this.particleEmitterSparks.explode(5, this.x, this.y);
+                this.particleEmitterSparks.setPosition(this.x, this.y);
+                this.particleEmitterSparks.explode(5);//, this.x, this.y);
                 break;
             case ProjectileType.FireRocket:
             case ProjectileType.HomingRocket:
                 this.health -= 5;
-                this.particleEmitterExplosion.explode(10, this.x, this.y);
+                this.particleEmitterExplosion.setPosition(this.x, this.y);
+                this.particleEmitterExplosion.explode(10);//, this.x, this.y);
                 break;
         }
         
@@ -1732,6 +1751,42 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }  
 
+    tryFireFlamethrower() {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        //let maxDistance = 100;
+        let minDistance = 30;
+
+        if(this.flamethrowerDistance < this.getMaxFlamethrowerDistance())
+            this.flamethrowerDistance += 10;
+        
+        for(var i = 0; i < 10; i++) {
+            var distance = minDistance + Utility.getRandomInt(this.flamethrowerDistance);
+            this.particleEmitterFlamethrower.emitParticleAt(this.x + this.aimX * distance, this.y + this.aimY * distance);               
+        }    
+        /*
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.rocketTime) {
+            
+            var changeBehaviorRand = Utility.getRandomInt(2);
+            if(changeBehaviorRand == 0)
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.HomingRocket);//this.playerOrientation);
+            else
+                this.createProjectile(this.aimX, this.aimY, ProjectileType.FireRocket);//this.playerOrientation);
+
+            this.rocketTime = gameTime + this.rocketTimeInterval;
+        }
+        */
+    }  
+
+    tryStopFireFlamethrower() {
+        
+        if(this.flamethrowerDistance > 0)
+            this.flamethrowerDistance -= 10;
+    }
+
     tryTurboBoostOn(): void {
         
         if(this.deadUntilRespawnTime > 0) return;
@@ -1745,9 +1800,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
             //this.particleEmitterTurbo.setSpeedX = -this.aimX;
             //this.particleEmitterTurbo.accelerationX = -this.aimX;
-            //if(!this.particleEmitterTurbo.active)
-                this.particleEmitterTurbo.start();
-                this.particleEmitterTurbo.setVisible(true);
+            //if(!this.particleEmitterTurbo.active)s
+            this.particleEmitterTurbo.start();
+            this.particleEmitterTurbo.setVisible(true);
         }        
     }
 

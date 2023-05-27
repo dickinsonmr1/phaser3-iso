@@ -687,6 +687,14 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
+
+            if(pad.X) {
+                this.player.tryFireFlamethrower();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
+            } 
+            else{
+                this.player.tryStopFireFlamethrower();
+            }
             
             if(pad.B) {
                 this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
