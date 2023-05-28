@@ -145,6 +145,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterDeathBurn: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
 
@@ -349,6 +350,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
 
+        
+        
         this.particleEmitterExplosion = this.scene.add.particles(this.x, this.y, 'explosion', {
             lifespan: 750,
             speed: { min: -50, max: 50 },
@@ -356,7 +359,31 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             scale: {start: 0.5, end: 1.0},
             blendMode: 'ADD',
             frequency: -1,
-            alpha: {start: 0.9, end: 0.0},
+            alpha: {start: 0.9, end: 0.0}
+        });
+
+        this.particleEmitterDeathBurn = this.scene.add.particles(this.x, this.y, 'explosion',
+        {
+            //frame: 'white',
+
+            color: [ 0x040d61, 0xfacc22, 0xf89800, 0xf83600, 0x9f0404, 0x4b4a4f, 0x353438, 0x040404 ],
+            lifespan: 1000,
+            angle: { min: -100, max: -80 },
+            scale: 0.75,
+            speed: { min: 100, max: 150 },
+            //advance: 2000,
+            blendMode: 'ADD',
+            /*
+            color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
+            colorEase: 'quad.out',
+            lifespan: 2400,
+            angle: { min: -100, max: -80 },
+            scale: { start: 0.70, end: 0, ease: 'sine.out' },
+            speed: 100,
+            advance: 2000,
+            blendMode: 'ADD',
+            */
+            emitting: false            
         });
         //weaponHitParticles.setDepth(4);
 
@@ -1461,6 +1488,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.particleEmitterExplosion.setPosition(this.x, this.y);
         this.particleEmitterExplosion.explode(20);//, this.x, this.y);
 
+        this.particleEmitterDeathBurn.setPosition(this.x, this.y);
+        this.particleEmitterDeathBurn.start(0, 1000);
+
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
         
@@ -1505,6 +1535,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.setVisible(true);
         this.healthBar.setVisible(true);
         this.multiplayerNameText.setVisible(true);
+
+        this.particleEmitterDeathBurn.emitting = false;
     }
 
     snapToAngle() {

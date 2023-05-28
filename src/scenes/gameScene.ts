@@ -411,7 +411,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(6);
+            var rand = Utility.getRandomInt(7);
             var pickUpIconKey = "deathIcon";
             switch(rand) {
                 case 0: // pink
@@ -419,7 +419,7 @@ export default class GameScene extends Phaser.Scene
                     leftColor = 0xFF2DB6;
                     rightColor = 0xFF5BC6;
                     pickupType = PickupType.Rocket;
-                    pickUpIconKey = "deathIcon";
+                    pickUpIconKey = "rocketIcon";
                     break;
                 case 1: // purple
                     topColor = 0xA26FFF;
@@ -455,6 +455,13 @@ export default class GameScene extends Phaser.Scene
                     rightColor = 0xFF5D5B;
                     pickupType = PickupType.Rocket;
                     pickUpIconKey = "rocketIcon";
+                    break;
+                case 6: // orange
+                    topColor = 0xFFBA6F;
+                    leftColor = 0xFF992D;
+                    rightColor = 0xFFAF5B;
+                    pickupType = PickupType.Turbo;
+                    pickUpIconKey = "turboIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
