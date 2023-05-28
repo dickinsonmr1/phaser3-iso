@@ -336,6 +336,11 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.collider(this.player, this.player3);
         this.physics.add.collider(this.player, this.player4);
 
+        this.physics.add.collider(this.player2, this.player3);
+        this.physics.add.collider(this.player2, this.player4);
+        
+        this.physics.add.collider(this.player3, this.player4);        
+
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));

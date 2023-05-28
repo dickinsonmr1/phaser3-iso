@@ -349,7 +349,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
 
-
         this.particleEmitterExplosion = this.scene.add.particles(this.x, this.y, 'explosion', {
             lifespan: 750,
             speed: { min: -50, max: 50 },
@@ -361,9 +360,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         });
         //weaponHitParticles.setDepth(4);
 
-        //weaponHitParticles.createEmitter();
-
-       
         this.particleEmitterSparks = this.scene.add.particles(this.x, this.y, 'sparks', {            
             lifespan: 300,
             speed: { min: -50, max: 50 },
@@ -374,7 +370,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
         });
 
-        this.particleEmitterTurbo = this.scene.add.particles(this.x, this.y, 'smoke', {
+        this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
             lifespan: 180,
             speed: 100, //{ min: 400, max: 400 },
             //accelerationX: params.velocityX,
@@ -382,21 +378,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             //rotate: params.angle,
             //gravityY: 300,
             tint: 0x808080, // gray: 808080
-            scaleX: { start: 0.20, end: 0.01 },
-            scaleY: { start: 0.20, end: 0.01 },
-            quantity: 1,
+            scale: { start: 0.20, end: 0.01 },
+            //quantity: 1,
             blendMode: 'ADD',
-            frequency: 25,
+            //frequency: 25,
             alpha: {start: 1.0, end: 0.5},
             //maxParticles: 25,
-            //active: false
+            emitting: false
         });
-        this.particleEmitterTurbo.stop();
-        this.particleEmitterTurbo.setVisible(false);
 
-        // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js
-    
-        
+        // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js        
         this.particleEmitterFlamethrower = this.scene.add.particles(0, 0, 'smoke',
         {
             //x: this.x,
@@ -1170,18 +1161,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.setOrigin(0.5, 0.5);
 
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
-
-            this.particleEmitterTurbo.setPosition(this.x, this.y);
-            this.particleEmitterTurbo.emitParticleAt(this.x, this.y, 1);
-            this.particleEmitterTurbo.setRotation(-this.arctangent);
-
-            //this.particleEmitterFlamethrower.setPosition(this.x, this.y);
-            //this.particleEmitterFlamethrower.setRotation(-this.arctangent + Math.PI / 2);
-        
-            //this.particleEmitterTurbo.setEmitterAngle(90);
-            //this.particleEmitterTurbo.set (-this.aimX * 10, -this.aimY * 10);
-
-            //this.turboOn = false;
         }
         else {
             this.deadUntilRespawnTime--;
@@ -1474,7 +1453,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.turbo = 0;
         this.turboBar.updateHealth(this.turbo);
-        this.particleEmitterTurbo.stop();
 
         this.turboBar.setVisible(false);
         this.healthBar.setVisible(false);
@@ -1517,7 +1495,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
         this.tryTurboBoostOff();
-        this.particleEmitterTurbo.setPosition(this.x, this.y);
 
         this.deadUntilRespawnTime = 0;
 
@@ -1798,11 +1775,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.turboBar.updateHealth(this.turbo);
             this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
-            //this.particleEmitterTurbo.setSpeedX = -this.aimX;
-            //this.particleEmitterTurbo.accelerationX = -this.aimX;
-            //if(!this.particleEmitterTurbo.active)s
-            this.particleEmitterTurbo.start();
-            this.particleEmitterTurbo.setVisible(true);
+            var distance = 15;
+            this.particleEmitterTurbo.emitParticleAt(this.x - this.aimX * distance, this.y - this.aimY * distance);               
         }        
     }
 
@@ -1814,9 +1788,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.turboOn) {
             this.turboOn = false;            
         }
-
-        //if(this.particleEmitterTurbo.active)
-            this.particleEmitterTurbo.stop();
     }
 
     tryFireSecondaryWeaponWithGamepad() { //x, y) {
