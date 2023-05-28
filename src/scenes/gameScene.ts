@@ -16,6 +16,8 @@ export default class GameScene extends Phaser.Scene
     player3: Player;
     player4: Player;
 
+    allPlayers: Phaser.GameObjects.Group;
+
     public showDebug: boolean = false;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
@@ -44,6 +46,7 @@ export default class GameScene extends Phaser.Scene
     layerPickups : Phaser.Tilemaps.TilemapLayer;
 
     pickups : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
+    pickupIcons : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
     
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
@@ -275,6 +278,12 @@ export default class GameScene extends Phaser.Scene
         });        
         this.player4.init();
 
+        this.allPlayers = this.physics.add.group();
+
+        this.allPlayers.add(this.player);
+        this.allPlayers.add(this.player2);
+        this.allPlayers.add(this.player3);
+        this.allPlayers.add(this.player4);
 
         var cursors = this.input.keyboard.createCursorKeys();
 
@@ -315,10 +324,13 @@ export default class GameScene extends Phaser.Scene
             this.generatePickup(tile);            
         })        
 
-        this.physics.add.overlap(this.player, this.layer4);
+        this.physics.add.overlap(this.allPlayers, this.layer4);
+        
+        /*this.physics.add.overlap(this.player, this.layer4);
         this.physics.add.overlap(this.player2, this.layer4);
         this.physics.add.overlap(this.player3, this.layer4);
         this.physics.add.overlap(this.player4, this.layer4);
+        */
 
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
@@ -332,14 +344,7 @@ export default class GameScene extends Phaser.Scene
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
         //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
 
-        this.physics.add.collider(this.player, this.player2);
-        this.physics.add.collider(this.player, this.player3);
-        this.physics.add.collider(this.player, this.player4);
-
-        this.physics.add.collider(this.player2, this.player3);
-        this.physics.add.collider(this.player2, this.player4);
-        
-        this.physics.add.collider(this.player3, this.player4);        
+        this.physics.add.collider(this.allPlayers, this.allPlayers);
 
         this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
         this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
@@ -354,11 +359,7 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player3, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
         this.physics.add.overlap(this.player4, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
-        //this.physics.add.collider(this.player, this.player2);
-        //this.physics.add.collider(this.player, this.player3);
-        //this.physics.add.collider(this.player, this.player4);
-
-        this.cameras.main.startFollow(this.player, false, 0.5, 0.5, 0, 0);
+        this.cameras.main.startFollow(this.player, true, 0.6, 0.6, 0, 0);
 
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
@@ -405,6 +406,7 @@ export default class GameScene extends Phaser.Scene
 
             var pickupType = PickupType.Rocket;
             var rand = Utility.getRandomInt(6);
+            var pickUpIconKey = "deathIcon";
             switch(rand) {
                 case 0: // pink
                     topColor = 0xFF6FCC;
@@ -452,6 +454,8 @@ export default class GameScene extends Phaser.Scene
 
 
             var pickup = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
+
+        
             
             /*var pickup = new Pickup({
                 scene: this,
@@ -471,6 +475,18 @@ export default class GameScene extends Phaser.Scene
             this.physics.world.enable(pickup);
 
             this.pickups.push(pickup);
+
+            var pickupIcon = this.add.image(
+                temp.x,
+                temp.y,
+                pickUpIconKey);
+            pickupIcon.setScale(0.25);
+            pickupIcon.setOrigin(0.5, 0.75);
+                //this.deathIcon.setDisplayOrigin(0,0);
+            pickupIcon.alpha = 0.2;    
+            pickupIcon.depth = 1;
+
+            this.pickupIcons.push(pickupIcon);
 
             this.layerPickups.removeTileAt(tile.x, tile.y);
         }
@@ -823,6 +839,20 @@ export default class GameScene extends Phaser.Scene
             let leftColor = new Phaser.Display.Color(150, 0, 0);
             let rightColor = new Phaser.Display.Color(150, 0, 0);
 
+            if(this.pickupScaleTime > 30)
+                temp.alpha += 0.01;
+                //temp.y -= 0.1;
+            else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
+                temp.alpha -= 0.01;
+                //temp.y += 0.1;
+            
+            //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
+        });
+
+        this.pickupIcons.forEach(item => {
+            let temp = <Phaser.GameObjects.Image>(item);
+            temp.setScale(this.pickupScale * 0.25);
+            
             if(this.pickupScaleTime > 30)
                 temp.alpha += 0.01;
                 //temp.y -= 0.1;

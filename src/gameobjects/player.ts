@@ -1955,7 +1955,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
 
             case PlayerDrawOrientation.N_NE:                
-                drawAngle = 9 * Math.PI / 12;                            
+                drawAngle = 10 * Math.PI / 12;                            
                 break;
             case PlayerDrawOrientation.NE:                
                 //angle = 3 * Math.PI / 4;  
@@ -1981,7 +1981,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
             case PlayerDrawOrientation.S_SE:                    
                 //angle = 3 * Math.PI / 4;
-                drawAngle = 3 * Math.PI / 12;               
+                drawAngle = 2 * Math.PI / 12;               
                 break;
 
             case PlayerDrawOrientation.S:                
@@ -1990,7 +1990,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
             case PlayerDrawOrientation.S_SW:    
                 //angle = -Math.PI / 4;      
-                drawAngle = -Math.PI / 3;                  
+                drawAngle = -2 * Math.PI / 12;                  
                 break;
 
             case PlayerDrawOrientation.SW:    
@@ -2017,7 +2017,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
 
             case PlayerDrawOrientation.N_NW:
-                drawAngle = -9 * Math.PI / 12;
+                drawAngle = -10 * Math.PI / 12;
                 break;       
     
         }
