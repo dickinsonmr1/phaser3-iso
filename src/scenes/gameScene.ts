@@ -90,6 +90,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
+        this.load.image('rocketIcon', './assets/sprites/HUD/chess_pawn.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square.png');
@@ -413,47 +414,54 @@ export default class GameScene extends Phaser.Scene
                     leftColor = 0xFF2DB6;
                     rightColor = 0xFF5BC6;
                     pickupType = PickupType.Rocket;
+                    pickUpIconKey = "deathIcon";
                     break;
                 case 1: // purple
                     topColor = 0xA26FFF;
                     leftColor = 0x762DFF;
                     rightColor = 0x945BFF;
                     pickupType = PickupType.Rocket;
+                    pickUpIconKey = "rocketIcon";
                     break;
                 case 2: // green
                     topColor = 0xB4FF6F;
                     leftColor = 0x93FF2D;
                     rightColor = 0xABFF5B;
                     pickupType = PickupType.Health;
+                    pickUpIconKey = "healthIcon";
                     break;
                 case 3: // blue
                     topColor = 0x6F84FF;
                     leftColor = 0x2D4DFF;
                     rightColor = 0x5B74FF;
                     pickupType = PickupType.Turbo;
+                    pickUpIconKey = "turboIcon";
                     break;
                 case 4: // yellow
                     topColor = 0xFFEA6F;
                     leftColor = 0xFFEA6F;
                     rightColor = 0xFFE65B;
                     pickupType = PickupType.Turbo;
+                    pickUpIconKey = "turboIcon";
                     break;
                 case 5: // red
                     topColor = 0xFF726F;
                     leftColor = 0xFF302D;
                     rightColor = 0xFF5D5B;
                     pickupType = PickupType.Rocket;
+                    pickUpIconKey = "rocketIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
                     leftColor = 0xFF2DB6;
                     rightColor = 0xFF5BC6;
                     pickupType = PickupType.Rocket;
+                    pickUpIconKey = "rocketIcon";
                     break;
             }
 
 
-            var pickup = this.add.isobox(temp.x, temp.y, 20, 10, topColor, leftColor, rightColor);
+            var pickup = this.add.isobox(temp.x, temp.y, 30, 15, topColor, leftColor, rightColor);
 
         
             
@@ -470,7 +478,8 @@ export default class GameScene extends Phaser.Scene
             });*/
             pickup.name = pickupType.toString();
             
-            pickup.alpha = 0.6;
+            pickup.depth = 2;
+            pickup.alpha = 0.5;
             pickup.setOrigin(0.5, 0.5);
             this.physics.world.enable(pickup);
 
@@ -481,9 +490,9 @@ export default class GameScene extends Phaser.Scene
                 temp.y,
                 pickUpIconKey);
             pickupIcon.setScale(0.25);
-            pickupIcon.setOrigin(0.5, 0.75);
+            pickupIcon.setOrigin(0.5, 0.85);
                 //this.deathIcon.setDisplayOrigin(0,0);
-            pickupIcon.alpha = 0.2;    
+            pickupIcon.alpha = 1.0;//0.2;    
             pickupIcon.depth = 1;
 
             this.pickupIcons.push(pickupIcon);
@@ -839,13 +848,14 @@ export default class GameScene extends Phaser.Scene
             let leftColor = new Phaser.Display.Color(150, 0, 0);
             let rightColor = new Phaser.Display.Color(150, 0, 0);
 
+            /*
             if(this.pickupScaleTime > 30)
                 temp.alpha += 0.01;
                 //temp.y -= 0.1;
             else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
                 temp.alpha -= 0.01;
                 //temp.y += 0.1;
-            
+            */
             //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
         });
 
@@ -853,12 +863,14 @@ export default class GameScene extends Phaser.Scene
             let temp = <Phaser.GameObjects.Image>(item);
             temp.setScale(this.pickupScale * 0.25);
             
+            /*
             if(this.pickupScaleTime > 30)
                 temp.alpha += 0.01;
                 //temp.y -= 0.1;
             else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
                 temp.alpha -= 0.01;
                 //temp.y += 0.1;
+            */
             
             //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
         });
