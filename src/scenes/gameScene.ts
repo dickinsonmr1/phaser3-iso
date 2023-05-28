@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { Constants } from "../constants";
-import { PickupType } from "../gameobjects/pickup";
+import { Pickup, PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
 import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
@@ -46,7 +46,10 @@ export default class GameScene extends Phaser.Scene
     layerPickups : Phaser.Tilemaps.TilemapLayer;
 
     pickups : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
-    pickupIcons : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
+    //pickupIcons : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
+
+    pickupObjects : Array<Pickup> = new Array<Pickup>();
+    pickupPhysicsObjects: Phaser.GameObjects.Group;
     
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
@@ -320,7 +323,7 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player, this.layerPickups);
         this.layerPickups.setTileIndexCallback(Constants.pickupSpawnTile, this.playerTouchingTileHandler, this);
 
-        
+        this.pickupPhysicsObjects = this.physics.add.group();
         this.layerPickups.forEachTile(tile => {
             this.generatePickup(tile);            
         })        
@@ -355,10 +358,12 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player, this.player3.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
         this.physics.add.overlap(this.player, this.player4.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
 
-        this.physics.add.overlap(this.player, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        this.physics.add.overlap(this.player2, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        this.physics.add.overlap(this.player3, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        this.physics.add.overlap(this.player4, this.pickups, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        
+
+        this.physics.add.overlap(this.allPlayers, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        //this.physics.add.overlap(this.player2, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        //this.physics.add.overlap(this.player3, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
+        //this.physics.add.overlap(this.player4, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
         this.cameras.main.startFollow(this.player, true, 0.6, 0.6, 0, 0);
 
@@ -461,11 +466,11 @@ export default class GameScene extends Phaser.Scene
             }
 
 
-            var pickup = this.add.isobox(temp.x, temp.y, 30, 15, topColor, leftColor, rightColor);
-
-        
             
-            /*var pickup = new Pickup({
+
+            
+            
+            var pickup = new Pickup({
                 scene: this,
                 pickupType: pickupType,
                 x: temp.x,
@@ -474,10 +479,18 @@ export default class GameScene extends Phaser.Scene
                 height: 10,
                 topColor: topColor,
                 leftColor: leftColor,
-                rightColor: rightColor
-            });*/
-            pickup.name = pickupType.toString();
+                rightColor: rightColor,
+                pickupIconKey: pickUpIconKey
+                //name: pickupType.toString(),
+                //depth: 2,
+                //alpha: 0.5
+            });
+
+            this.pickupObjects.push(pickup);
             
+            /*
+            var pickup = this.add.isobox(temp.x, temp.y, 30, 15, topColor, leftColor, rightColor);
+            pickup.name = pickupType.toString();        
             pickup.depth = 2;
             pickup.alpha = 0.5;
             pickup.setOrigin(0.5, 0.5);
@@ -496,6 +509,7 @@ export default class GameScene extends Phaser.Scene
             pickupIcon.depth = 1;
 
             this.pickupIcons.push(pickupIcon);
+            */
 
             this.layerPickups.removeTileAt(tile.x, tile.y);
         }
@@ -639,8 +653,9 @@ export default class GameScene extends Phaser.Scene
         
         //selectedPlayer.
         //otherPlayer.tryDamage();
-
         pickup.destroy();
+
+        //var pickupParent = pickup.getData('parentId');
         
         
         //bullet.remove();
@@ -838,7 +853,10 @@ export default class GameScene extends Phaser.Scene
         this.player4.updateCpuBehavior(this.player.x, this.player.y);
         this.player4.update();
 
-        var pickupScale = this.updatePickupScaleTime()
+        this.updatePickupScaleTime()
+        this.pickupObjects.forEach(item => {
+            item.update(this.pickupScale);
+        })
 
         this.pickups.forEach(item => {
             let temp = <Phaser.GameObjects.IsoBox>(item);
@@ -856,22 +874,6 @@ export default class GameScene extends Phaser.Scene
                 temp.alpha -= 0.01;
                 //temp.y += 0.1;
             */
-            //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
-        });
-
-        this.pickupIcons.forEach(item => {
-            let temp = <Phaser.GameObjects.Image>(item);
-            temp.setScale(this.pickupScale * 0.25);
-            
-            /*
-            if(this.pickupScaleTime > 30)
-                temp.alpha += 0.01;
-                //temp.y -= 0.1;
-            else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
-                temp.alpha -= 0.01;
-                //temp.y += 0.1;
-            */
-            
             //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
         });
 
