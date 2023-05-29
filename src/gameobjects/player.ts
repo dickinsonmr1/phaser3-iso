@@ -1750,7 +1750,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.bulletTime) {
             
-            this.createProjectile(this.aimX, this.aimY, ProjectileType.Bullet);//this.playerOrientation);
+            this.createProjectile(ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
@@ -1766,9 +1766,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             
             var changeBehaviorRand = Utility.getRandomInt(2);
             if(changeBehaviorRand == 0)
-                this.createProjectile(this.aimX, this.aimY, ProjectileType.HomingRocket);//this.playerOrientation);
+                this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
             else
-                this.createProjectile(this.aimX, this.aimY, ProjectileType.FireRocket);//this.playerOrientation);
+                this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1844,7 +1844,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.bulletTime) {
             
-            this.createProjectile(this.aimX, this.aimY, ProjectileType.Bullet);//this.playerOrientation);
+            this.createProjectile(ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
     }  
@@ -1859,9 +1859,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             
             var changeBehaviorRand = Utility.getRandomInt(2);
             if(changeBehaviorRand == 0)
-                this.createProjectile(this.aimX, this.aimY, ProjectileType.HomingRocket);//this.playerOrientation);
+                this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
             else
-                this.createProjectile(this.aimX, this.aimY, ProjectileType.FireRocket);//this.playerOrientation);
+                this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
                                 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1879,7 +1879,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
     }
 
-    private createProjectile(x, y, projectileType) : Projectile {
+    private createProjectile(projectileType) : Projectile {
         //var body = <Phaser.Physics.Arcade.Body>this.body;
         var velocityX: number;
         var velocityY: number;
@@ -1910,91 +1910,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
         }            
 
-        /*
         velocityX = this.aimX * bulletVelocity;
         velocityY = this.aimY * bulletVelocity;
-        return;
-        */
-
-        if(x == null && y == null) {
-            var cartesianOrientation = this.getPlayerIsometricOrientation();
-
-            switch(cartesianOrientation){
-                case PlayerCartesianOrientation.N:
-                    velocityX = 0;
-                    velocityY = -bulletVelocity;
-                    break;
-                //case PlayerCartesianOrientation.N_NE:
-                    //velocityX = bulletVelocity / 2;
-                    //velocityY = -bulletVelocity / 2;
-                    //break;
-                case PlayerCartesianOrientation.NE:
-                    velocityX = bulletVelocity;
-                    velocityY = -bulletVelocity;
-                    break;
-                //case PlayerCartesianOrientation.E_NE:
-                    //velocityX = bulletVelocity / 2;
-                    //velocityY = -bulletVelocity / 2;
-                    //break;
-                case PlayerCartesianOrientation.E:
-                    velocityX = bulletVelocity;
-                    velocityY = 0;
-                    break;                 
-                //case PlayerCartesianOrientation.E_SE:
-                    //velocityX = bulletVelocity / 2;
-                    //velocityY = bulletVelocity / 2;
-                    //break;   
-                case PlayerCartesianOrientation.SE:
-                    velocityX = bulletVelocity;
-                    velocityY = bulletVelocity;
-                    break;
-                case PlayerCartesianOrientation.S:
-                    velocityX = 0;
-                    velocityY = bulletVelocity;
-                    break;
-                case PlayerCartesianOrientation.SW:
-                    velocityX = -bulletVelocity;
-                    velocityY = bulletVelocity;
-                    break;
-                case PlayerCartesianOrientation.W:
-                    velocityX = -bulletVelocity;
-                    velocityY = 0;
-                    break;
-                case PlayerCartesianOrientation.NW:
-                    velocityX = -bulletVelocity;
-                    velocityY = -bulletVelocity;
-                    break;
-
-            }
-        }
-        else {
-            // gamepad
-
-            //var temp = this.arctangent + 7 * Math.PI / 4;
-
-            //velocityX = Math.cos(temp) * bulletVelocity;
-            //velocityY = Math.sin(-temp) * bulletVelocity;
-            velocityX = this.aimX * bulletVelocity;
-            velocityY = this.aimY * bulletVelocity;
-        }
 
         var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
+        
+        var launchDistanceFromPlayerCenter = 25;
 
-        //var angle = Math.atan2(this.aimY, this.aimX) + 5 * Math.PI / 4;
-
-        var drawAngle = 0;
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
         //         0 PI  0 PI
 
-        /*
-        if(this.arctangent < 0)
-            angle = Math.abs(this.arctangent) - Math.abs(this.arctangent % (Math.PI / 4));
-        else
-            angle = -(Math.abs(this.arctangent) - Math.abs(this.arctangent % (Math.PI / 4)));
-        */
-        
-        var drawAngle = 0;
+        var drawAngle = 0;        
         switch(this.playerDrawOrientation) {
             case PlayerDrawOrientation.N:
                 drawAngle = Math.PI;
@@ -2071,8 +1998,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         var bullet = new Projectile({
             scene: this.scene,
             projectileType: projectileType,
-            isometricX: this.x, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            isometricY: this.y, //screenPosition.y, //body.y + this.getBulletOffsetY(),
+            isometricX: this.x + this.aimX * launchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            isometricY: this.y + this.aimY * launchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
             key: weaponImageKey,//this.currentWeaponBulletName,
@@ -2089,25 +2016,5 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.bullets.add(bullet);
 
         return bullet;
-
-        /*
-        if (this.flipX) {
-            var bullet = this.bullets
-                .create(body.x, body.y + this.getBulletOffsetY(), this.currentWeaponBulletName)
-                .setFlipX(true)
-                .body.setVelocityX(-this.playerBulletVelocityX)
-                .setVelocityY(0);
-
-            //bullet.damage = 4;
-        }
-        else {
-            var bullet = this.bullets
-                .create(body.x + Player.playerBulletOffsetX, body.y + this.getBulletOffsetY(), this.currentWeaponBulletName)
-                .body.setVelocityX(this.playerBulletVelocityX)
-                .setVelocityY(0);
-
-            //bullet.damage = 4;
-        }
-        */
     }
 }
