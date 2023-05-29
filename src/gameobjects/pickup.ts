@@ -5,7 +5,8 @@ export enum PickupType {
     Health,
     Rocket,
     Bullet,
-    Special
+    Special,
+    Flamethrower
 }
 
 
@@ -38,7 +39,7 @@ export class Pickup { //extends Phaser.GameObjects.IsoBox {
             params.y,
             params.pickupIconKey);
 
-            this.icon.setScale(0.25);
+            this.icon.setScale(0.33);
             this.icon.setOrigin(0.5, 0.85);
             //this.deathIcon.setDisplayOrigin(0,0);
             this.icon.alpha = 1.0;//0.2;    

@@ -89,11 +89,13 @@ export default class GameScene extends Phaser.Scene
         this.load.image('turboBarMid', './assets/sprites/HUD/barHorizontal_yellow_mid.png');
         this.load.image('turboBarRight', './assets/sprites/HUD/barHorizontal_yellow_right.png');
 
-        this.load.image('turboIcon', './assets/sprites/HUD/fire.png');
+        this.load.image('turboIcon', './assets/sprites/HUD/turboIcon.png');
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
         this.load.image('rocketIcon', './assets/sprites/HUD/chess_pawn.png');
+        this.load.image('fireIcon', './assets/sprites/HUD/fire.png');
+        this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square.png');
@@ -432,8 +434,8 @@ export default class GameScene extends Phaser.Scene
                     topColor = 0xB4FF6F;
                     leftColor = 0x93FF2D;
                     rightColor = 0xABFF5B;
-                    pickupType = PickupType.Health;
-                    pickUpIconKey = "healthIcon";
+                    pickupType = PickupType.Special;
+                    pickUpIconKey = "specialIcon";
                     break;
                 case 3: // blue
                     topColor = 0x6F84FF;
@@ -453,30 +455,25 @@ export default class GameScene extends Phaser.Scene
                     topColor = 0xFF726F;
                     leftColor = 0xFF302D;
                     rightColor = 0xFF5D5B;
-                    pickupType = PickupType.Rocket;
-                    pickUpIconKey = "rocketIcon";
+                    pickupType = PickupType.Health;
+                    pickUpIconKey = "healthIcon";
                     break;
                 case 6: // orange
                     topColor = 0xFFBA6F;
                     leftColor = 0xFF992D;
                     rightColor = 0xFFAF5B;
-                    pickupType = PickupType.Turbo;
-                    pickUpIconKey = "turboIcon";
+                    pickupType = PickupType.Flamethrower;
+                    pickUpIconKey = "fireIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
                     leftColor = 0xFF2DB6;
                     rightColor = 0xFF5BC6;
-                    pickupType = PickupType.Rocket;
-                    pickUpIconKey = "rocketIcon";
+                    pickupType = PickupType.Flamethrower;
+                    pickUpIconKey = "fireIcon";
                     break;
             }
 
-
-            
-
-            
-            
             var pickup = new Pickup({
                 scene: this,
                 pickupType: pickupType,
@@ -655,6 +652,10 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Special:
                 console.log('refill special');
                 this.sceneController.hudScene.setInfoText("Special restored - " + selectedPlayer.playerId, 2000);
+                break;
+            case PickupType.Flamethrower:
+                console.log('refill flamethrower');
+                this.sceneController.hudScene.setInfoText("Flamethrower restored - " + selectedPlayer.playerId, 2000);
                 break;
         }
         
