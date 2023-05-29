@@ -85,6 +85,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     private numberDeaths: number = 0;
 
+    public deathBurnSpotlight;//: Phaser.GameObjects.Light;
+
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -45;}
 
@@ -306,6 +308,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.deathIcon.alpha = 1;    
         this.deathIcon.setDepth(Constants.depthHealthBar);
         this.deathIcon.setVisible(false);
+        
+        this.deathBurnSpotlight = this.scene.lights
+            .addLight(this.x, this.y)
+            .setRadius(100)
+            .setColor(0xFFBA6F)
+            .setIntensity(1.0)
+            .setVisible(false);
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
@@ -367,9 +376,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             //frame: 'white',
 
             color: [ 0x040d61, 0xfacc22, 0xf89800, 0xf83600, 0x9f0404, 0x4b4a4f, 0x353438, 0x040404 ],
-            lifespan: 1000,
+            lifespan: 750,
             angle: { min: -100, max: -80 },
-            scale: 0.75,
+            scale: {start: 0.75, end: 0.25},
             speed: { min: 100, max: 150 },
             //advance: 2000,
             blendMode: 'ADD',
@@ -1491,6 +1500,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.particleEmitterDeathBurn.setPosition(this.x, this.y);
         this.particleEmitterDeathBurn.start(0, 1000);
 
+        this.deathBurnSpotlight.setPosition(this.x, this.y);
+        this.deathBurnSpotlight.setVisible(true);
+
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
         
@@ -1537,6 +1549,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.multiplayerNameText.setVisible(true);
 
         this.particleEmitterDeathBurn.emitting = false;
+        if(this.deathBurnSpotlight != null)
+            this.deathBurnSpotlight.setVisible(false);
     }
 
     snapToAngle() {
