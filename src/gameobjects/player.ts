@@ -87,6 +87,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     public deathBurnSpotlight;//: Phaser.GameObjects.Light;
 
+    public headlight;//: Phaser.GameObjects.Light;
+
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -45;}
 
@@ -315,6 +317,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             .setColor(0xFFBA6F)
             .setIntensity(1.0)
             .setVisible(false);
+
+        this.headlight = this.scene.lights
+            .addLight(this.x, this.y)
+            .setRadius(70)
+            .setColor(0xFFFFFF)
+            .setIntensity(1.0)
+            .setVisible(true);
     
         var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
@@ -1197,6 +1206,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.setOrigin(0.5, 0.5);
 
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
+
+            this.headlight.setPosition(this.x + this.aimX * 40, this.y + this.aimY * 40);
         }
         else {
             this.deadUntilRespawnTime--;
@@ -1503,6 +1514,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.deathBurnSpotlight.setPosition(this.x, this.y);
         this.deathBurnSpotlight.setVisible(true);
 
+        this.headlight.setVisible(false);
+
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
         
@@ -1551,6 +1564,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.particleEmitterDeathBurn.emitting = false;
         if(this.deathBurnSpotlight != null)
             this.deathBurnSpotlight.setVisible(false);
+
+        this.headlight.setVisible(true);
     }
 
     snapToAngle() {
