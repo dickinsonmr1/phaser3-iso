@@ -345,6 +345,11 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player3.bullets, this.layer4);
         this.physics.add.overlap(this.player4.bullets, this.layer4);
 
+        //const particles = this.player.particleEmitterFlamethrower.overlap(this.player2);
+        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player2, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player3, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player4, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
@@ -624,6 +629,16 @@ export default class GameScene extends Phaser.Scene
         bullet.destroy();
         */
     }
+
+    flameTouchingPlayerHandler(enemy: any, flame: any): void {       
+
+        var otherPlayer = <Player>enemy;
+        
+        if(otherPlayer.deadUntilRespawnTime <= 0) {
+            otherPlayer.tryDamageWithFlames();
+            //bullet.remove();
+        }
+    }
     
     playerTouchingPickup(player: any, pickup: any): void {       
 
@@ -851,6 +866,9 @@ export default class GameScene extends Phaser.Scene
         var temp = Utility.cartesianToIsometric(this.player.MapPosition);
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
+        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player2);
+        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player3);
+        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player4);
 
         this.player2.updateCpuBehavior(this.player.x, this.player.y);
         this.player2.update();
@@ -890,6 +908,23 @@ export default class GameScene extends Phaser.Scene
 
         if(this.showDebug)
             this.debugGraphics.clear().fillStyle(0).fillRectShape(this.physics.world.bounds);
+    }
+
+    intersectPlayer1FlamethrowerParticlesWithEnemies(player: Player) {
+        var body = <Phaser.Physics.Arcade.Body>player.body;
+
+        const particles = this.player.particleEmitterFlamethrower.overlap(body);        
+        if (particles.length > 0)
+        {
+            let totalDamage = 0;
+            particles.forEach(particle => {
+
+                totalDamage += 0.01;                
+                //this.explode.emitParticleAt(particle.x, particle.y);
+                //particle.kill();
+            });
+            player.tryDamageWithFlames(totalDamage);
+        }
     }
 
     updatePickupScaleTime(): void {

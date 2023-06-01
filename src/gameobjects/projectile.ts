@@ -14,6 +14,8 @@ export enum ProjectileType {
     HomingRocket,
     FireRocket,
     Bullet
+    // Freeze
+    // EMP
 }
 
 export class Projectile extends Phaser.Physics.Arcade.Sprite {

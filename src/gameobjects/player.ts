@@ -151,7 +151,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterDeathBurn: Phaser.GameObjects.Particles.ParticleEmitter;
 
-    private particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
+    public particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -1755,6 +1755,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 this.multiplayerHealthBar.updateHealth(this.health);
             }
         }*/
+    }
+
+    tryDamageWithFlames(totalDamage: number): void {
+
+        if(this.health > 0) {
+            this.health -= totalDamage;
+       
+            this.healthBar.updateHealth(this.health);
+            //this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+        }
+        if(this.health <= 0 && this.deadUntilRespawnTime == 0){
+            this.tryKill();
+        }
     }
 
     tryFireSecondaryWeapon() {
