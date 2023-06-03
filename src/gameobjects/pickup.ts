@@ -6,7 +6,8 @@ export enum PickupType {
     Rocket,
     Bullet,
     Special,
-    Flamethrower
+    Flamethrower,
+    Shield
 }
 
 
@@ -30,6 +31,7 @@ export class Pickup { //extends Phaser.GameObjects.IsoBox {
         this.isoBox.setOrigin(0.5, 0.5);
         this.isoBox.depth = 2;
         this.isoBox.setData('parentId', this);
+        this.isoBox.setData('PickupType', params.pickupType);
        
         params.scene.physics.world.enable(this.isoBox);
         params.scene.pickupPhysicsObjects.add(this.isoBox);

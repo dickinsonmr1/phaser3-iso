@@ -446,8 +446,8 @@ export default class GameScene extends Phaser.Scene
                     topColor = 0x6F84FF;
                     leftColor = 0x2D4DFF;
                     rightColor = 0x5B74FF;
-                    pickupType = PickupType.Turbo;
-                    pickUpIconKey = "turboIcon";
+                    pickupType = PickupType.Shield;
+                    pickUpIconKey = "shieldIcon";
                     break;
                 case 4: // yellow
                     topColor = 0xFFEA6F;
@@ -635,7 +635,7 @@ export default class GameScene extends Phaser.Scene
         var otherPlayer = <Player>enemy;
         
         if(otherPlayer.deadUntilRespawnTime <= 0) {
-            otherPlayer.tryDamageWithFlames();
+            otherPlayer.tryDamageWithFlames(0.01);
             //bullet.remove();
         }
     }
@@ -643,9 +643,12 @@ export default class GameScene extends Phaser.Scene
     playerTouchingPickup(player: any, pickup: any): void {       
 
         var selectedPlayer = <Player>player;
-        //var selectedPickup = <Phaser.GameObjects.IsoBox>pickup;
-        var pickupNumber = Number(pickup.name);
-        switch(pickupNumber){
+        var selectedPickup = <Phaser.GameObjects.IsoBox>pickup;
+        //var pickupNumber = Number(pickup.name);
+
+        var pickupType = Number(selectedPickup.getData('PickupType'));
+
+        switch(pickupType){
             case PickupType.Turbo:
                 console.log('refill turbo');
                 this.sceneController.hudScene.setInfoText("Turbo refilled - " + selectedPlayer.playerId, 2000);
@@ -671,6 +674,10 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Flamethrower:
                 console.log('refill flamethrower');
                 this.sceneController.hudScene.setInfoText("Flamethrower restored - " + selectedPlayer.playerId, 2000);
+                break;
+            case PickupType.Shield:
+                console.log('refill shield');
+                this.sceneController.hudScene.setInfoText("Shield restored - " + selectedPlayer.playerId, 2000);
                 break;
         }
         
