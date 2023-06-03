@@ -153,6 +153,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     public particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    public particleEmitterShockwave: Phaser.GameObjects.Particles.ParticleEmitter;
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -219,6 +221,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     public rocketTime: number = 0;
     public rocketTimeInterval: number = 500;
     //private bulletVelocity: number = 7;
+
+    public shockwaveTime: number = 0;
+    public shockwaveTimeInterval: number = 1000;
 
     public deadUntilRespawnTime: number = 0;
 
@@ -450,6 +455,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             //advance: 2000,
             blendMode: 'ADD',
             emitting: false
+        });
+
+        this.particleEmitterShockwave = this.scene.add.particles(this.x, this.y, 'shockwave',
+        {
+            lifespan: 500,
+            //speed: { min: -50, max: 50 },
+            tint: 0x187bcd, 
+            scaleX: {start: 0.5, end: 5.0, ease: 'sine.out'},
+            scaleY: {start: 0.3, end: 3.0, ease: 'sine.out'},
+            blendMode: 'ADD',
+            frequency: -1,
+            alpha: {start: 0.9, end: 0.0},
+            emitting: true
         });
     }
 
@@ -1208,6 +1226,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
             this.headlight.setPosition(this.x + this.aimX * 40, this.y + this.aimY * 40);
+
+            this.particleEmitterShockwave.setPosition(this.x, this.y);
         }
         else {
             this.deadUntilRespawnTime--;
@@ -1220,6 +1240,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.rocketTime > 0)
             this.rocketTime--;
+
+        if(this.shockwaveTime > 0)
+            this.shockwaveTime--;
 
     }
 
@@ -1830,6 +1853,24 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
         */
+    }  
+
+    tryFireShockwave() {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.shockwaveTime) {
+            
+
+            this.particleEmitterShockwave.explode(2);
+            
+            this.shockwaveTime = gameTime + this.shockwaveTimeInterval;
+        }
+
+        //this.particleEmitterShockwave.emitParticleAt(this.x, this.y);   
+
     }  
 
     tryStopFireFlamethrower() {

@@ -124,6 +124,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
+        this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
@@ -775,6 +776,10 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             }  
+
+            if(pad.A) {
+                this.player.tryFireShockwave();
+            } 
             
             if(pad.L1)
                 this.cameras.main.zoom -= 0.01;
