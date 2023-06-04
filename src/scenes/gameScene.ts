@@ -6,6 +6,7 @@ import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 import { RaceCarPlayer } from '../gameobjects/player/racecarplayer';
+import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
 
 export default class GameScene extends Phaser.Scene
 {    
@@ -211,6 +212,9 @@ export default class GameScene extends Phaser.Scene
         */
         //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
+        var vehicleFactory = new VehicleFactory();
+        this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
+        /*
         this.player = new RaceCarPlayer({
             scene: this,
             isCpuPlayer: false,
@@ -226,6 +230,7 @@ export default class GameScene extends Phaser.Scene
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
+        */
         this.player.init();        
        
         this.player2 = new RaceCarPlayer({

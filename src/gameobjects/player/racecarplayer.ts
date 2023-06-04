@@ -13,6 +13,29 @@ export class RaceCarPlayer extends Player
     }
 
     createAnims() {
+                
+        // https://en.wikipedia.org/wiki/Points_of_the_compass
+
+        // 0272 - SSW
+        // 0273 - SW
+        // 0274 - WSW
+        // 0275 - W
+
+        // 0276 - WNW
+        // 0277 - NW
+        // 0278 - NNW
+        // 0279 - N
+
+        // 0280 - NNE
+        // 0281 - NE
+        // 0282 - ENE
+        // 0283 - E
+
+        // 0284 - ESE
+        // 0285 - SE
+        // 0286 - SSE
+        // 0287 - S
+        
         var startIndex = 272;
 
         this.anims.create({

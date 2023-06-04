@@ -265,7 +265,7 @@ import { IconValueMapping, Menu } from './menu';
             }
             else if(this.menu.selectedItemIndex == 1) {
                 //this.menu.trySelectNextSubItem(this.sound);
-                this.sceneController.launchGame(VehicleType.PickupTruck);
+                this.sceneController.launchGame(this.selectedVehicleIndex);
             }
             else if(this.menu.selectedItemIndex == 2) {
                 //this.endGameAndReturnToTitleMenu();
@@ -309,17 +309,17 @@ import { IconValueMapping, Menu } from './menu';
     
             switch(this.selectedVehicleIndex) 
             {
+                case VehicleType.Taxi:
+                    this.selectedVehicleSprite.play('select-taxiYellow');
+                    break;
+                case VehicleType.Ambulance:
+                    this.selectedVehicleSprite.play('select-vanWhite');
+                    break;
                 case VehicleType.RaceCar:
                     this.selectedVehicleSprite.play('select-raceCarBlue');
                     break;
                 case VehicleType.PickupTruck:
                     this.selectedVehicleSprite.play('select-pickupTruckOrange');
-                    break;
-                case VehicleType.Ambulance:
-                    this.selectedVehicleSprite.play('select-vanWhite');
-                    break;
-                case VehicleType.Taxi:
-                    this.selectedVehicleSprite.play('select-taxiYellow');
                     break;
                 case VehicleType.Hearse:
                     this.selectedVehicleSprite.play('select-hearseBlack');
