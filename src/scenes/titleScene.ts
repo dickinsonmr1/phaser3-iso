@@ -47,6 +47,7 @@ import { IconValueMapping, Menu } from './menu';
 
     preload () {
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
+        this.load.image('shieldIcon', './assets/sprites/HUD/skull.png');
 
         this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
@@ -225,9 +226,9 @@ import { IconValueMapping, Menu } from './menu';
         var temp = new Array<IconValueMapping>();
 
         temp.push(new IconValueMapping({description: 'Speed Demon', texture: 'deathIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Taxi', texture: 'deathIcon', frame: '', scale: 1}));
+        temp.push(new IconValueMapping({description: 'Taxi', texture: 'shieldIcon', frame: '', scale: 1}));
         temp.push(new IconValueMapping({description: 'Ambulance', texture: 'deathIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Hearse', texture: 'deathIcon', frame: '', scale: 1}));
+        temp.push(new IconValueMapping({description: 'Hearse', texture: 'shieldIcon', frame: '', scale: 1}));
         temp.push(new IconValueMapping({description: 'Guerilla', texture: 'deathIcon', frame: '', scale: 1}));
         this.menu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
         this.menu.addMenuItem(this, "Confirm Selection");    

@@ -5,6 +5,7 @@ import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/playe
 import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
+import { RaceCarPlayer } from '../gameobjects/racecarplayer';
 
 export default class GameScene extends Phaser.Scene
 {    
@@ -210,7 +211,7 @@ export default class GameScene extends Phaser.Scene
         */
         //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
-        this.player = new Player({
+        this.player = new RaceCarPlayer({
             scene: this,
             isCpuPlayer: false,
             mapX: 200,
@@ -227,7 +228,7 @@ export default class GameScene extends Phaser.Scene
         });        
         this.player.init();        
        
-        this.player2 = new Player({
+        this.player2 = new RaceCarPlayer({
             scene: this,
             isCpuPlayer: true,
             mapX: 500,
@@ -242,7 +243,7 @@ export default class GameScene extends Phaser.Scene
         });        
         this.player2.init();
     
-        this.player3 = new Player({
+        this.player3 = new RaceCarPlayer({
             scene: this,
             isCpuPlayer: true,
             mapX: 100,
@@ -274,7 +275,7 @@ export default class GameScene extends Phaser.Scene
         this.player4.init();
         */
 
-        this.player4 = new Player({
+        this.player4 = new RaceCarPlayer({
             scene: this,
             isCpuPlayer: true,
             mapX: 300,
