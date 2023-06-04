@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
-import { VehicleType } from '../gameobjects/player';
+import { VehicleType } from '../gameobjects/player/player';
 import { IconValueMapping, Menu } from './menu';
 
  

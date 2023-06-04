@@ -1,11 +1,11 @@
 import * as Phaser from 'phaser';
 import { Constants } from "../constants";
 import { Pickup, PickupType } from "../gameobjects/pickup";
-import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player";
+import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player/player";
 import { Projectile } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
-import { RaceCarPlayer } from '../gameobjects/racecarplayer';
+import { RaceCarPlayer } from '../gameobjects/player/racecarplayer';
 
 export default class GameScene extends Phaser.Scene
 {    

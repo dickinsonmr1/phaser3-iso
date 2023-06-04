@@ -1,9 +1,9 @@
 import * as Phaser from 'phaser';
-import { Constants } from '../constants';
-import { HealthBar, HUDBarType } from './healthBar';
-import { Projectile, ProjectileType } from './projectile';
-import { Point, Utility } from '../utility';
-import GameScene from '../scenes/gameScene';
+import { Constants } from '../../constants';
+import { HealthBar, HUDBarType } from './../healthBar';
+import { Projectile, ProjectileType } from './../projectile';
+import { Point, Utility } from '../../utility';
+import GameScene from '../../scenes/gameScene';
 
 export enum PlayerDrawOrientation {
     N,

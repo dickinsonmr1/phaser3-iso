@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import GameScene from "./gameScene";
 import { HudScene } from "./hudscene";
 import { TitleScene } from './titleScene';
-import { VehicleType } from '../gameobjects/player';
+import { VehicleType } from '../gameobjects/player/player';
 
 export class SceneController extends Phaser.Scene {
     hudScene: HudScene;

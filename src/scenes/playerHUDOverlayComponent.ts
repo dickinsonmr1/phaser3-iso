@@ -2,7 +2,7 @@ import 'phaser';
 import { HealthBar } from "../gameobjects/healthBar";
 import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";
-import { Player } from "../gameobjects/player";
+import { Player } from "../gameobjects/player/player";
 
 export class PlayerHUDOverlayComponent {
 
