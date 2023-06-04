@@ -44,8 +44,8 @@ export enum PlayerCartesianOrientation {
 }
 
 export enum VehicleType {
-    Police,
-    TrashMan,
+    //Police,
+    //TrashMan,
     Taxi,
     Ambulance,
     RaceCar,
@@ -99,12 +99,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     private maxSpeed(): number {
 
         switch(this.vehicleType) {
-            case VehicleType.Police:
-                return 220;
+            //case VehicleType.Police:
+                //return 220;
             case VehicleType.Ambulance:
                 return 210;
-            case VehicleType.TrashMan:
-                return 210;
+            //case VehicleType.TrashMan:
+                //return 210;
             case VehicleType.Taxi:                
                 return 210;
 
@@ -120,12 +120,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     private maxTurboSpeed(): number { 
         switch(this.vehicleType) {
-            case VehicleType.Police:
-                return this.maxSpeed() * 1.5;
+            //case VehicleType.Police:
+                //return this.maxSpeed() * 1.5;
             case VehicleType.Ambulance:
                 return this.maxSpeed() * 1.5;
-            case VehicleType.TrashMan:
-                return this.maxSpeed() * 1.5;
+            //case VehicleType.TrashMan:
+                //return this.maxSpeed() * 1.5;
             case VehicleType.Taxi:
                 return this.maxSpeed() * 1.5;
             case VehicleType.RaceCar:
@@ -1055,7 +1055,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
                 this.anims.create({
                     key: this.animPrefix + '-WNW',
-                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+                    frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_0' + startIndex++}],
                     frameRate: 10,
                 });
                 this.anims.create({

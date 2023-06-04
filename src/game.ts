@@ -15,6 +15,9 @@ const config = {
     height: 1080,
     pixelArt: true,
     input: { keyboard: true, gamepad: true },
+    audio: {
+        // noaudio
+    },
     physics: {
         default: 'arcade',
         arcade: {

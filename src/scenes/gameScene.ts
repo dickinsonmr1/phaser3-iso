@@ -58,12 +58,16 @@ export default class GameScene extends Phaser.Scene
 
     debugGraphics: Phaser.GameObjects.Graphics;
 
+    player1VehicleType: VehicleType;
 
-    constructor (sceneController: SceneController)
+
+    constructor (sceneController: SceneController, player1VehicleType: VehicleType)
     {
         super('GameScene');
 
         this.sceneController = sceneController;
+
+        this.player1VehicleType = player1VehicleType;
     }
 
     preload ()
@@ -217,7 +221,7 @@ export default class GameScene extends Phaser.Scene
             frame: 'raceCarBlue-W',
             playerId: "Speed Demon",
             drawScale: 0.4,
-            vehicleType: VehicleType.RaceCar
+            vehicleType: this.player1VehicleType,//VehicleType.RaceCar
             //isMyPlayer: true,
             //isMultiplayer: this.isMultiplayer
         });        
