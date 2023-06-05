@@ -202,7 +202,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                //fontFamily: 'KenneyRocketSquare',
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             },
@@ -210,8 +210,8 @@ export class Menu {
         temp.setStroke('rgb(0,0,0)', 16);
         temp.setOrigin(0, 0.5);
         temp.setFontSize(this.menuItemFontSize());
-        if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].frame != null)
-            temp.setIcon(scene, iconMappings[0].texture, iconMappings[0].frame, iconMappings[0].scale);
+        if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null)
+            temp.setIcon(scene, iconMappings[0].key, iconMappings[0].scale);
 
         scene.add.existing(temp);
         this.items.push(temp);
@@ -429,7 +429,7 @@ export class Menu {
         this.items.forEach(x => {
             x.setVisible(true);
             if(x instanceof ComplexMenuItem) {
-                var icon = x.titleIcon;
+                var icon = x.sprite;
                 if(icon != null)
                     icon.setVisible(true);
             }
@@ -462,7 +462,7 @@ export class Menu {
         this.items.forEach(x => {
             x.setVisible(false);
             if(x instanceof ComplexMenuItem) {
-                var icon = x.titleIcon;
+                var icon = x.sprite;
                 if(icon != null)
                     icon.setVisible(false);
             }
@@ -524,7 +524,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     subItems: Array<IconValueMapping>;
     itemTitle: string;
     selectedSubItemIndex: integer;
-    titleIcon: Phaser.GameObjects.Image;
+    sprite: Phaser.GameObjects.Sprite;
 
     constructor(params) {
         super(params.scene, params.x, params.y, params.text, params.style);
@@ -537,13 +537,14 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
         this.refreshText();
     }    
 
-    setIcon(scene: Phaser.Scene, texture: string, frame: string, scale: number) {
+    setIcon(scene: Phaser.Scene, key: string, scale: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
-        this.titleIcon = scene.add.image(this.x - 100, this.y, texture, frame);
-        this.titleIcon.setOrigin(0.5, 0.5);
-        this.titleIcon.setScale(scale, scale);
+        this.sprite = scene.add.sprite(this.x + 500, this.y, key)
+        this.sprite.setOrigin(0.5, 0.5);
+        this.sprite.setScale(scale, scale);
+        this.sprite.play(key);
         
-        this.titleIcon.setDepth(1);
+        this.sprite.setDepth(1);
     }
 
     selectNextItem() {
@@ -561,25 +562,30 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     }
 
     private refreshText() {
+
         var subItem = this.subItems[this.selectedSubItemIndex];
         this.text = this.itemTitle + ' - ' + subItem.description;
-        if(this.titleIcon != null)
-            this.titleIcon.setTexture(subItem.texture, subItem.frame);
-            //this.titleIcon.setVisible(true);
+        
+        
+        if(this.sprite != null) {
+            //this.titleIcon.setTexture(subItem.texture, subItem.frame);
+            this.sprite.play(subItem.key);// = this.itemTitle + ' - ' + subItem.description;
+            //this.titleIcon.setVisible(true);            
+        }
     }
 }
 
 
 export class IconValueMapping {
     description: string;
-    texture: string;
-    frame: string;
+    key: string;
     scale: number;
+    selectedIndex: number;
 
     constructor(params) {
         this.description = params.description;
-        this.texture = params.texture;
-        this.frame = params.frame;
+        this.key = params.key;
         this.scale = params.scale;
+        this.selectedIndex = params.selectedIndex;
     }
 }

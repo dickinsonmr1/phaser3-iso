@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
-import { IconValueMapping, Menu } from './menu';
+import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
 
  
  export class TitleScene extends Phaser.Scene {
@@ -31,7 +31,7 @@ import { IconValueMapping, Menu } from './menu';
     cursorRight: Phaser.Input.Keyboard.Key;
 
     private selectedVehicleIndex: number = 0;
-    private selectedVehicleSprite: Phaser.GameObjects.Sprite;
+    //private selectedVehicleSprite: Phaser.GameObjects.Sprite;
 
     //healthText;
     //turboText;
@@ -215,9 +215,9 @@ import { IconValueMapping, Menu } from './menu';
 
 
 
-        this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
-        this.selectedVehicleSprite.setDisplaySize(256, 256);
-        this.selectedVehicleSprite.play('select-pickupTruckOrange');
+        //this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
+        //this.selectedVehicleSprite.setDisplaySize(256, 256);
+        //this.selectedVehicleSprite.play('select-pickupTruckOrange');
 
         this.menu = new Menu(this, false);
         this.menu.setTitle(this, "Select Vehicle");
@@ -225,11 +225,14 @@ import { IconValueMapping, Menu } from './menu';
         this.menu.setMarker(this, ">>");        
         var temp = new Array<IconValueMapping>();
 
-        temp.push(new IconValueMapping({description: 'Speed Demon', texture: 'deathIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Taxi', texture: 'shieldIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Ambulance', texture: 'deathIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Hearse', texture: 'shieldIcon', frame: '', scale: 1}));
-        temp.push(new IconValueMapping({description: 'Guerilla', texture: 'deathIcon', frame: '', scale: 1}));
+        
+        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 1, selectedIndex: VehicleType.Taxi}));
+        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 1, selectedIndex: VehicleType.Ambulance}));
+        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 1, selectedIndex: VehicleType.RaceCar}));
+        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1, selectedIndex: VehicleType.PickupTruck}));
+        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 1, selectedIndex: VehicleType.Hearse}));
+        
+        
         this.menu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
         this.menu.addMenuItem(this, "Confirm Selection");    
 
@@ -256,6 +259,8 @@ import { IconValueMapping, Menu } from './menu';
             //this.returnToGame();
         //}
 
+        var selectionChanged = false;
+
         if(Phaser.Input.Keyboard.JustDown(this.selectKey)) {
 
             if(this.menu.selectedItemIndex == 0) {
@@ -265,7 +270,9 @@ import { IconValueMapping, Menu } from './menu';
             }
             else if(this.menu.selectedItemIndex == 1) {
                 //this.menu.trySelectNextSubItem(this.sound);
-                this.sceneController.launchGame(this.selectedVehicleIndex);
+                                
+                var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menu.items[0];
+                this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
             }
             else if(this.menu.selectedItemIndex == 2) {
                 //this.endGameAndReturnToTitleMenu();
@@ -284,14 +291,17 @@ import { IconValueMapping, Menu } from './menu';
 
         if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {
             this.menu.trySelectPreviousSubItem(this.sound);
+            selectionChanged = true;
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.cursorRight)) {
             this.menu.trySelectNextSubItem(this.sound);
+            selectionChanged = true;
         }
 
 
-        var selectionChanged = false;
+
+        /*
         if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {  
             this.selectedVehicleIndex--;    
             selectionChanged = true;
@@ -300,7 +310,9 @@ import { IconValueMapping, Menu } from './menu';
             this.selectedVehicleIndex++;
             selectionChanged = true;
         }
+        */
 
+        /*
         if(selectionChanged) {            
             if(this.selectedVehicleIndex < 0) this.selectedVehicleIndex = VehicleType.Hearse;
             if(this.selectedVehicleIndex > VehicleType.Hearse) this.selectedVehicleIndex = 0;
@@ -325,7 +337,8 @@ import { IconValueMapping, Menu } from './menu';
                     this.selectedVehicleSprite.play('select-hearseBlack');
                     break;
             }
-        }       
+        } 
+        */      
     }
  }
 

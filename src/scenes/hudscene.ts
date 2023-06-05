@@ -95,9 +95,9 @@ import { SceneController } from "./sceneController";
 
     updatePlayerPosition(name: string, x: number, y: number): void {
 
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.find (x => x.playerName == name);
         if(selectedPlayerGroup != null) {
-            selectedPlayerGroup.updateLocation(x, y);
+            selectedPlayerGroup[0].updateLocation(x, y);
         }
     }
 
