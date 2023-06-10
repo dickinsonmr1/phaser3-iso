@@ -3,6 +3,7 @@ import { AmbulancePlayer } from "./ambulanceplayer";
 import { Player, VehicleType } from "./player";
 import { RaceCarPlayer } from "./racecarplayer";
 import { TaxiPlayer } from "./taxiplayer";
+import { PickupTruckPlayer } from "./pickuptruckplayer";
 
 export class VehicleFactory {
     constructor() {
@@ -38,21 +39,21 @@ export class VehicleFactory {
                     mapY: 500,
                     //mapX: 10,
                     //mapY: 10,
-                    key: "blueCars",
-                    frame: 'raceCarBlue-W',
+                    key: "yellowCars",
+                    frame: 'taxiYellow-W',
                     playerId: "Sideswipe",
                     vehicleType: vehicleType
                 });
                 break;
             case VehicleType.PickupTruck:
-                return new TaxiPlayer({                    
+                return new PickupTruckPlayer({                    
                     scene: scene,
                     drawScale: 0.4,
                     isCpuPlayer: isCpuPlayer,
                     mapX: 0,
                     mapY: 300,
                     key: "orangeCars",
-                    frame: 'c11_s128_iso_0',
+                    frame: 'pickupTruckOrange-W',
                     playerId: "Redneck",
                     vehicleType: vehicleType
                 });

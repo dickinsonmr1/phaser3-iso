@@ -300,25 +300,28 @@ export class Menu {
         this.marker.setOrigin(0.5, 0.5);
         this.marker.setStroke('rgb(0,0,0)', 16);  
         this.marker.setFontSize(this.menuItemFontSize());
-        /*
+        
         this.subItemMarkerLeft = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, "<<",
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             fontSize: 64,
             align: 'right',            
             color:"rgb(255,255,255)",
         });
+        this.subItemMarkerLeft.setOrigin(0.5, 0.5);
         this.subItemMarkerLeft.setStroke('rgb(0,0,0)', 16);  
+        this.subItemMarkerLeft.setFontSize(this.menuItemFontSize());
 
-        this.subItemMarkerRight = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, "<<",
+        this.subItemMarkerRight = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, ">>",
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily:  this.fontFamily(),
             fontSize: 64,
             align: 'right',            
             color:"rgb(255,255,255)",
         });
-        this.subItemMarkerLeft.setStroke('rgb(0,0,0)', 16);  
-        */
+        this.subItemMarkerRight.setOrigin(0.5, 0.5);
+        this.subItemMarkerRight.setStroke('rgb(0,0,0)', 16);  
+        this.subItemMarkerRight.setFontSize(this.menuItemFontSize());        
     }
 
     refreshColorsAndMarker() {
@@ -333,12 +336,14 @@ export class Menu {
 
         this.marker.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
 
-        /*
-        this.subItemMarkerLeft.setY(this.menuStartY + this.selectedIndex * this.menuItemDistanceY());   
-        this.subItemMarkerRight.setY(this.menuStartY + this.selectedIndex * this.menuItemDistanceY());   
-        this.subItemMarkerRight.setY(this.menuStartY + this.selectedIndex * this.menuItemDistanceY());   
+        
+        this.subItemMarkerLeft.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
+        
+        this.subItemMarkerRight.setX(this.menuStartX + 500);           
+        this.subItemMarkerRight.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
+        
 
-        var temp = this.items[i];
+        var temp = this.items[this.selectedItemIndex];
         if(temp instanceof ComplexMenuItem)
         {
             this.marker.setVisible(false);
@@ -349,8 +354,7 @@ export class Menu {
             this.marker.setVisible(true);
             this.subItemMarkerLeft.setVisible(false);
             this.subItemMarkerRight.setVisible(false);
-        }
-        */
+        }        
     }
 
     selectNextItem(sound) {
@@ -541,7 +545,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
 
     setIcon(scene: Phaser.Scene, key: string, scale: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
-        this.sprite = scene.add.sprite(this.x + 500, this.y, key)
+        this.sprite = scene.add.sprite(this.x + 300, this.y - 150, key)
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setScale(scale, scale);
         this.sprite.play(key);
@@ -566,7 +570,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     private refreshText() {
 
         var subItem = this.subItems[this.selectedSubItemIndex];
-        this.text = this.itemTitle + ' - ' + subItem.description;
+        this.text = subItem.description; //this.itemTitle + ' - ' + subItem.description;
         
         
         if(this.sprite != null) {
