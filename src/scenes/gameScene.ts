@@ -70,6 +70,8 @@ export default class GameScene extends Phaser.Scene
         this.sceneController = sceneController;
 
         this.player1VehicleType = player1VehicleType;
+
+        this.gamepad = null;
     }
 
     preload ()
@@ -580,7 +582,11 @@ export default class GameScene extends Phaser.Scene
                     }
                 });
             });
-        }     
+        }           
+        else
+        {
+            this.gamepad = this.input.gamepad.pad1;
+        }
     }
 
     playerTouchingTileHandler(sprite, tile): boolean {

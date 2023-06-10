@@ -4,6 +4,7 @@ import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
 import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
+import { Constants } from '../constants';
 
  
  export class TitleScene extends Phaser.Scene {
@@ -30,6 +31,8 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
     cursorLeft: Phaser.Input.Keyboard.Key;
     cursorRight: Phaser.Input.Keyboard.Key;
 
+    gamepad: Phaser.Input.Gamepad.Gamepad;
+
     private selectedVehicleIndex: number = 0;
     //private selectedVehicleSprite: Phaser.GameObjects.Sprite;
 
@@ -43,6 +46,8 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
         super({key: "TitleScene"});
 
         this.sceneController = sceneController;
+
+        this.gamepad = null;
     }
 
     preload () {
@@ -65,7 +70,8 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
         this.cursorUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.cursorLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.cursorRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-
+        
+        this.addGamepadListeners();   
 
         this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {
             font: 'bold 26px Arial'
@@ -226,11 +232,11 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
         var temp = new Array<IconValueMapping>();
 
         
-        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 1, selectedIndex: VehicleType.Taxi}));
-        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 1, selectedIndex: VehicleType.Ambulance}));
-        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 1, selectedIndex: VehicleType.RaceCar}));
-        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1, selectedIndex: VehicleType.PickupTruck}));
-        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 1, selectedIndex: VehicleType.Hearse}));
+        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 2, selectedIndex: VehicleType.Taxi}));
+        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 2, selectedIndex: VehicleType.Ambulance}));
+        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 2, selectedIndex: VehicleType.RaceCar}));
+        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 2, selectedIndex: VehicleType.PickupTruck}));
+        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 2, selectedIndex: VehicleType.Hearse}));
         
         
         this.menu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
@@ -263,22 +269,7 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
 
         if(Phaser.Input.Keyboard.JustDown(this.selectKey)) {
 
-            if(this.menu.selectedItemIndex == 0) {
-               //this.returnToGame();
-
-               //this.menu.confirmSelection(this.sound);
-            }
-            else if(this.menu.selectedItemIndex == 1) {
-                //this.menu.trySelectNextSubItem(this.sound);
-                                
-                var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menu.items[0];
-                this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
-            }
-            else if(this.menu.selectedItemIndex == 2) {
-                //this.endGameAndReturnToTitleMenu();
-
-                //this.sound.play("backSound");
-            }
+            this.confirmMenuSelection();           
         }
          
         if(Phaser.Input.Keyboard.JustDown(this.cursorUp)) {
@@ -299,7 +290,19 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
             selectionChanged = true;
         }
 
+        const pad = this.gamepad;
+        const threshold = 0.25;
+        if (pad != null && pad.axes.length)
+        {
+            pad.axes[0].threshold = 0.25;
+            pad.axes[1].threshold = 0.25;
 
+            var leftAxisX = pad.axes[0].getValue();
+            var leftAxisY = pad.axes[1].getValue();
+
+            //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
+
+        }
 
         /*
         if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {  
@@ -339,6 +342,61 @@ import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
             }
         } 
         */      
+    }
+
+    confirmMenuSelection(): void {
+        if(this.menu.selectedItemIndex == 0) {
+            //this.returnToGame();
+
+            //this.menu.confirmSelection(this.sound);
+         }
+         else if(this.menu.selectedItemIndex == 1) {
+             //this.menu.trySelectNextSubItem(this.sound);
+                             
+             var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menu.items[0];
+             this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
+         }
+         else if(this.menu.selectedItemIndex == 2) {
+             //this.endGameAndReturnToTitleMenu();
+
+             //this.sound.play("backSound");
+         }
+    }
+
+    addGamepadListeners(): void {
+        this.input.gamepad.once('connected', pad => {
+
+            this.gamepad = pad;
+
+            pad.on('down', (index, value, button) => {
+
+                switch(index) {
+                    case Constants.gamepadIndexSelect:
+                        console.log('A');
+                        this.confirmMenuSelection();
+                        break;
+                    case Constants.gamepadIndexInteract:
+                        console.log('X');
+                        break;
+                    case Constants.gamepadIndexUp:
+                        console.log('Up');
+                        this.menu.selectPreviousItem(null);
+                        break;
+                    case Constants.gamepadIndexDown:
+                        console.log('Down');
+                        this.menu.selectNextItem(null);
+                        break;
+                    case Constants.gamepadIndexLeft:
+                        this.menu.trySelectPreviousSubItem(null);
+                        console.log('Left');
+                        break;
+                    case Constants.gamepadIndexRight:
+                        console.log('Right');
+                        this.menu.trySelectNextSubItem(null);
+                        break;
+                }                
+            });
+        });
     }
  }
 

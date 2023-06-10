@@ -25,6 +25,8 @@ export class Menu {
     highlightedColor(): string {return "rgb(255,255,255)"};
     nonHighlightedColor(): string {return "rgb(150,150,150)"};
 
+    fontFamily(): string {return "Arial"};
+
     titleStartX: number;
     titleStartY: number;
     footerStartX: number;
@@ -65,7 +67,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             }});
@@ -87,7 +89,7 @@ export class Menu {
             text: text,
             menuDestinationLink: menuDestinationLink,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             }});
@@ -108,7 +110,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             }});
@@ -129,7 +131,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             }});
@@ -151,7 +153,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             }});
@@ -173,7 +175,7 @@ export class Menu {
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
             text: text,
             style: {
-                fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: 'right',            
                 color: this.nonHighlightedColor(),
             },
@@ -234,7 +236,7 @@ export class Menu {
     setTitle(scene: Phaser.Scene, text: string) {
         this.title = scene.add.text(this.titleStartX + this.titleOffsetX(), this.titleStartY, text,
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             align: 'center',            
             color: "rgb(255,255,255)",
         });
@@ -246,7 +248,7 @@ export class Menu {
     setSubtitle(scene: Phaser.Scene, text: string) {
         this.subtitle = scene.add.text(this.titleStartX + this.titleOffsetX(), this.titleStartY + this.subtitleOffsetY(), text,
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             align: 'center',            
             color: "rgb(255,255,255)",
         });
@@ -266,7 +268,7 @@ export class Menu {
     setFooter(scene: Phaser.Scene, text: string) {
         this.footer = scene.add.text(this.footerStartX, this.footerStartY, text,
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             align: 'center',            
             color:"rgb(255,255,255)",
         });
@@ -278,7 +280,7 @@ export class Menu {
     setFooter2(scene: Phaser.Scene, text: string) {
         this.footer2 = scene.add.text(this.footerStartX, this.footer2StartY, text,
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             fontSize: this.footerFontSize().toString(),
             align: 'center',            
             color:"rgb(255,255,255)",
@@ -291,7 +293,7 @@ export class Menu {
     setMarker(scene: Phaser.Scene, text: string) {
         this.marker = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, text,
         {
-            fontFamily: 'KenneyRocketSquare',
+            fontFamily: this.fontFamily(),
             align: 'right',            
             color:"rgb(255,255,255)",
         });
