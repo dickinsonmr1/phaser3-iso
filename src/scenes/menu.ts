@@ -26,6 +26,7 @@ export class Menu {
     nonHighlightedColor(): string {return "rgb(150,150,150)"};
 
     fontFamily(): string {return "Arial"};
+    align(): string {return "center"};
 
     titleStartX: number;
     titleStartY: number;
@@ -38,7 +39,7 @@ export class Menu {
     menuItemFontSize(): number {return 48;}
     footerFontSize(): number {return 32;}
 
-    markerOffsetX(): number {return -50;}
+    markerOffsetX(): number {return -300;}
     menuItemDistanceY(): number {return 60;}
 
     useAudio: boolean = false;
@@ -50,8 +51,8 @@ export class Menu {
         this.titleStartX = scene.game.canvas.width / 2;
         this.titleStartY = scene.game.canvas.height / 4;
 
-        this.menuStartX = scene.game.canvas.width / 3;
-        this.menuStartY = scene.game.canvas.height / 2;
+        this.menuStartX = scene.game.canvas.width / 2;
+        this.menuStartY = scene.game.canvas.height * 0.667;
         
         this.footerStartX = scene.game.canvas.width / 2;
         this.footerStartY = scene.game.canvas.height - scene.game.canvas.height / 8;
@@ -68,11 +69,11 @@ export class Menu {
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align: this.align(),            
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0, 0.5);
+        temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
         scene.add.existing(temp);
@@ -90,11 +91,11 @@ export class Menu {
             menuDestinationLink: menuDestinationLink,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0, 0.5);
+        temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
         scene.add.existing(temp);
@@ -111,7 +112,7 @@ export class Menu {
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
@@ -132,7 +133,7 @@ export class Menu {
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
@@ -154,7 +155,7 @@ export class Menu {
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
@@ -176,7 +177,7 @@ export class Menu {
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
-                align: 'right',            
+                align: this.align(),            
                 color: this.nonHighlightedColor(),
             },
             subItems});
@@ -205,12 +206,12 @@ export class Menu {
             text: text,
             style: {
                 //fontFamily: 'KenneyRocketSquare',
-                align: 'right',            
+                align: this.align(),            
                 color: this.nonHighlightedColor(),
             },
             subItems: iconMappings});
         temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0, 0.5);
+        temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
         if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null)
             temp.setIcon(scene, iconMappings[0].key, iconMappings[0].scale);
@@ -269,7 +270,7 @@ export class Menu {
         this.footer = scene.add.text(this.footerStartX, this.footerStartY, text,
         {
             fontFamily: this.fontFamily(),
-            align: 'center',            
+            align: this.align(),            
             color:"rgb(255,255,255)",
         });
         this.footer.setOrigin(0.5, 0.5);
@@ -282,7 +283,7 @@ export class Menu {
         {
             fontFamily: this.fontFamily(),
             fontSize: this.footerFontSize().toString(),
-            align: 'center',            
+            align: this.align(),            
             color:"rgb(255,255,255)",
         });
         this.footer2.setOrigin(0.5, 0.5);
@@ -294,7 +295,7 @@ export class Menu {
         this.marker = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, text,
         {
             fontFamily: this.fontFamily(),
-            align: 'right',            
+            align: this.align(),            
             color:"rgb(255,255,255)",
         });
         this.marker.setOrigin(0.5, 0.5);
@@ -305,7 +306,7 @@ export class Menu {
         {
             fontFamily: this.fontFamily(),
             fontSize: 64,
-            align: 'right',            
+            align: this.align(),            
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerLeft.setOrigin(0.5, 0.5);
@@ -316,7 +317,7 @@ export class Menu {
         {
             fontFamily:  this.fontFamily(),
             fontSize: 64,
-            align: 'right',            
+            align: this.align(),            
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerRight.setOrigin(0.5, 0.5);
@@ -337,9 +338,10 @@ export class Menu {
         this.marker.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
 
         
+        this.subItemMarkerRight.setX(this.menuStartX - 300);           
         this.subItemMarkerLeft.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
         
-        this.subItemMarkerRight.setX(this.menuStartX + 500);           
+        this.subItemMarkerRight.setX(this.menuStartX + 300);           
         this.subItemMarkerRight.setY(this.menuStartY + this.selectedItemIndex * this.menuItemDistanceY());   
         
 
@@ -545,7 +547,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
 
     setIcon(scene: Phaser.Scene, key: string, scale: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
-        this.sprite = scene.add.sprite(this.x + 300, this.y - 150, key)
+        this.sprite = scene.add.sprite(this.x, this.y - 150, key)
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setScale(scale, scale);
         this.sprite.play(key);
@@ -571,6 +573,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
 
         var subItem = this.subItems[this.selectedSubItemIndex];
         this.text = subItem.description; //this.itemTitle + ' - ' + subItem.description;
+        this.setOrigin(0.5, 0.5);
         
         
         if(this.sprite != null) {

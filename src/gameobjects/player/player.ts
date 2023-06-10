@@ -92,6 +92,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private get healthBarOffsetX(): number {return -30;}
     private get healthBarOffsetY(): number {return -45;}
 
+    public static get healthRating(): number { return 5; }
+    public static get specialRating(): number { return 4; }
+    public static get speedRating(): number { return 100; }
+
     public static get maxHealth(): number { return 20; }
     public static get maxShield(): number { return 4; }
     public static get maxTurbo(): number { return 100; }

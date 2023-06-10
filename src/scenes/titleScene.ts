@@ -90,7 +90,7 @@ import { Constants } from '../constants';
         this.infoTextExpiryGameTime = this.game.getTime();
 
         //  Grab a reference to the Game Scene        
-        let ourGame = this.scene.get('GameScene');
+        //let ourGame = this.scene.get('GameScene');
 
         var framerate = 10;
 
@@ -232,18 +232,31 @@ import { Constants } from '../constants';
         var temp = new Array<IconValueMapping>();
 
         
-        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 2, selectedIndex: VehicleType.Taxi}));
-        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 2, selectedIndex: VehicleType.Ambulance}));
-        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 2, selectedIndex: VehicleType.RaceCar}));
-        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 2, selectedIndex: VehicleType.PickupTruck}));
-        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 2, selectedIndex: VehicleType.Hearse}));
+        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
+        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
+        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar}));
+        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck}));
+        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse}));
         
         
         this.menu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
         this.menu.addMenuItem(this, "Confirm Selection");    
 
-        
+        var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
+        text.setStroke('rgb(0,0,0)', 8);
+        text.setOrigin(0, 0.5);
+        text.setFontSize(24);
 
+        var text2 = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5 + 50, "Speed:   • •")
+        text2.setStroke('rgb(0,0,0)', 8);
+        text2.setOrigin(0, 0.5);
+        text2.setFontSize(24);
+
+        var text3 = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5 + 100, "Special: • • •")
+        text3.setStroke('rgb(0,0,0)', 8);
+        text3.setOrigin(0, 0.5);
+        text3.setFontSize(24);
+        
         /*
         ourGame.events.on('updateFPS', function (delta) {
             this.fpsText.setText('FPS: ' + (1000/delta).toFixed(3));// + '\n' +            
