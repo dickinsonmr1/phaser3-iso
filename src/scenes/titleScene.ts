@@ -3,7 +3,8 @@ import * as Phaser from 'phaser';
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
-import { ComplexMenuItem, IconValueMapping, Menu } from './menu';
+import { ComplexMenuItem, IconValueMapping, MenuPage } from './menuPage';
+import { MenuController } from './menuController';
 import { Constants } from '../constants';
 
  
@@ -11,8 +12,10 @@ import { Constants } from '../constants';
     
     fpsText: Phaser.GameObjects.Text;
 
-    mapSelectionMenu: Menu;
-    vehicleSelectionMenu: Menu;
+    //mapSelectionMenu: MenuPage;
+    //vehicleSelectionMenu: MenuPage;
+
+    menuController: MenuController;
     
     infoText: Phaser.GameObjects.Text;
     infoTextAlpha: number;
@@ -34,7 +37,7 @@ import { Constants } from '../constants';
 
     gamepad: Phaser.Input.Gamepad.Gamepad;
 
-    private selectedVehicleIndex: number = 0;
+    //private selectedVehicleIndex: number = 0;
     //private selectedVehicleSprite: Phaser.GameObjects.Sprite;
 
     //healthText;
@@ -226,12 +229,16 @@ import { Constants } from '../constants';
         //this.selectedVehicleSprite.setDisplaySize(256, 256);
         //this.selectedVehicleSprite.play('select-pickupTruckOrange');
 
-        this.vehicleSelectionMenu = new Menu(this, false);
-        this.vehicleSelectionMenu.setTitle(this, "Select Vehicle");
-        this.vehicleSelectionMenu.setTitleIcon(this, 'deathIcon', '', 1);
-        this.vehicleSelectionMenu.setMarker(this, ">>");        
-        var temp = new Array<IconValueMapping>();
+        this.menuController = new MenuController()
 
+      
+        // vehicle selection menu
+
+        var vehicleSelectionMenu = new MenuPage(this, false);
+        vehicleSelectionMenu.setTitle(this, "Select Vehicle");
+        vehicleSelectionMenu.setTitleIcon(this, 'deathIcon', '', 1);
+        vehicleSelectionMenu.setMarker(this, ">>");        
+        var temp = new Array<IconValueMapping>();
         
         temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
         temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
@@ -239,9 +246,8 @@ import { Constants } from '../constants';
         temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck}));
         temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse}));
         
-        
-        this.vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
-        this.vehicleSelectionMenu.addMenuItem(this, "Confirm Selection");    
+        vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
+        vehicleSelectionMenu.addStartGameMenuItem(this, "Confirm Selection");    
 
         var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
         text.setStroke('rgb(0,0,0)', 8);
@@ -258,17 +264,24 @@ import { Constants } from '../constants';
         text3.setOrigin(0, 0.5);
         text3.setFontSize(24);
 
-        this.mapSelectionMenu = new Menu(this, false);
-        this.mapSelectionMenu.setTitle(this, "Select Map");
-        this.mapSelectionMenu.setMarker(this, ">>");
+        // map selection menu
+
+        var mapSelectionMenu = new MenuPage(this, false);
+        mapSelectionMenu.setTitle(this, "Select Map");
+        mapSelectionMenu.setMarker(this, ">>");
         var temp2 = new Array<IconValueMapping>();
 
-        temp2.push(new IconValueMapping({description: 'Forest', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
-        temp2.push(new IconValueMapping({description: 'Quarry', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
-        temp2.push(new IconValueMapping({description: 'Desert', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar}));
-        this.vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Map", temp2);
-        this.vehicleSelectionMenu.addMenuItem(this, "Confirm Selection");    
+        temp2.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.Taxi}));
+        temp2.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: VehicleType.Ambulance}));
+        temp2.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.RaceCar}));
+        mapSelectionMenu.addMenuComplexItemWithIcons(this, "Map", temp2);
+        mapSelectionMenu.addMenuLinkItem(this, "Next", vehicleSelectionMenu);    
+             
+        // adding menus to menu controller in order
         
+        this.menuController.addMenu(mapSelectionMenu);
+        this.menuController.addMenu(vehicleSelectionMenu);
+
         /*
         ourGame.events.on('updateFPS', function (delta) {
             this.fpsText.setText('FPS: ' + (1000/delta).toFixed(3));// + '\n' +            
@@ -293,26 +306,30 @@ import { Constants } from '../constants';
         var selectionChanged = false;
 
         if(Phaser.Input.Keyboard.JustDown(this.selectKey)) {
-
-            this.confirmMenuSelection();           
+    
+            var isLaunchGame = this.menuController.confirmSelection();
+            if(isLaunchGame)
+            {
+                this.launchGame();
+            }
         }
          
         if(Phaser.Input.Keyboard.JustDown(this.cursorUp)) {
-            this.vehicleSelectionMenu.selectPreviousItem(this.sound);
+            this.menuController.selectPreviousItem();
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.cursorDown)) {
-            this.vehicleSelectionMenu.selectNextItem(this.sound);
+            this.menuController.selectNextItem();
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {
-            this.vehicleSelectionMenu.trySelectPreviousSubItem(this.sound);
-            selectionChanged = true;
+            this.menuController.selectPreviousSubItem();
+            //selectionChanged = true;
         }
 
         if(Phaser.Input.Keyboard.JustDown(this.cursorRight)) {
-            this.vehicleSelectionMenu.trySelectNextSubItem(this.sound);
-            selectionChanged = true;
+            this.menuController.selectNextSubItem();
+            //selectionChanged = true;
         }
 
         const pad = this.gamepad;
@@ -369,23 +386,9 @@ import { Constants } from '../constants';
         */      
     }
 
-    confirmMenuSelection(): void {
-        if(this.vehicleSelectionMenu.selectedItemIndex == 0) {
-            //this.returnToGame();
-
-            //this.menu.confirmSelection(this.sound);
-         }
-         else if(this.vehicleSelectionMenu.selectedItemIndex == 1) {
-             //this.menu.trySelectNextSubItem(this.sound);
-                             
-             var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.vehicleSelectionMenu.items[0];
-             this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
-         }
-         else if(this.vehicleSelectionMenu.selectedItemIndex == 2) {
-             //this.endGameAndReturnToTitleMenu();
-
-             //this.sound.play("backSound");
-         }
+    launchGame(): void {                             
+        var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menuController.selectedMenuPage.items[0];
+        this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
     }
 
     addGamepadListeners(): void {
@@ -398,26 +401,30 @@ import { Constants } from '../constants';
                 switch(index) {
                     case Constants.gamepadIndexSelect:
                         console.log('A');
-                        this.confirmMenuSelection();
+                        var isLaunchGame = this.menuController.confirmSelection();
+                        if(isLaunchGame)
+                        {
+                            this.launchGame();
+                        }
                         break;
                     case Constants.gamepadIndexInteract:
                         console.log('X');
                         break;
                     case Constants.gamepadIndexUp:
                         console.log('Up');
-                        this.vehicleSelectionMenu.selectPreviousItem(null);
+                        this.menuController.selectPreviousItem();
                         break;
                     case Constants.gamepadIndexDown:
                         console.log('Down');
-                        this.vehicleSelectionMenu.selectNextItem(null);
+                        this.menuController.selectNextItem();
                         break;
                     case Constants.gamepadIndexLeft:
-                        this.vehicleSelectionMenu.trySelectPreviousSubItem(null);
+                        this.menuController.selectPreviousSubItem();
                         console.log('Left');
                         break;
                     case Constants.gamepadIndexRight:
                         console.log('Right');
-                        this.vehicleSelectionMenu.trySelectNextSubItem(null);
+                        this.menuController.selectNextSubItem();
                         break;
                 }                
             });
