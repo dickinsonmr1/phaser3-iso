@@ -270,19 +270,25 @@ import { Constants } from '../constants';
         vehicleSelectionMenu.setMarker(this, "•");        
         var vehicleSprites = new Array<IconValueMapping>();
         
-        vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
-        vehicleSprites.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
-        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar}));
-        vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck}));
-        vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse}));        
-        vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
+        vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
+        vehicleSprites.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
+        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
+        vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
+        vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
+        var complexMenuItem = vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
+        
+        vehicleSelectionMenu.setInitialStats(this, complexMenuItem);
+
         vehicleSelectionMenu.addStartGameMenuItem(this, "Confirm Selection");    
+        
 
         // adding menus to menu controller in order        
         this.menuController.addMenu(titleMenu);
         this.menuController.addMenu(mapSelectionMenu);
         this.menuController.addMenu(vehicleSelectionMenu);
 
+
+        /*
         var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
         text.setStroke('rgb(0,0,0)', 8);
         text.setOrigin(0, 0.5);
@@ -297,6 +303,7 @@ import { Constants } from '../constants';
         text3.setStroke('rgb(0,0,0)', 8);
         text3.setOrigin(0, 0.5);
         text3.setFontSize(24);
+        */
 
         /*
         ourGame.events.on('updateFPS', function (delta) {

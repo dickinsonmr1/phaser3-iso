@@ -14,6 +14,11 @@ export class MenuPage {
     backMenu: MenuPage;
     menuIndex: number;
 
+    statsTitle: Phaser.GameObjects.Text;
+    stat1Text: Phaser.GameObjects.Text;
+    stat2Text: Phaser.GameObjects.Text;
+    stat3Text: Phaser.GameObjects.Text;
+
     titleIcon: Phaser.GameObjects.Image;
 
     menuStartX: number;
@@ -193,7 +198,7 @@ export class MenuPage {
         this.refreshColorsAndMarker();        
     }
 
-    addMenuComplexItemWithIcons(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>) {
+    addMenuComplexItemWithIcons(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>): ComplexMenuItem  {
 
         //var subItems = [];
 
@@ -221,7 +226,11 @@ export class MenuPage {
         scene.add.existing(temp);
         this.items.push(temp);
 
-        this.refreshColorsAndMarker();        
+        this.refreshColorsAndMarker();     
+        
+        //this.refreshStats(temp.subItems[temp.selectedSubItemIndex]);   
+
+        return temp;
     }
 
     setBackMenu(scene: Phaser.Scene, currentMenu: MenuPage) {
@@ -291,6 +300,55 @@ export class MenuPage {
         this.footer2.setOrigin(0.5, 0.5);
         this.footer2.setStroke('rgb(0,0,0)', 16);
         this.footer2.setFontSize(this.footerFontSize());
+    }
+
+    setInitialStats(scene: Phaser.Scene, complexMenuItem: ComplexMenuItem) {
+        this.stat1Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5, "stat1",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat1Text.setOrigin(0, 0.5);
+        this.stat1Text.setStroke('rgb(0,0,0)', 8);
+        this.stat1Text.setFontSize(this.footerFontSize());
+
+        this.stat2Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 50, "stat2",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat2Text.setOrigin(0, 0.5);
+        this.stat2Text.setStroke('rgb(0,0,0)', 8);
+        this.stat2Text.setFontSize(this.footerFontSize());
+
+        this.stat3Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 100, "stat3",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat3Text.setOrigin(0, 0.5);
+        this.stat3Text.setStroke('rgb(0,0,0)', 8);
+        this.stat3Text.setFontSize(this.footerFontSize());
+
+        this.refreshStats(complexMenuItem.subItems[complexMenuItem.selectedSubItemIndex]);
+    }
+
+    refreshStats(subItem: IconValueMapping) {
+
+        if(subItem.armorRating != null)
+            this.stat1Text.setText("Armor:   " + this.ratingToDots(subItem.armorRating));
+
+        if(subItem.speedRating != null)
+            this.stat2Text.setText("Speed:  " + this.ratingToDots(subItem.speedRating));
+        
+        if(subItem.specialRating != null && subItem.specialDescription != null)
+            this.stat3Text.setText("Special: " + this.ratingToDots(subItem.specialRating) + "(" + subItem.specialDescription + ")" );        
     }
 
     setMarker(scene: Phaser.Scene, text: string) {
@@ -392,10 +450,10 @@ export class MenuPage {
 
             if(this.useAudio)
                 sound.play("menuSwitchItemSound");
+
+            this.refreshStats(item.subItems[item.selectedSubItemIndex]);
        }       
     }
-
-
 
     trySelectPreviousSubItem(sound) {
         var temp = this.items[this.selectedItemIndex];
@@ -406,7 +464,18 @@ export class MenuPage {
 
              if(this.useAudio)
                 sound.play("menuSwitchItemSound");
+
+            this.refreshStats(item.subItems[item.selectedSubItemIndex]);   
         }   
+     }
+
+     private ratingToDots(rating: number): string{
+        let text = '';
+        for(var i = 0; i < rating; i++) {
+            text += '•';
+        }
+
+        return text;
      }
 
      show() {
@@ -423,6 +492,15 @@ export class MenuPage {
         
         if(this.footer2 != null)
             this.footer2.setVisible(true);
+
+        if(this.stat1Text != null)
+            this.stat1Text.setVisible(true);
+
+        if(this.stat2Text != null)
+            this.stat2Text.setVisible(true);
+
+        if(this.stat3Text != null)
+            this.stat3Text.setVisible(true);
         
         this.marker.setVisible(true);
 
@@ -465,6 +543,16 @@ export class MenuPage {
         if(this.footer2 != null)
             this.footer2.setVisible(false);
         
+        if(this.stat1Text != null)
+            this.stat1Text.setVisible(false);
+
+        if(this.stat2Text != null)
+            this.stat2Text.setVisible(false);
+
+        if(this.stat3Text != null)
+            this.stat3Text.setVisible(false);
+        
+
         this.marker.setVisible(false);
 
         if(this.subItemMarkerLeft != null)
@@ -596,11 +684,20 @@ export class IconValueMapping {
     key: string;
     scale: number;
     selectedIndex: number;
+    armorRating: number;
+    speedRating: number;
+    specialDescription: string;
+    specialRating: number;
 
     constructor(params) {
         this.description = params.description;
         this.key = params.key;
         this.scale = params.scale;
         this.selectedIndex = params.selectedIndex;
+
+        this.armorRating = params.armorRating;
+        this.speedRating = params.speedRating;
+        this.specialDescription = params.specialDescription;
+        this.specialRating = params.specialRating;
     }
 }
