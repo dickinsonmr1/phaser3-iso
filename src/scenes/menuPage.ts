@@ -116,7 +116,7 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             }});
         temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0, 0.5);
+        temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
         scene.add.existing(temp);
@@ -427,10 +427,18 @@ export class MenuPage {
         this.marker.setVisible(true);
 
         if(this.subItemMarkerLeft != null)
-            this.subItemMarkerLeft.setVisible(true);
 
-        if(this.subItemMarkerRight != null)
+        if(this.subItemMarkerLeft != null
+            && this.items[this.selectedItemIndex] instanceof ComplexMenuItem) {
+
+            this.subItemMarkerLeft.setVisible(true);
+        }
+
+        if(this.subItemMarkerRight != null
+            && this.items[this.selectedItemIndex] instanceof ComplexMenuItem) {
+                
             this.subItemMarkerRight.setVisible(true);
+        }
         
         this.items.forEach(x => {
             x.setVisible(true);

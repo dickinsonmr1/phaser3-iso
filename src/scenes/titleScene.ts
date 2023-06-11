@@ -57,6 +57,7 @@ import { Constants } from '../constants';
     preload () {
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/skull.png');
+        this.load.image('carIcon', './assets/sprites/HUD/carIcon.png');
 
         this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
@@ -230,24 +231,57 @@ import { Constants } from '../constants';
         //this.selectedVehicleSprite.play('select-pickupTruckOrange');
 
         this.menuController = new MenuController()
-
-      
-        // vehicle selection menu
-
+        
+        
+        var titleMenu = new MenuPage(this, false);        
+        var mapSelectionMenu = new MenuPage(this, false);
         var vehicleSelectionMenu = new MenuPage(this, false);
+
+        ///////////////////////////////////
+        // title menu
+        ///////////////////////////////////
+        titleMenu.setTitle(this, "Vehicular Vengeance");
+        titleMenu.setMarker(this, "•")
+        titleMenu.setTitleIcon(this, 'carIcon', 'carIcon', 1);
+        titleMenu.setFooter(this, "Copyright 2023 by Mark Dickinson")
+        titleMenu.addMenuLinkItem(this, "Single Player", mapSelectionMenu);
+        titleMenu.addMenuLinkItem(this, "Multiplayer", mapSelectionMenu);
+        titleMenu.addMenuLinkItem(this, "Options", mapSelectionMenu);
+
+        ///////////////////////////////////
+        // map selection menu  
+        ///////////////////////////////////
+        mapSelectionMenu.setTitle(this, "Select Map");
+        mapSelectionMenu.setTitleIcon(this, 'shieldIcon', '', 1);
+        mapSelectionMenu.setMarker(this, "•");
+
+        var mapIcons = new Array<IconValueMapping>();
+        mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.Taxi}));
+        mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: VehicleType.Ambulance}));
+        mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.RaceCar}));
+        mapSelectionMenu.addMenuComplexItemWithIcons(this, "Map", mapIcons);
+        mapSelectionMenu.addMenuLinkItem(this, "Next", vehicleSelectionMenu);    
+             
+        ///////////////////////////////////
+        // vehicle selection menu
+        ///////////////////////////////////
         vehicleSelectionMenu.setTitle(this, "Select Vehicle");
         vehicleSelectionMenu.setTitleIcon(this, 'deathIcon', '', 1);
-        vehicleSelectionMenu.setMarker(this, ">>");        
-        var temp = new Array<IconValueMapping>();
+        vehicleSelectionMenu.setMarker(this, "•");        
+        var vehicleSprites = new Array<IconValueMapping>();
         
-        temp.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
-        temp.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
-        temp.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar}));
-        temp.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck}));
-        temp.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse}));
-        
-        vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", temp);
+        vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 3, selectedIndex: VehicleType.Taxi}));
+        vehicleSprites.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 3, selectedIndex: VehicleType.Ambulance}));
+        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar}));
+        vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck}));
+        vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse}));        
+        vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         vehicleSelectionMenu.addStartGameMenuItem(this, "Confirm Selection");    
+
+        // adding menus to menu controller in order        
+        this.menuController.addMenu(titleMenu);
+        this.menuController.addMenu(mapSelectionMenu);
+        this.menuController.addMenu(vehicleSelectionMenu);
 
         var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
         text.setStroke('rgb(0,0,0)', 8);
@@ -263,24 +297,6 @@ import { Constants } from '../constants';
         text3.setStroke('rgb(0,0,0)', 8);
         text3.setOrigin(0, 0.5);
         text3.setFontSize(24);
-
-        // map selection menu
-
-        var mapSelectionMenu = new MenuPage(this, false);
-        mapSelectionMenu.setTitle(this, "Select Map");
-        mapSelectionMenu.setMarker(this, ">>");
-        var temp2 = new Array<IconValueMapping>();
-
-        temp2.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.Taxi}));
-        temp2.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: VehicleType.Ambulance}));
-        temp2.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.RaceCar}));
-        mapSelectionMenu.addMenuComplexItemWithIcons(this, "Map", temp2);
-        mapSelectionMenu.addMenuLinkItem(this, "Next", vehicleSelectionMenu);    
-             
-        // adding menus to menu controller in order
-        
-        this.menuController.addMenu(mapSelectionMenu);
-        this.menuController.addMenu(vehicleSelectionMenu);
 
         /*
         ourGame.events.on('updateFPS', function (delta) {
