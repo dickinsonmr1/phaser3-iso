@@ -244,6 +244,7 @@ import { Constants } from '../constants';
         titleMenu.setMarker(this, "•")
         titleMenu.setTitleIcon(this, 'carIcon', 'carIcon', 1);
         titleMenu.setFooter(this, "Copyright 2023 by Mark Dickinson")
+        titleMenu.addStartGameMenuItem(this, "Instant Action");    
         titleMenu.addMenuLinkItem(this, "Single Player", mapSelectionMenu);
         titleMenu.addMenuLinkItem(this, "Multiplayer", mapSelectionMenu);
         titleMenu.addMenuLinkItem(this, "Options", mapSelectionMenu);
@@ -411,7 +412,10 @@ import { Constants } from '../constants';
 
     launchGame(): void {                             
         var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menuController.selectedMenuPage.items[0];
-        this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
+        if(selectedVehicleTypeMenuItem.selectedSubItemIndex != null)
+            this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
+        else
+            this.sceneController.launchGame(VehicleType.Hearse);
     }
 
     addGamepadListeners(): void {
