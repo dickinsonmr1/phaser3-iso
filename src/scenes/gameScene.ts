@@ -215,86 +215,17 @@ export default class GameScene extends Phaser.Scene
         //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
         var vehicleFactory = new VehicleFactory();
+        
         this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
-        /*
-        this.player = new RaceCarPlayer({
-            scene: this,
-            isCpuPlayer: false,
-            mapX: 200,
-            mapY: 200,
-            //mapX: 10,
-            //mapY: 10,
-            key: "blueCars",
-            frame: 'raceCarBlue-W',
-            playerId: "Speed Demon",
-            drawScale: 0.4,
-            vehicleType: this.player1VehicleType,//VehicleType.RaceCar
-            //isMyPlayer: true,
-            //isMultiplayer: this.isMultiplayer
-        });        
-        */
-        this.player.init();        
-       
-        this.player2 = new RaceCarPlayer({
-            scene: this,
-            isCpuPlayer: true,
-            mapX: 500,
-            mapY: 500,
-            key: "orangeCars",
-            frame: 'c11_s128_iso_0',
-            playerId: "Redneck",
-            drawScale: 0.4,
-            vehicleType: VehicleType.PickupTruck
-            //isMyPlayer: true,
-            //isMultiplayer: this.isMultiplayer
-        });        
+        this.player.init();    
+        
+        this.player2 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, this);
         this.player2.init();
-    
-        this.player3 = new RaceCarPlayer({
-            scene: this,
-            isCpuPlayer: true,
-            mapX: 100,
-            mapY: 400,
-            key: "whiteCars",
-            frame: 'vanWhite-NW',
-            playerId: "Work Van",
-            drawScale: 0.4,
-            vehicleType: VehicleType.Ambulance
-            //isMyPlayer: true,
-            //isMultiplayer: this.isMultiplayer
-        });        
+
+        this.player3 = vehicleFactory.generatePlayer(VehicleType.Ambulance, true, this);
         this.player3.init();
 
-        /*
-        this.player4 = new Player({
-            scene: this,
-            isCpuPlayer: true,
-            mapX: 300,
-            mapY: 50,
-            key: "yellowCars",
-            frame: 'taxiYellow-W',
-            playerId: "Sideswipe",
-            drawScale: 0.4,
-            vehicleType: VehicleType.Taxi
-            //isMyPlayer: true,
-            //isMultiplayer: this.isMultiplayer
-        });        
-        this.player4.init();
-        */
-
-        this.player4 = new RaceCarPlayer({
-            scene: this,
-            isCpuPlayer: true,
-            mapX: 300,
-            mapY: 50,
-            key: "blackCars",
-            frame: 'hearseBlack-W',
-            playerId: "Undertaker",
-            drawScale: 0.4,
-            vehicleType: VehicleType.Hearse
-            //isMyPlayer: true,
-            //isMultiplayer: this.isMultiplayer
-        });        
+        this.player4 = vehicleFactory.generatePlayer(VehicleType.Taxi, true, this);
         this.player4.init();
 
         this.allPlayers = this.physics.add.group();

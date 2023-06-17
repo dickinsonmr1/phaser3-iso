@@ -4,6 +4,7 @@ import { Player, VehicleType } from "./player";
 import { RaceCarPlayer } from "./racecarplayer";
 import { TaxiPlayer } from "./taxiplayer";
 import { PickupTruckPlayer } from "./pickuptruckplayer";
+import { HearsePlayer } from "./hearseplayer";
 
 export class VehicleFactory {
     constructor() {
@@ -67,12 +68,12 @@ export class VehicleFactory {
                     mapY: 400,
                     key: "whiteCars",
                     frame: 'vanWhite-NW',
-                    playerId: "Work Van",
+                    playerId: "Ambulance",
                     vehicleType: vehicleType
                 });
                 break;
             case VehicleType.Hearse:
-                return new AmbulancePlayer({                    
+                return new HearsePlayer({                    
                     scene: scene,
                     drawScale: 0.4,
                     isCpuPlayer: isCpuPlayer,
