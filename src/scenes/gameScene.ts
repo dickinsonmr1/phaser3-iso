@@ -111,7 +111,7 @@ export default class GameScene extends Phaser.Scene
 
         // tiles
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
-        //this.load.image('tiles2', './assets/iso-64x64-building.png');
+        this.load.image('tiles2', './assets/iso-64x64-building.png');
         this.load.image('groundTiles', './assets/Overworld - Terrain 1 - Flat 128x64.png');
         this.load.image('waterTiles', './assets/Overworld - Water - Flat 128x64.png');
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
@@ -119,6 +119,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('roadTiles', './assets/Road_Toon_01-128x64.png');        
         this.load.image('outlineTile', './assets/Grid Type A - 128x64.png');   
         this.load.image('treeTile', './assets/baum-tree.png');   
+        this.load.image('houseTile', './assets/house-sample.png');   
 
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
@@ -152,11 +153,14 @@ export default class GameScene extends Phaser.Scene
         //v
         //var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2')
 
+        // tileset name matches what is in Tiled
         var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles');      
         var tilesetWater = map.addTilesetImage('Overworld - Water - Flat 128x64', 'waterTiles');
         var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles');
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
-        var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');
+        var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');       
+        var tilesetHouses = map.addTilesetImage('house-sample', 'houseTile');
+        //var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile', 'houseTile', 'tiles2');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
         this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
@@ -176,7 +180,7 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
-        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects ])
+        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
@@ -215,7 +219,7 @@ export default class GameScene extends Phaser.Scene
         //player = this.add.sprite(100, 100, 'utilityCars', 'police_W.png');
 
         var vehicleFactory = new VehicleFactory();
-        
+
         this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
         this.player.init();    
         
@@ -283,6 +287,7 @@ export default class GameScene extends Phaser.Scene
         */
 
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
+        this.layer4.setTileIndexCallback(Constants.houseObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
         this.physics.add.overlap(this.player.bullets, this.layer4);
         this.physics.add.overlap(this.player2.bullets, this.layer4);
@@ -348,6 +353,8 @@ export default class GameScene extends Phaser.Scene
             collidingTileColor: colldingTileColor, // Colliding tiles
             faceColor: faceColor // Interesting faces, i.e. colliding edges
         });
+
+        //this.cameras.main.postFX.addTiltShift(0.5, 0.1, 0.8, 0.5, 1, 1);
     }
 
     generatePickup(tile) {
