@@ -387,7 +387,7 @@ export default class GameScene extends Phaser.Scene
     generatePickup(tile) {
         if(tile.index == Constants.pickupSpawnTile) {
             const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-            const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+            const y = ((tile.y * tile.height));// / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
            
             var temp = Utility.cartesianToIsometric(new Point(x, y));
 
@@ -505,13 +505,15 @@ export default class GameScene extends Phaser.Scene
     generateHouse(tile) {
         if(tile.index == Constants.houseObjectTile) {
             const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-            const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+            const y = ((tile.y * tile.height));// tile.height / 2; //tile.y;//tile.getCenterY();                
            
             var temp = Utility.cartesianToIsometric(new Point(x, y));
 
             var sprite =  this.physics.add.image(temp.x, temp.y, 'houseTile');
+            sprite.setOrigin(0.5, 0.5);
+            //sprite.setScale(0.75, 0.75);            
             sprite.setDepth(temp.y + 64);            
-            sprite.setBodySize(48, 32, true);
+            sprite.setBodySize(40, 24, true);
 
             this.environmentPhysicsObjects.add(sprite);
 
@@ -715,6 +717,13 @@ export default class GameScene extends Phaser.Scene
     playerOrWeaponTouchingEnvironmentObject(playerOrWeapon: any, object: any) {
 
         this.particleEmitter.explode(2, object.x, object.y);
+
+        
+        if(playerOrWeapon instanceof Projectile)
+        {
+            var projectile = <Projectile>playerOrWeapon;
+            projectile.remove();
+        }
 
         object.destroy();
     }
