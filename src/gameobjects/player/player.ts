@@ -69,8 +69,8 @@ enum PlayerAliveStatus {
 
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
-    private bodyDrawSize: number = 64;
-    private bodyDrawOffset: number = 0;
+    private bodyDrawSize: number = 48;
+    private bodyDrawOffset: number = 10;
 
     getPlayerSpeed(): number {
         if(this.turboOn) {
@@ -375,7 +375,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
           //  .setSize(this.bodyDrawSize, this.bodyDrawSize)
             //.setOffset(-this.bodyDrawOffset, -this.bodyDrawOffset);
 
-        this.setCircle(this.bodyDrawSize, -this.bodyDrawOffset, -this.bodyDrawOffset)
+        this.setCircle(this.bodyDrawSize, this.bodyDrawOffset, this.bodyDrawOffset)
 
         
         
@@ -561,7 +561,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
 
-            this.depth = this.y + 64;
+            this.setDepth(this.y);
 
             //this.x = screenPosition.x;
             //this.y = screenPosition.y;
@@ -584,6 +584,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             if(this.particleEmitterShockwave != null)
                 this.particleEmitterShockwave.setPosition(this.x, this.y);
+
+            this.particleEmitterFlamethrower.setDepth(this.y);
+
+            //this.particleEmitterExplosion.setDepth(this.y + 1000);
         }
         else {
             this.deadUntilRespawnTime--;
@@ -620,7 +624,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
                     \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI
                     \n Aim (${(this.aimX / Math.PI).toFixed(2)} PI, ${(this.aimY / Math.PI).toFixed(2)} PI)
-                    \n Behavior: ${this.cpuPlayerPattern.toString()}`)
+                    \n Behavior: ${this.cpuPlayerPattern.toString()}
+                    \n Depth: ${this.depth.toString()}`)
 
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
@@ -885,6 +890,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.multiplayerNameText.setVisible(false);
 
         this.particleEmitterExplosion.setPosition(this.x, this.y);
+        this.particleEmitterExplosion.setDepth(this.y + 64);
         this.particleEmitterExplosion.explode(20);//, this.x, this.y);
 
         this.particleEmitterDeathBurn.setPosition(this.x, this.y);
@@ -1092,12 +1098,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case ProjectileType.Bullet:
                 this.health--;
                 this.particleEmitterSparks.setPosition(this.x, this.y);
+                this.particleEmitterSparks.setDepth(this.y + 64);
                 this.particleEmitterSparks.explode(5);//, this.x, this.y);
                 break;
             case ProjectileType.FireRocket:
             case ProjectileType.HomingRocket:
                 this.health -= 5;
                 this.particleEmitterExplosion.setPosition(this.x, this.y);
+                this.particleEmitterExplosion.setDepth(this.y + 64);
                 this.particleEmitterExplosion.explode(10);//, this.x, this.y);
                 break;
         }
@@ -1185,6 +1193,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTime > 0) return;
 
+
+        this.particleEmitterFlamethrower.setDepth(this.y);
+
         //let maxDistance = 100;
         let minDistance = 30;
 
@@ -1193,7 +1204,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
         for(var i = 0; i < 10; i++) {
             var distance = minDistance + Utility.getRandomInt(this.flamethrowerDistance);
-            this.particleEmitterFlamethrower.emitParticleAt(this.x + this.aimX * distance, this.y + this.aimY * distance);               
+            this.particleEmitterFlamethrower.emitParticleAt(this.x + this.aimX * distance, this.y + this.aimY * distance);                       
         }    
         /*
         var gameTime = this.scene.game.loop.time;

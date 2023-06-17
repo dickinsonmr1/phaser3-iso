@@ -73,7 +73,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.setCircle(this.getBodyDrawSize(), -this.bodyDrawOffset, -this.bodyDrawOffset)
        
         this.setAlpha(1.0);
-        this.setDepth(1);//Constants.depthBullets);
+        this.setDepth(this.y);//Constants.depthBullets);
 
         
         
@@ -179,7 +179,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(...args: any[]): void {
-               
+        this.setDepth(this.y);
     }
 
     remove() {
