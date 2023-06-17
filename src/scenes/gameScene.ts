@@ -19,6 +19,7 @@ export default class GameScene extends Phaser.Scene
     player4: Player;
 
     allPlayers: Phaser.GameObjects.Group;
+    allBullets: Phaser.GameObjects.Group;
 
     public showDebug: boolean = false;
 
@@ -52,6 +53,8 @@ export default class GameScene extends Phaser.Scene
 
     pickupObjects : Array<Pickup> = new Array<Pickup>();
     pickupPhysicsObjects: Phaser.GameObjects.Group;
+
+    environmentPhysicsObjects: Phaser.GameObjects.Group;
     
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
@@ -184,6 +187,7 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
+
         //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
         //this.layer4 = map.createLayer('Tile Layer 4', [ tileset1, tileset2 ]);
@@ -277,6 +281,11 @@ export default class GameScene extends Phaser.Scene
         this.layerPickups.forEachTile(tile => {
             this.generatePickup(tile);            
         })        
+        
+        this.environmentPhysicsObjects = this.physics.add.group();
+        this.layer4.forEachTile(tile => {
+            this.generateHouse(tile); 
+        });        
 
         this.physics.add.overlap(this.allPlayers, this.layer4);
         
@@ -286,13 +295,30 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player4, this.layer4);
         */
 
-        this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
-        this.layer4.setTileIndexCallback(Constants.houseObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
+        //this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
+        //this.layer4.setTileIndexCallback(Constants.houseObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
-        this.physics.add.overlap(this.player.bullets, this.layer4);
-        this.physics.add.overlap(this.player2.bullets, this.layer4);
-        this.physics.add.overlap(this.player3.bullets, this.layer4);
-        this.physics.add.overlap(this.player4.bullets, this.layer4);
+        this.allBullets = this.physics.add.group();
+        /*
+        this.allBullets.addMultiple(this.player.bullets.getChildren());
+        this.allBullets.addMultiple(this.player2.bullets.getChildren());
+        this.allBullets.addMultiple(this.player3.bullets.getChildren());
+        this.allBullets.addMultiple(this.player4.bullets.getChildren());
+        */
+
+        this.physics.add.overlap(this.allPlayers, this.environmentPhysicsObjects, (player, object) => this.playerOrWeaponTouchingEnvironmentObject(player, object));
+        //this.physics.add.overlap(this.allBullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+
+        this.physics.add.overlap(this.player.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player2.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player3.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player4.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+
+        
+        //this.physics.add.overlap(this.player.bullets, this.layer4);
+        //this.physics.add.overlap(this.player2.bullets, this.layer4);
+        //this.physics.add.overlap(this.player3.bullets, this.layer4);
+        //this.physics.add.overlap(this.player4.bullets, this.layer4);
 
         //const particles = this.player.particleEmitterFlamethrower.overlap(this.player2);
         this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player2, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
@@ -301,6 +327,7 @@ export default class GameScene extends Phaser.Scene
 
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
+        
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
         //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
 
@@ -472,6 +499,23 @@ export default class GameScene extends Phaser.Scene
             */
 
             this.layerPickups.removeTileAt(tile.x, tile.y);
+        }
+    }
+
+    generateHouse(tile) {
+        if(tile.index == Constants.houseObjectTile) {
+            const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
+            const y = ((tile.y * tile.height)) / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+           
+            var temp = Utility.cartesianToIsometric(new Point(x, y));
+
+            var sprite =  this.physics.add.image(temp.x, temp.y, 'houseTile');
+            sprite.setDepth(temp.y + 64);            
+            sprite.setBodySize(48, 32, true);
+
+            this.environmentPhysicsObjects.add(sprite);
+
+            this.layer4.removeTileAt(tile.x, tile.y);
         }
     }
 
@@ -666,6 +710,13 @@ export default class GameScene extends Phaser.Scene
 
         bullet.destroy();
         */
+    }
+
+    playerOrWeaponTouchingEnvironmentObject(playerOrWeapon: any, object: any) {
+
+        this.particleEmitter.explode(2, object.x, object.y);
+
+        object.destroy();
     }
 
     update(time, delta) {

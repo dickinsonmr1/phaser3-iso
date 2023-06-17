@@ -561,6 +561,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
 
+            this.depth = this.y + 64;
+
             //this.x = screenPosition.x;
             //this.y = screenPosition.y;
             //this.body.position.x = screenPosition.x;
