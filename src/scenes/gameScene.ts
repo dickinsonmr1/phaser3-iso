@@ -47,12 +47,15 @@ export default class GameScene extends Phaser.Scene
     layer4 : Phaser.Tilemaps.TilemapLayer;
     layer5 : Phaser.Tilemaps.TilemapLayer;
     layerPickups : Phaser.Tilemaps.TilemapLayer;
+    layerRespawnPoints : Phaser.Tilemaps.TilemapLayer;
 
     pickups : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
     //pickupIcons : Array<Phaser.GameObjects.GameObject> = new Array<Phaser.GameObjects.GameObject>();
 
     pickupObjects : Array<Pickup> = new Array<Pickup>();
     pickupPhysicsObjects: Phaser.GameObjects.Group;
+
+    respawnPoints : Array<Point> = new Array<Point>();
 
     environmentPhysicsObjects: Phaser.GameObjects.Group;
     
@@ -187,6 +190,8 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
+        this.layerRespawnPoints = map.createLayer('RespawnPointLayer', [ tilesetPickups ])
+            .setDisplayOrigin(0.5, 0.5);
 
         //this.layer2 = map.createLayer('Tile Layer 2', [ tileset1, tileset2 ]);
         //this.layer3 = map.createLayer('Tile Layer 3', [ tileset1, tileset2 ]);
@@ -280,6 +285,10 @@ export default class GameScene extends Phaser.Scene
         this.pickupPhysicsObjects = this.physics.add.group();
         this.layerPickups.forEachTile(tile => {
             this.generatePickup(tile);            
+        })    
+        
+        this.layerRespawnPoints.forEachTile(tile => {
+            this.generateRespawnPoint(tile);            
         })        
         
         this.environmentPhysicsObjects = this.physics.add.group();
@@ -500,6 +509,24 @@ export default class GameScene extends Phaser.Scene
 
             this.layerPickups.removeTileAt(tile.x, tile.y);
         }
+    }
+
+    generateRespawnPoint(tile) {
+        if(tile.index == Constants.pickupSpawnTile) {
+            const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
+            const y = ((tile.y * tile.height));// / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+           
+            var temp = Utility.cartesianToIsometric(new Point(x, y));
+
+            this.respawnPoints.push(new Point(temp.x, temp.y));
+
+            this.layerRespawnPoints.removeTileAt(tile.x, tile.y);
+        }
+    }
+
+    getRandomRespawnPoint(): Point {
+        let randomIndex = Utility.getRandomInt(this.respawnPoints.length - 1);
+        return this.respawnPoints[randomIndex];
     }
 
     generateHouse(tile) {

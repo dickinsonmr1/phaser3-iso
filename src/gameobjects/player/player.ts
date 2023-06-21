@@ -917,28 +917,38 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.MapPosition.x = Utility.getRandomInt(200);
         this.MapPosition.y = Utility.getRandomInt(200);
 
+        let gameScene = <GameScene>this.scene;          
+        let respawnPoint = gameScene.getRandomRespawnPoint();
+
+        this.x = respawnPoint.x;
+        this.y = respawnPoint.y;
+
         //this.body.position.x = this.MapPosition.x;
         //this.body.position.y = this.MapPosition.y;
 
         //this.MapPosition.x += this.body.velocity.x;
         //this.MapPosition.y += this.body.velocity.y;
 
-        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
-        this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
+        //var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
+        //this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);
 
-        this.x = screenPosition.x;
-        this.y = screenPosition.y;
+        //this.x = screenPosition.x;
+        //this.y = screenPosition.y;
 
         this.health = Player.maxHealth;
         this.healthBar.updateHealth(this.health);
+        this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
 
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
         this.tryTurboBoostOff();
+        this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
         this.deadUntilRespawnTime = 0;
 
         this.deathIcon.setVisible(false);
+
+        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);    
 
         this.setVisible(true);
         
