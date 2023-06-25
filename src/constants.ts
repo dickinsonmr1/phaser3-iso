@@ -35,6 +35,7 @@ export class Constants {
 
     public static get treeObjectTile(): number { return 50; }
     public static get houseObjectTile(): number { return 131; }
+    public static get buildingObjectTile(): number { return 132; }
 
     public static get respawnTime(): number { return 180; }
 

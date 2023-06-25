@@ -57,7 +57,9 @@ export default class GameScene extends Phaser.Scene
 
     respawnPoints : Array<Point> = new Array<Point>();
 
-    environmentPhysicsObjects: Phaser.GameObjects.Group;
+    environmentDestructiblePhysicsObjects: Phaser.GameObjects.Group;
+    environmentIndestructiblePhysicsObjects: Phaser.GameObjects.Group;
+    
     
     pickupScaleTime: number = 60;
     pickupScale: number = 1;
@@ -126,6 +128,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('outlineTile', './assets/Grid Type A - 128x64.png');   
         this.load.image('treeTile', './assets/baum-tree.png');   
         this.load.image('houseTile', './assets/house-sample.png');   
+        this.load.image('buildingTile', './assets/building-sample-256x256.png');         
 
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
@@ -166,6 +169,7 @@ export default class GameScene extends Phaser.Scene
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
         var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');       
         var tilesetHouses = map.addTilesetImage('house-sample', 'houseTile');
+        var tilesetBuildings = map.addTilesetImage('building-sample-256x256', 'buildingTile');
         //var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile', 'houseTile', 'tiles2');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
@@ -186,7 +190,7 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
-        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses ])
+        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses, tilesetBuildings ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
@@ -291,9 +295,15 @@ export default class GameScene extends Phaser.Scene
             this.generateRespawnPoint(tile);            
         })        
         
-        this.environmentPhysicsObjects = this.physics.add.group();
+        this.environmentDestructiblePhysicsObjects = this.physics.add.group();
+        this.environmentIndestructiblePhysicsObjects = this.physics.add.group();
+
         this.layer4.forEachTile(tile => {
-            this.generateHouse(tile); 
+
+            if(tile.index == Constants.houseObjectTile)
+                this.generateHouse(tile); 
+            if(tile.index == Constants.buildingObjectTile)
+                this.generateBuilding(tile);
         });        
 
         this.physics.add.overlap(this.allPlayers, this.layer4);
@@ -315,13 +325,13 @@ export default class GameScene extends Phaser.Scene
         this.allBullets.addMultiple(this.player4.bullets.getChildren());
         */
 
-        this.physics.add.overlap(this.allPlayers, this.environmentPhysicsObjects, (player, object) => this.playerOrWeaponTouchingEnvironmentObject(player, object));
+        this.physics.add.overlap(this.allPlayers, this.environmentDestructiblePhysicsObjects, (player, object) => this.playerOrWeaponTouchingEnvironmentObject(player, object));
         //this.physics.add.overlap(this.allBullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
 
-        this.physics.add.overlap(this.player.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player2.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player3.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player4.bullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player2.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player3.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player4.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
 
         
         //this.physics.add.overlap(this.player.bullets, this.layer4);
@@ -530,22 +540,37 @@ export default class GameScene extends Phaser.Scene
     }
 
     generateHouse(tile) {
-        if(tile.index == Constants.houseObjectTile) {
-            const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-            const y = ((tile.y * tile.height));// tile.height / 2; //tile.y;//tile.getCenterY();                
-           
-            var temp = Utility.cartesianToIsometric(new Point(x, y));
+        const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
+        const y = ((tile.y * tile.height));// tile.height / 2; //tile.y;//tile.getCenterY();                
+        
+        var temp = Utility.cartesianToIsometric(new Point(x, y));
 
-            var sprite =  this.physics.add.image(temp.x, temp.y, 'houseTile');
-            sprite.setOrigin(0.5, 0.5);
-            //sprite.setScale(0.75, 0.75);            
-            sprite.setDepth(temp.y + 64);            
-            sprite.setBodySize(40, 24, true);
+        var sprite =  this.physics.add.image(temp.x, temp.y, 'houseTile');
+        sprite.setOrigin(0.5, 0.5);
+        //sprite.setScale(0.75, 0.75);            
+        sprite.setDepth(temp.y + 64);            
+        sprite.setBodySize(50, 15, true);
 
-            this.environmentPhysicsObjects.add(sprite);
+        this.environmentDestructiblePhysicsObjects.add(sprite);
 
-            this.layer4.removeTileAt(tile.x, tile.y);
-        }
+        this.layer4.removeTileAt(tile.x, tile.y);
+    }
+
+    generateBuilding(tile) {
+        const x = ((tile.x * 128)) / 2 + 128 / 2; //tile.x;// tile.getCenterX();
+        const y = ((tile.y * 64));// tile.height / 2; //tile.y;//tile.getCenterY();                
+        
+        var temp = Utility.cartesianToIsometric(new Point(x, y));
+
+        var sprite =  this.physics.add.image(temp.x, temp.y, 'buildingTile');
+        sprite.setOrigin(0.5, 0);
+        //sprite.setScale(0.75, 0.75);            
+        sprite.setDepth(temp.y + 256);            
+        sprite.setBodySize(220, 100, true);
+
+        this.environmentIndestructiblePhysicsObjects.add(sprite);
+
+        this.layer4.removeTileAt(tile.x, tile.y);
     }
 
     addGamePadListeners() {
