@@ -67,7 +67,7 @@ enum PlayerAliveStatus {
     PermaDead
 }
 
-export abstract class Player extends Phaser.Physics.Arcade.Sprite {
+export abstract class Player extends Phaser.Physics.Matter.Sprite {
 
     private bodyDrawSize: number = 48;
     private bodyDrawOffset: number = 10;
@@ -245,7 +245,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private static get deathIconOffsetY(): number {return 0;}
 
     constructor(params) {
-        super(params.scene, params.mapX, params.mapY, params.key, params.frame);
+        super(params.scene.matter.world, params.mapX, params.mapY, params.key, params.frame);
 
         this.isCpuPlayer = params.isCpuPlayer;
 
@@ -359,12 +359,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         
+        /*
         this.bullets = this.scene.physics.add.group({
             allowGravity: false
         });
+        */
+
+        const bulletIndex = this.scene.matter.world.nextGroup();
     }
     init() {
-        this.scene.physics.world.enable(this);
+        //this.scene.physics.world.enable(this);
+
+        this.scene.add.existing(this);
 
         
         var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -375,7 +381,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
           //  .setSize(this.bodyDrawSize, this.bodyDrawSize)
             //.setOffset(-this.bodyDrawOffset, -this.bodyDrawOffset);
 
-        this.setCircle(this.bodyDrawSize, this.bodyDrawOffset, this.bodyDrawOffset)
+        this.setCircle(this.bodyDrawSize);//, this.bodyDrawOffset, this.bodyDrawOffset)
 
         
         
@@ -556,7 +562,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.MapPosition.x += this.body.velocity.x;
             this.MapPosition.y += this.body.velocity.y;
 
-            this.setBounce(1,1);
+            this.setBounce(1);//,1);
 
             var screenPosition = Utility.cartesianToIsometric(this.MapPosition);
             this.playerPositionOnTileset = Utility.getTileCoordinates(this.MapPosition, Constants.isometricTileHeight);

@@ -19,7 +19,7 @@ const config = {
         // noaudio
     },
     physics: {
-        default: 'arcade',
+        default: 'matter',
         arcade: {
             debug: true,
             debugShowBody: true,
@@ -29,6 +29,13 @@ const config = {
             debugBodyColor: 0x0000ff,
             debugStaticBodyColor: 0xffffff,
             x: 0, y: 0, width: 500, height: 200,
+        },
+        matter: {
+            gravity: {
+                y: 0
+            },
+            debug: true,
+            debugBodyColor: 0xffffff
         }
     },
     scene: [SceneController]
