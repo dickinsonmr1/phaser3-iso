@@ -1270,6 +1270,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             var distance = 15;
             this.particleEmitterTurbo.emitParticleAt(this.x - this.aimX * distance, this.y - this.aimY * distance);               
         }        
+        else {
+            this.turboOn = false;
+        }
     }
 
     
