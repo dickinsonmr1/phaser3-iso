@@ -70,6 +70,8 @@ export default class GameScene extends Phaser.Scene
 
     player1VehicleType: VehicleType;
 
+    crosshairSprite: Phaser.GameObjects.Sprite;
+
 
     constructor (sceneController: SceneController, player1VehicleType: VehicleType)
     {
@@ -143,6 +145,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
         this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');
+
+        this.load.image('crosshair', './assets/sprites/crosshair061.png');
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
@@ -234,7 +238,13 @@ export default class GameScene extends Phaser.Scene
         var vehicleFactory = new VehicleFactory();
 
         this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
-        this.player.init();    
+        this.player.init();   
+        
+        //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
+        //this.crosshairSprite.setOrigin(0.5, 0.5);
+        //this.crosshairSprite.setAngle(45);
+        //this.crosshairSprite.setScale(0.5, 0.3);        
+        //this.crosshairSprite.play(key);
         
         this.player2 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, this);
         this.player2.init();
@@ -418,7 +428,7 @@ export default class GameScene extends Phaser.Scene
 
             var pickupType = PickupType.Rocket;
             var rand = Utility.getRandomInt(7);
-            var pickUpIconKey = "deathIcon";
+            var pickUpIconKey = "shieldIcon";
             switch(rand) {
                 case 0: // pink
                     topColor = 0xFF6FCC;

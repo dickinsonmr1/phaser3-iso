@@ -13,7 +13,8 @@ import {v4 as uuidv4} from 'uuid';
 export enum ProjectileType {
     HomingRocket,
     FireRocket,
-    Bullet
+    Bullet,
+    Airstrike
     // Freeze
     // EMP
 }
@@ -29,6 +30,8 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     public MapPosition: Phaser.Geom.Point;
 
     public spotlight;//: Phaser.GameObjects.Light;
+
+    private crosshairSprite: Phaser.GameObjects.Sprite;
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
@@ -72,11 +75,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
         this.setCircle(this.getBodyDrawSize(), -this.bodyDrawOffset, -this.bodyDrawOffset)
        
-        this.setAlpha(1.0);
+        if(this.projectileType == ProjectileType.Airstrike)
+            this.setAlpha(0);
+        else
+            this.setAlpha(1.0);
         this.setDepth(this.y);//Constants.depthBullets);
-
-        
-        
 
         if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
             // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
@@ -115,6 +118,14 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 //active: false
             });
             this.particleEmitter.setDepth(Constants.depthTurboParticles)
+        }
+
+        if(this.projectileType == ProjectileType.Airstrike) {
+            this.crosshairSprite = this.scene.add.sprite(this.x, this.y, 'crosshair');
+            this.crosshairSprite.setOrigin(0.5, 0.5);
+            this.crosshairSprite.setAlpha(0.7);
+            //this.crosshairSprite.setAngle(45);
+            this.crosshairSprite.setScale(0.5, 0.3);   
         }
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
@@ -160,6 +171,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 this.particleEmitter.setDepth(4)
                 this.particleEmitter.setPosition(this.x, this.y);
             }
+
+            if(this.projectileType == ProjectileType.Airstrike) {
+                this.crosshairSprite.setPosition(this.x, this.y);
+            }
             
             /*
             var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -188,6 +203,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 this.scene.lights.removeLight(this.spotlight);
 
             this.particleEmitter.stop();
+        }
+        if(this.projectileType == ProjectileType.Airstrike) {
+            this.crosshairSprite.destroy();
         }
         this.destroy();
     }

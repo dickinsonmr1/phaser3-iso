@@ -1306,12 +1306,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            var changeBehaviorRand = Utility.getRandomInt(2);
+            var changeBehaviorRand = Utility.getRandomInt(3);
             if(changeBehaviorRand == 0)
                 this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
-            else
+            else if(changeBehaviorRand == 1)
                 this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
-                                
+            else if(changeBehaviorRand == 2)
+                this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
+
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
@@ -1353,6 +1355,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
             case ProjectileType.Bullet:
                 bulletVelocity = 700;    
+                weaponImageKey = "bullet";
+                scaleX = 0.25;
+                scaleY = 0.25;
+                break;
+            case ProjectileType.Airstrike:
+                bulletVelocity = 400;    
                 weaponImageKey = "bullet";
                 scaleX = 0.25;
                 scaleY = 0.25;

@@ -1,5 +1,5 @@
 import 'phaser';
-import { HealthBar } from "../gameobjects/healthBar";
+import { HUDBarType, HealthBar } from "../gameobjects/healthBar";
 import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
@@ -20,6 +20,7 @@ export class PlayerHUDOverlayComponent {
 
     healthBar: HealthBar;
     turboBar: HealthBar;    
+    shieldBar: HealthBar;
 
     displayX: number;
     displayY: number;
@@ -27,14 +28,16 @@ export class PlayerHUDOverlayComponent {
     private get IsoBoxHealthStartX(): number {return this.scene.game.canvas.width / 16; }
     private get IsoBoxHealthStartY(): number {return this.scene.game.canvas.height - this.scene.game.canvas.height / 16; }   
 
-    private get IsoBoxTurboStartX(): number {return this.IsoBoxHealthStartX + 110; }
-    private get IsoBoxShieldStartX(): number {return this.IsoBoxTurboStartX - 110; }
+    private get IsoBoxTurboStartY(): number {return this.IsoBoxHealthStartY - 50 };
+    private get IsoBoxShieldStartY(): number {return this.IsoBoxHealthStartY - 80 };
 
-    private get IsoBoxTextStartY(): number {return this.IsoBoxHealthStartY - 250; }
+    //private get IsoBoxTurboStartX(): number {return this.IsoBoxHealthStartX + 110; }
+    //private get IsoBoxShieldStartX(): number {return this.IsoBoxTurboStartX - 110; }
+    //private get IsoBoxTextStartY(): number {return this.IsoBoxHealthStartY - 250; }
 
-    isoBoxHealthBar: IsoBoxHealthBar;
-    isoBoxTurboBar: IsoBoxHealthBar;
-    isoBoxShieldBar: IsoBoxHealthBar;
+    //isoBoxHealthBar: IsoBoxHealthBar;
+    //isoBoxTurboBar: IsoBoxHealthBar;
+    //isoBoxShieldBar: IsoBoxHealthBar;
 
     //isoBoxHealth: Phaser.GameObjects.IsoBox;
     //isoBoxTurbo: Phaser.GameObjects.IsoBox;
@@ -52,6 +55,7 @@ export class PlayerHUDOverlayComponent {
         });
         this.playerNameText.setOrigin(0.5, 0.5);
 
+        /*
         this.healthText = this.scene.add.text(this.IsoBoxHealthStartX, this.IsoBoxTextStartY, "+",
         {
             font: 'bold 36px Arial'
@@ -72,7 +76,18 @@ export class PlayerHUDOverlayComponent {
         });
         this.shieldText.setOrigin(0.5, 0.5);
         this.shieldText.setDepth(1);
+        */
 
+        this.healthBar = new HealthBar(this.scene);
+        this.healthBar.init(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 400, 40, HUDBarType.Health);
+
+        this.turboBar = new HealthBar(this.scene);
+        this.turboBar.init(this.IsoBoxHealthStartX, this.IsoBoxTurboStartY, Player.maxTurbo, 200, 20, HUDBarType.Turbo);
+
+        this.shieldBar = new HealthBar(this.scene);
+        this.shieldBar.init(this.IsoBoxHealthStartX, this.IsoBoxShieldStartY, Player.maxShield, 200, 20, HUDBarType.Shield);
+        
+        /*
         this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
         this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);
 
@@ -86,6 +101,7 @@ export class PlayerHUDOverlayComponent {
         isotriangle.showLeft = false;
         isotriangle.showRight = false;
         isotriangle.showTop = true;
+        */
     }
 
     updateLocation(x: number, y: number) {
@@ -94,10 +110,10 @@ export class PlayerHUDOverlayComponent {
     }
 
     updateHealth(currentHealth: number) {
-        this.isoBoxHealthBar.updateValue(currentHealth);
+        this.healthBar.updateHealth(currentHealth);
     }
 
     updateTurbo(currentTurbo: number) {
-        this.isoBoxTurboBar.updateValue(currentTurbo);
+        this.turboBar.updateHealth(currentTurbo);
     }
 }
