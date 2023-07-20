@@ -858,6 +858,10 @@ export default class GameScene extends Phaser.Scene
             if(pad.A) {
                 this.player.tryFireShockwave();
             } 
+
+            if(pad.Y) {
+                this.player.tryFireAirstrike();
+            } 
             
             if(pad.L1)
                 this.cameras.main.zoom -= 0.01;
@@ -865,6 +869,7 @@ export default class GameScene extends Phaser.Scene
             if(pad.R1)
                 this.cameras.main.zoom += 0.01;
 
+                /*
             if(pad.Y) {
                 this.showDebug = !this.showDebug;
                 if(this.showDebug) {
@@ -880,6 +885,7 @@ export default class GameScene extends Phaser.Scene
                     this.player4.hideDebugText();
                 }
             }
+            */
         }
         if(pad == null) {
 

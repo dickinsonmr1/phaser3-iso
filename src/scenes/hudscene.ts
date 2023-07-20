@@ -50,6 +50,7 @@ import { SceneController } from "./sceneController";
         this.load.image('turboIcon', './assets/sprites/HUD/turboIcon.png');
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
+        this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
     }
 
     

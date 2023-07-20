@@ -224,6 +224,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     public rocketTime: number = 0;
     public rocketTimeInterval: number = 500;
+
+    public airstrikeTime: number = 0;
+    public airstrikeTimeInterval: number = 500;
+    public activeAirstrike: Projectile;
     //private bulletVelocity: number = 7;
 
     public shockwaveTime: number = 0;
@@ -604,6 +608,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.shockwaveTime > 0)
             this.shockwaveTime--;
 
+        if(this.airstrikeTime > 0)
+            this.airstrikeTime--;
     }
 
     alignPlayerNameText(x: number, y: number) {
@@ -1256,6 +1262,33 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.flamethrowerDistance -= 10;
     }
 
+    tryFireAirstrike(): void {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        var gameTime = this.scene.game.loop.time;
+
+        if(gameTime > this.airstrikeTime) {
+            
+            if(this.activeAirstrike == null)  {
+                this.activeAirstrike = this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
+
+                this.airstrikeTime = gameTime + this.airstrikeTimeInterval;
+            }
+            else {
+
+                this.particleEmitterExplosion.setPosition(this.activeAirstrike.x, this.activeAirstrike.y);
+                this.particleEmitterExplosion.setDepth(this.y + 64);
+                this.particleEmitterExplosion.explode(50);//, this.x, this.y);
+                
+                this.activeAirstrike.remove();
+                this.activeAirstrike = null;
+
+                this.airstrikeTime = gameTime + this.airstrikeTimeInterval
+            }
+        }
+    }
+
     tryTurboBoostOn(): void {
         
         if(this.deadUntilRespawnTime > 0) return;
@@ -1306,13 +1339,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            var changeBehaviorRand = Utility.getRandomInt(3);
+            var changeBehaviorRand = Utility.getRandomInt(2);
             if(changeBehaviorRand == 0)
                 this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
             else if(changeBehaviorRand == 1)
                 this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
-            else if(changeBehaviorRand == 2)
-                this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
+            //else if(changeBehaviorRand == 2)
+                //this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1470,7 +1503,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         });
         bullet.init();
 
-        this.bullets.add(bullet);
+        if(bullet.projectileType != ProjectileType.Airstrike)
+            this.bullets.add(bullet);
 
         return bullet;
     }

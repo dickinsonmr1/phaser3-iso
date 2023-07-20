@@ -43,6 +43,8 @@ export class PlayerHUDOverlayComponent {
     //isoBoxTurbo: Phaser.GameObjects.IsoBox;
     //isoBoxShield: Phaser.GameObjects.IsoBox;
 
+    selectedWeaponIcon: Phaser.GameObjects.Image;
+
     constructor(scene: HudScene, playerName: string, x: number, y: number) {
         this.scene = scene;
         this.displayX = x;
@@ -87,6 +89,7 @@ export class PlayerHUDOverlayComponent {
         this.shieldBar = new HealthBar(this.scene);
         this.shieldBar.init(this.IsoBoxHealthStartX, this.IsoBoxShieldStartY, Player.maxShield, 200, 20, HUDBarType.Shield);
         
+        this.selectedWeaponIcon = this.scene.add.image(this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 'specialIcon');
         /*
         this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
         this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);
