@@ -56,7 +56,7 @@ import { Constants } from '../constants';
 
     preload () {
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
-        this.load.image('shieldIcon', './assets/sprites/HUD/skull.png');
+        this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('carIcon', './assets/sprites/HUD/carIcon.png');
 
         this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        

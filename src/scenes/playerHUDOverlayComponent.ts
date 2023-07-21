@@ -81,15 +81,25 @@ export class PlayerHUDOverlayComponent {
         */
 
         this.healthBar = new HealthBar(this.scene);
-        this.healthBar.init(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 400, 40, HUDBarType.Health);
+        this.healthBar.init(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth,            
+            400, 40,
+            0.5,
+            HUDBarType.Health);
 
         this.turboBar = new HealthBar(this.scene);
-        this.turboBar.init(this.IsoBoxHealthStartX, this.IsoBoxTurboStartY, Player.maxTurbo, 200, 20, HUDBarType.Turbo);
+        this.turboBar.init(this.IsoBoxHealthStartX, this.IsoBoxTurboStartY, Player.maxTurbo,
+            200, 20,
+            0.5,
+            HUDBarType.Turbo);
 
         this.shieldBar = new HealthBar(this.scene);
-        this.shieldBar.init(this.IsoBoxHealthStartX, this.IsoBoxShieldStartY, Player.maxShield, 200, 20, HUDBarType.Shield);
+        this.shieldBar.init(this.IsoBoxHealthStartX, this.IsoBoxShieldStartY, Player.maxShield,
+            200, 20,
+            0.5,
+            HUDBarType.Shield);
         
         this.selectedWeaponIcon = this.scene.add.image(this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 'specialIcon');
+        this.selectedWeaponIcon.setOrigin(0.5, 0.5);
         /*
         this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
         this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);

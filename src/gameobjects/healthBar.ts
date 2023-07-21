@@ -44,7 +44,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
     private static get iconOffsetX(): number {return -25;}
     private static get iconOffsetY(): number {return -5;}
 
-    init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, hudBarType: HUDBarType): void {
+    init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, iconScale: number, hudBarType: HUDBarType): void {
         
         var shadowAlpha = 0.4; //isShield ? 0.2 : 0.2;
 
@@ -74,7 +74,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
             this.healthBarOriginX + HealthBar.healthBarShadowOffsetX,
             this.healthBarOriginY + HealthBar.healthBarShadowOffsetY,
             'uiSpaceSprites', 'barHorizontal_shadow_left.png');
-        this.healthBarShadowLeft.setOrigin(0,0);
+        this.healthBarShadowLeft.setOrigin(0, 0.5);
         this.healthBarShadowLeft.setDisplayOrigin(0,0);
         this.healthBarShadowLeft.setDisplaySize(HealthBar.healthBarShadowLeftSegmentWidth, this.healthBarShadowHeight());
         this.healthBarShadowLeft.alpha = shadowAlpha;    
@@ -84,7 +84,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
             this.healthBarOriginX + HealthBar.healthBarShadowOffsetX + HealthBar.healthBarShadowLeftSegmentWidth,
             this.healthBarOriginY + HealthBar.healthBarShadowOffsetY,
             'uiSpaceSprites', 'barHorizontal_shadow_mid.png');
-        this.healthBarShadowMid.setOrigin(0, 0);
+        this.healthBarShadowMid.setOrigin(0, 0.5);
         this.healthBarShadowMid.setDisplayOrigin(0,0);// = 0;
         this.healthBarShadowMid.setDisplaySize(this.healthMaxWidthInPixels, this.healthBarShadowHeight());
         this.healthBarShadowMid.alpha = shadowAlpha;    
@@ -94,7 +94,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
             this.healthBarOriginX + HealthBar.healthBarShadowOffsetX + HealthBar.healthBarShadowLeftSegmentWidth + this.healthBarShadowMidSegmentWidth(),
             this.healthBarOriginY + HealthBar.healthBarShadowOffsetY,
             'uiSpaceSprites', 'barHorizontal_shadow_right.png');
-        this.healthBarShadowRight.setOrigin(0,0);
+        this.healthBarShadowRight.setOrigin(0, 0.5);
         this.healthBarShadowRight.setDisplayOrigin(0,0);
         this.healthBarShadowRight.setDisplaySize(HealthBar.healthBarShadowRightSegmentWidth, this.healthBarShadowHeight());
         this.healthBarShadowRight.alpha = shadowAlpha;    
@@ -114,7 +114,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
         }
 
         this.healthBarLeft = this.scene.add.image(this.healthBarOriginX, this.healthBarOriginY, barLeftTextureName);
-        this.healthBarLeft.setOrigin(0,0);
+        this.healthBarLeft.setOrigin(0, 0.5);
         this.healthBarLeft.setDisplayOrigin(0,0);
         this.healthBarLeft.setDisplaySize(HealthBar.healthBarLeftSegmentWidth, this.healthBarHeight);
         this.healthBarLeft.alpha = barAlpha;    
@@ -136,7 +136,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarMid = this.scene.add.image(
             this.healthBarOriginX + HealthBar.healthBarLeftSegmentWidth,
             this.healthBarOriginY, barMidTextureName);
-        this.healthBarMid.setOrigin(0,0);
+        this.healthBarMid.setOrigin(0, 0.5);
         this.healthBarMid.setDisplayOrigin(0,0);
         this.healthBarMid.setDisplaySize(this.calculateCurrentHealthBarWidthInPixels(), this.healthBarHeight);
         this.healthBarMid.alpha = barAlpha;    
@@ -157,7 +157,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarRight = this.scene.add.image(
             this.healthBarOriginX + HealthBar.healthBarLeftSegmentWidth + this.calculateCurrentHealthBarWidthInPixels(),
             this.healthBarOriginY, barRightTextureName);
-        this.healthBarRight.setOrigin(0,0);
+        this.healthBarRight.setOrigin(0, 0.5);
         this.healthBarRight.setDisplayOrigin(0,0);
         this.healthBarRight.setDisplaySize(HealthBar.healthBarRightSegmentWidth, this.healthBarHeight);
         this.healthBarRight.alpha = barAlpha;    
@@ -167,30 +167,28 @@ export class HealthBar extends Phaser.GameObjects.Group {
         switch(hudBarType){
             case HUDBarType.Health:
                 iconTextureName = 'healthIcon';
-                this.iconScale = 0.25;
+                this.iconScale = iconScale;
                 break;
             case HUDBarType.Shield:
                 iconTextureName = 'shieldIcon';
-                this.iconScale = 0.25;
+                this.iconScale = iconScale;
                 break;
             case HUDBarType.Turbo:
                 iconTextureName = 'turboIcon';
-                this.iconScale = 0.25;
+                this.iconScale = iconScale;
                 break;
         }
 
         this.icon = this.scene.add.image(
             this.healthBarOriginX + HealthBar.iconOffsetX,
-            this.healthBarOriginY + HealthBar.iconOffsetY,
+            this.healthBarOriginY, // + HealthBar.iconOffsetY,
             iconTextureName);
-        this.icon.setOrigin(0,0);
+        this.icon.setOrigin(0, 0.5);
         this.icon.setScale(this.iconScale);
         this.icon.setDisplayOrigin(0,0);
         //this.icon.setDisplaySize(HealthBar.healthBarRightSegmentWidth, this.healthBarHeight);
         this.icon.alpha = barAlpha;    
-        this.icon.setDepth(Constants.depthHealthBar);
-
-        
+        this.icon.setDepth(Constants.depthHealthBar);        
     }
 
     calculateCurrentHealthBarWidthInPixels(): number {

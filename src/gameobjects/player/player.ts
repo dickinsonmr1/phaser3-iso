@@ -279,7 +279,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
             this.health, 
-            50, 10, HUDBarType.Health);
+            50, 10,
+            0.25,
+            HUDBarType.Health);
         
         this.healthBar.setDepth(Constants.depthHealthBar);
         this.healthBar.show();
@@ -287,7 +289,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar = new HealthBar(this.scene)        
         this.turboBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.3,
             this.turbo, 
-            50, 5, HUDBarType.Turbo);
+            50, 5,
+            0.25,
+            HUDBarType.Turbo);
         
         this.turboBar.setDepth(Constants.depthHealthBar);
         this.turboBar.show();

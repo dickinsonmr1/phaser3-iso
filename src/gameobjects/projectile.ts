@@ -123,9 +123,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         if(this.projectileType == ProjectileType.Airstrike) {
             this.crosshairSprite = this.scene.add.sprite(this.x, this.y, 'crosshair');
             this.crosshairSprite.setOrigin(0.5, 0.5);
-            this.crosshairSprite.setAlpha(0.7);
+            this.crosshairSprite.setAlpha(0.5);
             //this.crosshairSprite.setAngle(45);
-            this.crosshairSprite.setScale(0.5, 0.3);   
+            this.crosshairSprite.setScale(1, 0.6);   
         }
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light

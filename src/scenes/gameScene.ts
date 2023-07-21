@@ -311,7 +311,9 @@ export default class GameScene extends Phaser.Scene
         this.layer4.forEachTile(tile => {
 
             if(tile.index == Constants.houseObjectTile)
-                this.generateHouse(tile); 
+                this.generateDestructibleObject(tile, 'houseTile'); 
+            if(tile.index == Constants.treeObjectTile)
+                this.generateDestructibleObject(tile, 'treeTile');
             if(tile.index == Constants.buildingObjectTile)
                 this.generateBuilding(tile);
         });        
@@ -551,13 +553,13 @@ export default class GameScene extends Phaser.Scene
         return this.respawnPoints[randomIndex];
     }
 
-    generateHouse(tile) {
+    generateDestructibleObject(tile, tileName) {
         const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
         const y = ((tile.y * tile.height));// tile.height / 2; //tile.y;//tile.getCenterY();                
         
         var temp = Utility.cartesianToIsometric(new Point(x, y));
 
-        var sprite =  this.physics.add.image(temp.x, temp.y, 'houseTile');
+        var sprite =  this.physics.add.image(temp.x, temp.y, tileName);
         sprite.setOrigin(0.5, 0.5);
         //sprite.setScale(0.75, 0.75);            
         sprite.setDepth(temp.y + 64);            
