@@ -13,7 +13,7 @@ export default class GameScene extends Phaser.Scene
     sceneController: SceneController;
 
     //playerSpeed: number = 0.25;
-    player: Player;
+    public player: Player;
     player2: Player;
     player3: Player;
     player4: Player;
@@ -240,6 +240,8 @@ export default class GameScene extends Phaser.Scene
 
         this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
         this.player.init();   
+
+        this.sceneController.addHudForPlayerId(this.player.playerId);
         
         //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
         //this.crosshairSprite.setOrigin(0.5, 0.5);

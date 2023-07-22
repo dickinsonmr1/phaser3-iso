@@ -29,7 +29,7 @@ export class PlayerHUDOverlayComponent {
     private get IsoBoxHealthStartY(): number {return this.scene.game.canvas.height - this.scene.game.canvas.height / 16; }   
 
     private get IsoBoxTurboStartY(): number {return this.IsoBoxHealthStartY - 50 };
-    private get IsoBoxShieldStartY(): number {return this.IsoBoxHealthStartY - 80 };
+    private get IsoBoxShieldStartY(): number {return this.IsoBoxHealthStartY - 100 };
 
     //private get IsoBoxTurboStartX(): number {return this.IsoBoxHealthStartX + 110; }
     //private get IsoBoxShieldStartX(): number {return this.IsoBoxTurboStartX - 110; }
@@ -124,9 +124,18 @@ export class PlayerHUDOverlayComponent {
 
     updateHealth(currentHealth: number) {
         this.healthBar.updateHealth(currentHealth);
+        if(currentHealth > 0)
+            this.healthBar.show();
     }
 
     updateTurbo(currentTurbo: number) {
         this.turboBar.updateHealth(currentTurbo);
+        if(currentTurbo > 0)
+            this.turboBar.show();   
+    }
+
+    respawn() {
+        this.healthBar.show();
+        this.turboBar.show();
     }
 }

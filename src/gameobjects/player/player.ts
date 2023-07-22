@@ -1003,11 +1003,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.health = Player.maxHealth;
         this.healthBar.updateHealth(this.health);
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
+        this.healthBar.show();
+
+        this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);        
+        
+
 
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
         this.tryTurboBoostOff();
         this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
+        this.turboBar.show();
+        this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
         this.deadUntilRespawnTime = 0;
 
@@ -1028,6 +1035,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.deathBurnSpotlight.setVisible(false);
 
         this.headlight.setVisible(true);
+
+        this.scene.events.emit('playerRespawn', this.playerId);
     }
 
     snapToAngle() {
@@ -1191,7 +1200,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
         
         this.healthBar.updateHealth(this.health);
-        //this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+        this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
 
         if(this.health <= 0){
             this.tryKill();
@@ -1230,7 +1239,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.health -= totalDamage;
        
             this.healthBar.updateHealth(this.health);
-            //this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+            this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
         }
         if(this.health <= 0 && this.deadUntilRespawnTime == 0){
             this.tryKill();
@@ -1362,7 +1371,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 
             this.turbo--;
             this.turboBar.updateHealth(this.turbo);
-            //this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
+            this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
             var distance = 15;
             this.particleEmitterTurbo.emitParticleAt(this.x - this.aimX * distance, this.y - this.aimY * distance);               
@@ -1418,13 +1427,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     refillTurbo() {
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
-        //this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
+        this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
     }
 
     refillHealth() {
         this.health = Player.maxHealth;
         this.healthBar.updateHealth(this.health);
-        //this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+        this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
     }
 
     private createProjectile(projectileType) : Projectile {

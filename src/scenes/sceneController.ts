@@ -24,27 +24,28 @@ export class SceneController extends Phaser.Scene {
          
     }
 
-    create() {
-
-        
+    create() {        
         this.titleScene = new TitleScene(this);
         this.game.scene.add("TitleScene", this.titleScene);
         this.scene.launch('TitleScene');
-
     }
 
     launchGame(player1VehicleType: VehicleType) {
         this.titleScene.scene.stop();
 
-        this.hudScene = new HudScene(this);
-        this.game.scene.add("HudScene", this.hudScene);
-        this.scene.launch('HudScene');
-
         this.gameScene = new GameScene(this, player1VehicleType);
         this.game.scene.add("GameScene", this.gameScene);
         this.scene.launch('GameScene');
 
+        this.hudScene = new HudScene(this);        
+        this.game.scene.add("HudScene", this.hudScene);
+        this.scene.launch('HudScene');
+
         this.scene.bringToTop("HudScene");
+    }
+
+    addHudForPlayerId(playerId: string) {
+        this.hudScene.setOverlay(playerId);
     }
 
     update(): void {

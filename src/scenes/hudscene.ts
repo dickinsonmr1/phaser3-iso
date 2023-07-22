@@ -12,6 +12,8 @@ import { SceneController } from "./sceneController";
     infoTextAlpha: number;
     infoTextExpiryGameTime: number;
 
+    //playerId: string;
+
     playerHUDOverlayComponents: PlayerHUDOverlayComponent[]
 
     private get InfoTextStartX(): number {return this.game.canvas.width / 2; }
@@ -86,6 +88,10 @@ import { SceneController } from "./sceneController";
             this.updatePlayerHealth(playerName, health);
         }, this);
 
+        ourGame.events.on('playerRespawn', function (playerName) {       
+            this.playerRespawn(playerName);
+        }, this);
+
         ourGame.events.on('updatePlayerTurbo', function (playerName, turbo) {
             //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
             this.updatePlayerTurbo(playerName, turbo);
@@ -99,8 +105,7 @@ import { SceneController } from "./sceneController";
             this.updatePlayerPosition(playerName, x, y);
         }, this);
 
-        this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();
-        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, "Police", 100, 100));
+        this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();       
 
         //var temp = this.add.nineslice(400, 300, 'buttons', 'enemy_hp_bar', 600, 400, 16, 16, 32, 16);        
 
@@ -135,6 +140,11 @@ import { SceneController } from "./sceneController";
         this.scene.bringToTop();
     }
 
+    setOverlay(playerId: string) {
+        //this.playerId = playerId;
+        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, playerId, 100, 100));
+    }
+
     setInfoText(text: string, infoTextDurationInMs: number): void {
         this.infoText.setText(text);
         this.infoTextAlpha = 0.1;
@@ -145,7 +155,7 @@ import { SceneController } from "./sceneController";
 
     updatePlayerPosition(name: string, x: number, y: number): void {
         /*
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.find (x => x.playerName == name);
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name).;
         if(selectedPlayerGroup != null) {
             selectedPlayerGroup[0].updateLocation(x, y);
         }
@@ -153,21 +163,26 @@ import { SceneController } from "./sceneController";
     }
 
     updatePlayerHealth(name: string, currentHealth: number): void {
-        /*
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
-        if(selectedPlayerGroup != null) {
-            selectedPlayerGroup.updateHealth(currentHealth);
+
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].updateHealth(currentHealth);
         }
-        */
     }
     
     updatePlayerTurbo(name: string, currentTurbo: number): void {
-        /*
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.find(x => x.playerName == name);
-        if(selectedPlayerGroup != null) {
-            selectedPlayerGroup.updateTurbo(currentTurbo);
+
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].updateTurbo(currentTurbo);
         }
-        */
+    }
+
+    playerRespawn(name: string) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].respawn();
+        }
     }
     
     update(): void {
