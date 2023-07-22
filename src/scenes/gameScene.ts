@@ -114,6 +114,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('rocketIcon', './assets/sprites/HUD/chess_pawn.png');
         this.load.image('fireIcon', './assets/sprites/HUD/fire.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
+        this.load.image('cpuIcon', './assets/sprites/HUD/cpu.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square.png');
@@ -869,8 +870,7 @@ export default class GameScene extends Phaser.Scene
             if(pad.R1)
                 this.cameras.main.zoom += 0.01;
 
-                /*
-            if(pad.Y) {
+            if(pad.isButtonDown(8)) {
                 this.showDebug = !this.showDebug;
                 if(this.showDebug) {
                     this.player.showDebugText();
@@ -885,7 +885,6 @@ export default class GameScene extends Phaser.Scene
                     this.player4.hideDebugText();
                 }
             }
-            */
         }
         if(pad == null) {
 
@@ -966,6 +965,11 @@ export default class GameScene extends Phaser.Scene
         this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player3);
         this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player4);
 
+        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player2);
+        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
+        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player4);
+
+
         this.player2.updateCpuBehavior(this.player.x, this.player.y);
         this.player2.update();
 
@@ -1018,6 +1022,21 @@ export default class GameScene extends Phaser.Scene
                 totalDamage += 0.01;                
                 //this.explode.emitParticleAt(particle.x, particle.y);
                 //particle.kill();
+            });
+            player.tryDamageWithFlames(totalDamage);
+        }
+    }
+
+    intersectPlayer1ShockwaveParticlesWithEnemies(player: Player) {
+        var body = <Phaser.Physics.Arcade.Body>player.body;
+
+        const particles = this.player.particleEmitterShockwave.overlap(body);        
+        if (particles.length > 0)
+        {
+            let totalDamage = 0;
+            particles.forEach(particle => {
+
+                totalDamage += 0.1;                
             });
             player.tryDamageWithFlames(totalDamage);
         }
