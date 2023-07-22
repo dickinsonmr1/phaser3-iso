@@ -164,6 +164,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private arctangent: number = 0;
     private aimX: number = 0;
     private aimY: number = 0;
+
+    private bulletLaunchX1: number = 0;
+    private bulletLaunchY1: number = 0;
+
+    private bulletLaunchX2: number = 0;
+    private bulletLaunchY2: number = 0;
+
+    private launchLeft: boolean = true;
+
     private drawScale: number = 1;
 
     public playerId: string;
@@ -684,6 +693,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //let angle2 = this.arctangent + (Math.PI / 2) - (3 * Math.PI / 4);
         this.aimX = Math.cos(angle2);
         this.aimY = Math.sin(angle2);
+
+        this.bulletLaunchX1 = Math.cos(angle2 - Math.PI / 16);
+        this.bulletLaunchY1 = Math.sin(angle2 - Math.PI / 16);
+    
+        this.bulletLaunchX2 = Math.cos(angle2 + Math.PI / 16);
+        this.bulletLaunchY2 = Math.sin(angle2 + Math.PI / 16);
         return;
 
         /*
@@ -1104,8 +1119,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryStopMove(): void {
-        this.body.velocity.x = 0;
-        this.body.velocity.y = 0;
+        //this.body.velocity.x = 0;
+        //this.body.velocity.y = 0;
+
+        this.body.velocity.x *= 0.95;
+        this.body.velocity.y *= 0.95;
 
         this.tryTurboBoostOff();
     }
@@ -1488,12 +1506,21 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 break;       
     
         }
+       var launchPoint = new Phaser.Math.Vector2(this.aimX, this.aimY);
+       if(projectileType == ProjectileType.Bullet) {
+            this.launchLeft = !this.launchLeft;
+            
+            if(this.launchLeft)
+                launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX1, this.bulletLaunchY1);
+            else
+                launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX2, this.bulletLaunchY2);
+       }
 
         var bullet = new Projectile({
             scene: this.scene,
             projectileType: projectileType,
-            isometricX: this.x + this.aimX * launchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            isometricY: this.y + this.aimY * launchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
+            isometricX: this.x + launchPoint.x * launchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            isometricY: this.y + launchPoint.y * launchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
             key: weaponImageKey,//this.currentWeaponBulletName,

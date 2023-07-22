@@ -832,11 +832,9 @@ export default class GameScene extends Phaser.Scene
                 this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
 
                 this.player.tryMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
-                //this.player.tryMoveSpaceship(leftAxisX, leftAxisY);                    
             }
             else {
-                this.player.tryStopMove();
-                //this.player.tryStopSpaceShipY();
+                this.player.tryStopMove();                
             }                    
 
             if(pad.R2) {

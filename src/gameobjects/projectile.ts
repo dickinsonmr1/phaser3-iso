@@ -100,22 +100,29 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 .setColor(rocketColor)
                 .setIntensity(1.5);        
 
-            this.particleEmitter =  this.scene.add.particles(this.x, this.y, 'smoke', {
-                lifespan: 500,
-                speed: 5, //{ min: 400, max: 400 },
-                accelerationX: -params.velocityX,
-                accelerationY: -params.velocityY,
-                //rotate: params.angle,
-                //gravityY: 300,
-                tint: rocketColor, // gray: 808080
-                scaleX: { start: 0.20, end: 0.01 },
-                scaleY: { start: 0.20, end: 0.01 },
-                quantity: 1,
+            this.particleEmitter =  this.scene.add.particles(0, 0, 'smoke', {
+                speed: 10, //{ min: 400, max: 400 },                
+                lifespan: 400,
+                tint: rocketColor, // gray: 808080                
+                angle: { min: -100, max: -80 },
+                scale: { start: 0.20, end: 0.1, ease: 'sine.out' },
                 blendMode: 'ADD',
-                frequency: 25,
-                alpha: {start: 1.0, end: 0.5},
-                maxParticles: 25,                
-                //active: false
+                //frequency: 25,
+                alpha: {start: 1.0, end: 0.0},
+                //maxParticles: 25,    
+                emitting: false
+                /*
+                color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
+                colorEase: 'quad.out',
+                lifespan: 400,
+                //angle: { min: -280, max: -260 },
+                angle: { min: -100, max: -80 },
+                scale: { start: 0.20, end: 0, ease: 'sine.out' },
+                speed: 100,
+                //advance: 2000,
+                blendMode: 'ADD',
+                emitting: false
+                */
             });
             this.particleEmitter.setDepth(Constants.depthTurboParticles)
         }
@@ -169,7 +176,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
                 this.spotlight.setPosition(this.x, this.y);
                 this.particleEmitter.setDepth(4)
-                this.particleEmitter.setPosition(this.x, this.y);
+                
+                this.particleEmitter.emitParticleAt(this.x, this.y);
+                //this.particleEmitter.setPosition(this.x, this.y);
             }
 
             if(this.projectileType == ProjectileType.Airstrike) {
@@ -195,6 +204,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     update(...args: any[]): void {
         this.setDepth(this.y);
+
     }
 
     remove() {
