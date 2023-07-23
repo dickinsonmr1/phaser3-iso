@@ -440,8 +440,8 @@ export default class GameScene extends Phaser.Scene
                     topColor = 0xFF6FCC;
                     leftColor = 0xFF2DB6;
                     rightColor = 0xFF5BC6;
-                    pickupType = PickupType.Rocket;
-                    pickUpIconKey = "rocketIcon";
+                    pickupType = PickupType.Airstrike;
+                    pickUpIconKey = "crosshair";
                     break;
                 case 1: // purple
                     topColor = 0xA26FFF;
@@ -749,6 +749,10 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Shield:
                 console.log('refill shield');
                 this.sceneController.hudScene.setInfoText("Shield restored - " + selectedPlayer.playerId, 2000);
+                break;
+            case PickupType.Airstrike:
+                console.log('refill airstrike');
+                this.sceneController.hudScene.setInfoText("Airstrike acquired - " + selectedPlayer.playerId, 2000);
                 break;
         }
         

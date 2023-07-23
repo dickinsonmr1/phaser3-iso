@@ -242,7 +242,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public rocketTimeInterval: number = 500;
 
     public airstrikeTime: number = 0;
-    public airstrikeTimeInterval: number = 500;
+    public airstrikeTimeInterval: number = 200;
     public activeAirstrike: Projectile;
     //private bulletVelocity: number = 7;
 
@@ -460,10 +460,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
         this.particleEmitterMuzzleFlash = this.scene.add.particles(this.x, this.y, 'muzzleFlash', {            
-            lifespan: 200,
+            lifespan: 150,
             //speed: { min: -50, max: 50 },
             //tint: 0xff0000, 
-            scale: {start: 1.0, end: 0.0},
+            scale: {start: 0.5, end: 0.0},
             blendMode: 'ADD',
             frequency: -1,
             alpha: {start: 0.9, end: 0.0},
@@ -1359,19 +1359,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.airstrikeTime) {
             
-            if(this.activeAirstrike == null)  {
+            if(this.activeAirstrike == null || this.activeAirstrike.detonated == true)  {
                 this.activeAirstrike = this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
 
                 this.airstrikeTime = gameTime + this.airstrikeTimeInterval;
             }
             else {
 
-                this.particleEmitterExplosion.setPosition(this.activeAirstrike.x, this.activeAirstrike.y);
-                this.particleEmitterExplosion.setDepth(this.y + 64);
-                this.particleEmitterExplosion.explode(50);//, this.x, this.y);
+                //this.particleEmitterExplosion.setPosition(this.activeAirstrike.x, this.activeAirstrike.y);
+                //this.particleEmitterExplosion.setDepth(this.y + 64);
+                //this.particleEmitterExplosion.emitParticle(10);
                 
-                this.activeAirstrike.remove();
-                this.activeAirstrike = null;
+                this.activeAirstrike.detonate();
+
+                //this.activeAirstrike = null;
 
                 this.airstrikeTime = gameTime + this.airstrikeTimeInterval
             }
@@ -1494,7 +1495,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
         
-        var launchDistanceFromPlayerCenter = 20;
+        var launchDistanceFromPlayerCenter = 22;
 
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI

@@ -34,6 +34,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     private crosshairSprite: Phaser.GameObjects.Sprite;
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private creationGameTime: number;
 
@@ -45,6 +46,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         else return 24;
     }
     private bodyDrawOffset: number = 0;
+
+    public detonationGameTime: number;
+    public detonated: boolean = false;
+    private detonationCount: integer = 0;
+
 
     constructor(params)
     {
@@ -133,6 +139,16 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.crosshairSprite.setAlpha(0.5);
             //this.crosshairSprite.setAngle(45);
             this.crosshairSprite.setScale(1, 0.6);   
+
+            this.particleEmitterExplosion = this.scene.add.particles(0,0, 'explosion', {
+                lifespan: 750,
+                speed: { min: -50, max: 50 },
+                //tint: 0xff0000, 
+                scale: {start: 0.5, end: 1.0},
+                blendMode: 'ADD',
+                frequency: -1,
+                alpha: {start: 0.9, end: 0.0}
+            });
         }
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
@@ -152,19 +168,23 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     preUpdate(time, delta): void {  
 
-        if(this.initiated) {  
+        if(this.initiated && this.scene != null) {  
             super.preUpdate(time, delta);
 
             if(this.scene.sys.game.loop.time > this.creationGameTime + 3000) {
                 this.remove();
             }
 
+            //if(this.scene.sys.game.loop.time > this.markedForRemovalGameTime) {
+                //this.remove();
+            //}
             
             var body = <Phaser.Physics.Arcade.Body>this.body;
-            if(body != null && this.velocityX != null && this.velocityY != null) {
+            if(body != null && this.velocityX != null && this.velocityY != null) { // && this.markedForRemovalGameTime == 0) {
                 body.setVelocityX(this.velocityX);
                 body.setVelocityY(this.velocityY);
             }
+            
                         
             //this.MapPosition.x += this.velocityX;
             //this.MapPosition.y += this.velocityY;
@@ -182,8 +202,15 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             }
 
             if(this.projectileType == ProjectileType.Airstrike) {
+
                 this.crosshairSprite.setPosition(this.x, this.y);
+
+                if(this.scene.sys.game.loop.time > this.detonationGameTime) {
+                    this.detonate();
+                }               
             }
+
+
             
             /*
             var body = <Phaser.Physics.Arcade.Body>this.body;
@@ -207,6 +234,29 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    detonate() {
+        if(this.projectileType == ProjectileType.Airstrike) {
+            
+            this.detonated = true;
+            //var body = <Phaser.Physics.Arcade.Body>this.body;
+            //body.setVelocityX(0);
+            //body.setVelocityY(0);
+
+            //this.particleEmitterExplosion.setPosition(this.x, this.y);
+            //this.particleEmitterExplosion.setDepth(this.y + 64);
+            //this.particleEmitterExplosion.emitParticle(10);    
+
+            this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
+
+            this.detonationCount++;
+
+            this.detonationGameTime = this.scene.sys.game.loop.time + 50;
+
+            if(this.detonationCount > 5)
+                this.remove();
+        } 
+    }
+
     remove() {
         if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
             if(this.scene != null && this.spotlight != null)
@@ -216,6 +266,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         }
         if(this.projectileType == ProjectileType.Airstrike) {
             this.crosshairSprite.destroy();
+
+            //this.particleEmitterExplosion.setPosition(this.x, this.y);
+            //this.particleEmitterExplosion.setDepth(this.y + 64);
+            //this.particleEmitterExplosion.emitParticle(10, this.x, this.y);  
         }
         this.destroy();
     }

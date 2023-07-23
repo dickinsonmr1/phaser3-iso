@@ -7,7 +7,8 @@ export enum PickupType {
     Bullet,
     Special,
     Flamethrower,
-    Shield
+    Shield,
+    Airstrike
 }
 
 
