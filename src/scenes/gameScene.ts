@@ -111,7 +111,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
-        this.load.image('rocketIcon', './assets/sprites/HUD/chess_pawn.png');
+        this.load.image('rocketIcon', './assets/sprites/HUD/rocketIcon-multiple.png');
         this.load.image('fireIcon', './assets/sprites/HUD/fire.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
         this.load.image('cpuIcon', './assets/sprites/HUD/cpu.png');
@@ -143,6 +143,7 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
 
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
+        this.load.image('muzzleFlash', './assets/sprites/explosions/tank_explosion10.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
         this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');

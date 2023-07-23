@@ -158,6 +158,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterDeathBurn: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    private particleEmitterMuzzleFlash: Phaser.GameObjects.Particles.ParticleEmitter;
+
     public particleEmitterFlamethrower: Phaser.GameObjects.Particles.ParticleEmitter;
 
     public particleEmitterShockwave: Phaser.GameObjects.Particles.ParticleEmitter;
@@ -457,6 +459,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
         });
 
+        this.particleEmitterMuzzleFlash = this.scene.add.particles(this.x, this.y, 'muzzleFlash', {            
+            lifespan: 200,
+            //speed: { min: -50, max: 50 },
+            //tint: 0xff0000, 
+            scale: {start: 1.0, end: 0.0},
+            blendMode: 'ADD',
+            frequency: -1,
+            alpha: {start: 0.9, end: 0.0},
+        });
+
+
         this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
             lifespan: 180,
             speed: 100, //{ min: 400, max: 400 },
@@ -639,6 +652,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.particleEmitterFlamethrower.setDepth(this.y);
 
+            this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
+            this.particleEmitterMuzzleFlash.setDepth(this.y);
+
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
         }
         else {
@@ -732,11 +748,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.aimX = Math.cos(angle2);
         this.aimY = Math.sin(angle2);
 
-        this.bulletLaunchX1 = Math.cos(angle2 - Math.PI / 16);
-        this.bulletLaunchY1 = Math.sin(angle2 - Math.PI / 16);
+        this.bulletLaunchX1 = Math.cos(angle2 - Math.PI / 12);
+        this.bulletLaunchY1 = Math.sin(angle2 - Math.PI / 12);
     
-        this.bulletLaunchX2 = Math.cos(angle2 + Math.PI / 16);
-        this.bulletLaunchY2 = Math.sin(angle2 + Math.PI / 16);
+        this.bulletLaunchX2 = Math.cos(angle2 + Math.PI / 12);
+        this.bulletLaunchY2 = Math.sin(angle2 + Math.PI / 12);
         return;
 
         /*
@@ -1478,7 +1494,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
         
-        var launchDistanceFromPlayerCenter = 25;
+        var launchDistanceFromPlayerCenter = 20;
 
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
@@ -1565,6 +1581,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX1, this.bulletLaunchY1);
             else
                 launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX2, this.bulletLaunchY2);
+
+            //this.particleEmitterMuzzleFlash.setPosition(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);
+
+            this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
+            this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * launchDistanceFromPlayerCenter);            
+            this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * launchDistanceFromPlayerCenter, launchPoint.y * launchDistanceFromPlayerCenter);               
+
+            //this.particleEmitterMuzzleFlash.emitParticleAt(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);               
        }
 
         var bullet = new Projectile({
