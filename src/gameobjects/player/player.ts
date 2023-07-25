@@ -1199,7 +1199,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     tryDamage(projectileType: ProjectileType): void {
 
         switch(projectileType)
-        {
+        {            
             case ProjectileType.Bullet:
                 this.health--;
                 this.particleEmitterSparks.setPosition(this.x, this.y);
@@ -1212,6 +1212,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.particleEmitterExplosion.setPosition(this.x, this.y);
                 this.particleEmitterExplosion.setDepth(this.y + 64);
                 this.particleEmitterExplosion.explode(10);//, this.x, this.y);
+                break;
+            case ProjectileType.Airstrike:
+                this.health -= 2;
                 break;
         }
         
@@ -1483,10 +1486,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 scaleY = 0.25;
                 break;
             case ProjectileType.Airstrike:
-                bulletVelocity = 400;    
-                weaponImageKey = "bullet";
-                scaleX = 0.25;
-                scaleY = 0.25;
+                bulletVelocity = 500;    
+                weaponImageKey = "deathIcon";
+                scaleX = 1.25;
+                scaleY = 1.25;
                 break;
         }            
 
@@ -1610,8 +1613,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         });
         bullet.init();
 
-        if(bullet.projectileType != ProjectileType.Airstrike)
-            this.bullets.add(bullet);
+        //if(bullet.projectileType != ProjectileType.Airstrike)
+        this.bullets.add(bullet);
 
         return bullet;
     }

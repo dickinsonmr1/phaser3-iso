@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { Constants } from "../constants";
 import { Pickup, PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player/player";
-import { Projectile } from "../gameobjects/projectile";
+import { Projectile, ProjectileType } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 import { RaceCarPlayer } from '../gameobjects/player/racecarplayer';
@@ -661,7 +661,8 @@ export default class GameScene extends Phaser.Scene
         if(sprite instanceof Projectile)
         {
             var projectile = <Projectile>sprite;
-            projectile.remove();
+            if(projectile.projectileType != ProjectileType.Airstrike)
+                projectile.remove();
         }
                 
         return true;
@@ -674,8 +675,14 @@ export default class GameScene extends Phaser.Scene
         var projectile = <Projectile>bullet;
         
         if(otherPlayer.deadUntilRespawnTime <= 0) {
-            otherPlayer.tryDamage(projectile.projectileType);
-            bullet.remove();
+
+            if(projectile.projectileType != ProjectileType.Airstrike
+                || (projectile.projectileType == ProjectileType.Airstrike && projectile.detonated)) {
+                    otherPlayer.tryDamage(projectile.projectileType);            
+                }
+
+            if(projectile.projectileType != ProjectileType.Airstrike)
+                bullet.remove();
         }
         /*         
         var scene = <MainScene>enemy.getScene();
@@ -789,16 +796,17 @@ export default class GameScene extends Phaser.Scene
     }
 
     playerOrWeaponTouchingEnvironmentObject(playerOrWeapon: any, object: any) {
-
-        this.particleEmitter.explode(2, object.x, object.y);
-
-        
+       
         if(playerOrWeapon instanceof Projectile)
         {
             var projectile = <Projectile>playerOrWeapon;
+            if(projectile.projectileType == ProjectileType.Airstrike)
+                return;
+
             projectile.remove();
         }
 
+        this.particleEmitter.explode(2, object.x, object.y);        
         object.destroy();
     }
 
@@ -976,7 +984,6 @@ export default class GameScene extends Phaser.Scene
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player4);
 
-
         this.player2.updateCpuBehavior(this.player.x, this.player.y);
         this.player2.update();
 
@@ -1048,6 +1055,23 @@ export default class GameScene extends Phaser.Scene
             player.tryDamageWithFlames(totalDamage);
         }
     }
+
+    /*
+    intersectPlayer1ActiveAirstrikeWithEnemies(player: Player) {
+
+        var body = <Phaser.Physics.Arcade.Body>player.body;
+        if(this.player.activeAirstrike != null) {
+            var airstrikeBody = <Phaser.Physics.Arcade.Body>this.player.activeAirstrike.body;
+
+            airstrikeBody.
+            //this.player.particleEmitterShockwave.overlap(body);        
+            if (particles.length > 0)
+            {
+                player.tryDamageWithFlames(totalDamage);
+            }
+        }
+    }
+    */
 
     updatePickupScaleTime(): void {
         if(this.pickupScaleTime > 50)

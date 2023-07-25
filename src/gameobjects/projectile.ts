@@ -50,6 +50,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     public detonationGameTime: number;
     public detonated: boolean = false;
     private detonationCount: integer = 0;
+    private readonly maxDetonationCount: integer = 7;
 
 
     constructor(params)
@@ -82,7 +83,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.setCircle(this.getBodyDrawSize(), -this.bodyDrawOffset, -this.bodyDrawOffset)
        
         if(this.projectileType == ProjectileType.Airstrike)
-            this.setAlpha(0);
+            this.setAlpha(0.2);
         else
             this.setAlpha(1.0);
         this.setDepth(this.y);//Constants.depthBullets);
@@ -141,10 +142,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.crosshairSprite.setScale(1, 0.6);   
 
             this.particleEmitterExplosion = this.scene.add.particles(0,0, 'explosion', {
-                lifespan: 750,
+                lifespan: 1000,
                 speed: { min: -50, max: 50 },
                 //tint: 0xff0000, 
-                scale: {start: 0.5, end: 1.0},
+                scale: {start: 0.5, end: 1.25},
                 blendMode: 'ADD',
                 frequency: -1,
                 alpha: {start: 0.9, end: 0.0}
@@ -168,7 +169,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     preUpdate(time, delta): void {  
 
-        if(this.initiated && this.scene != null) {  
+        if(this.initiated && this.scene != null && this.scene.sys != null) {  
             super.preUpdate(time, delta);
 
             if(this.scene.sys.game.loop.time > this.creationGameTime + 3000) {
@@ -205,8 +206,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
                 this.crosshairSprite.setPosition(this.x, this.y);
 
-                if(this.scene.sys.game.loop.time > this.detonationGameTime) {
-                    this.detonate();
+                if(this.scene != null && this.scene.sys != null) {
+                    if(this.scene.sys.game.loop.time > this.detonationGameTime) {
+                        this.detonate();
+                    }
                 }               
             }
 
@@ -246,13 +249,19 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             //this.particleEmitterExplosion.setDepth(this.y + 64);
             //this.particleEmitterExplosion.emitParticle(10);    
 
+            this.particleEmitterExplosion.setDepth(this.y + 64);
             this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
 
             this.detonationCount++;
 
-            this.detonationGameTime = this.scene.sys.game.loop.time + 50;
+            if(this.scene != null && this.scene.sys != null) 
+            {
+                this.detonationGameTime = this.scene.sys.game.loop.time + 50;
+            }
+            else
+                this.remove();
 
-            if(this.detonationCount > 5)
+            if(this.detonationCount > this.maxDetonationCount)
                 this.remove();
         } 
     }
