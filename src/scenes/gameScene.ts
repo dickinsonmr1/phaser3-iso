@@ -8,6 +8,11 @@ import { SceneController } from "./sceneController";
 import { RaceCarPlayer } from '../gameobjects/player/racecarplayer';
 import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
 
+export enum ControlStyle {
+   LeftStickAimsAndMoves,
+   LeftStickAims   
+}
+
 export default class GameScene extends Phaser.Scene
 {    
     sceneController: SceneController;
@@ -22,6 +27,8 @@ export default class GameScene extends Phaser.Scene
     allBullets: Phaser.GameObjects.Group;
 
     public showDebug: boolean = false;
+
+    controlStyle: ControlStyle = ControlStyle.LeftStickAimsAndMoves;
 
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
@@ -834,6 +841,9 @@ export default class GameScene extends Phaser.Scene
             var leftAxisX = pad.axes[0].getValue();
             var leftAxisY = pad.axes[1].getValue();
 
+            //var rightAxisX = pad.axes[2].getValue();
+            var rightAxisY = pad.axes[3].getValue();
+
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
             if(pad.L2) {
@@ -843,26 +853,35 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryTurboBoostOff();
             }
 
-            if(leftAxisX != 0 || leftAxisY != 0) {
+            if(this.controlStyle == ControlStyle.LeftStickAims) {
+                if(leftAxisX != 0 || leftAxisY != 0) {
 
-                this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
-
-                this.player.tryMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                    this.player.tryAimWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                }                 
             }
-            else {
-                this.player.tryStopMove();                
-            }                    
+            else if(this.controlStyle == ControlStyle.LeftStickAimsAndMoves) {
+                if(leftAxisX != 0 || leftAxisY != 0) {
+
+                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                    this.player.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                }
+                else {
+                    this.player.tryStopMove();            
+                }           
+            }
+
 
             if(pad.R2) {
                 this.player.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
 
-            if(pad.X) {
+            if(pad.R1) {
                 this.player.tryFireFlamethrower();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
-            else{
+            else {
                 this.player.tryStopFireFlamethrower();
             }
             
@@ -879,10 +898,19 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryFireAirstrike();
             } 
             
-            if(pad.L1)
+            if(pad.X) {
+                this.player.tryAccelerateInAimDirection();
+            }
+            else {
+                this.player.tryStopMove();        
+            }
+            
+            //if(pad.L1)
+            if(rightAxisY < -0.1)
                 this.cameras.main.zoom -= 0.01;
 
-            if(pad.R1)
+            //if(pad.R1)
+            if(rightAxisY > 0.1)
                 this.cameras.main.zoom += 0.01;
 
             if(pad.isButtonDown(8)) {

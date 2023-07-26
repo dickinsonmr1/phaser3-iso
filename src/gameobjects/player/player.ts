@@ -576,19 +576,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             // movement
             switch(this.cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
-                    this.tryMoveWithGamepad(playerX, playerY); // TODO: try move AWAY from location
+                    this.tryAimWithGamepad(playerX, playerY); // TODO: try move AWAY from location
+                    this.tryAccelerateInAimDirection();
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
-                    this.tryMoveToLocation(playerX, playerY);
                     this.tryAimAtLocation(playerX, playerY);
+                    this.tryMoveToLocation(playerX, playerY);                    
                     break;
                 case CpuPlayerPattern.Follow:
-                    this.tryMoveToLocation(playerX, playerY);
                     this.tryAimAtLocation(playerX, playerY);
+                    this.tryMoveToLocation(playerX, playerY);
                     break;
                 case CpuPlayerPattern.StopAndAttack:
-                    this.tryStopMove();
-                    this.tryAimAtLocation(playerX, playerY);
+                    this.tryAimAtLocation(playerX, playerY);    
+                    this.tryStopMove();                    
                     break;
                 case CpuPlayerPattern.Stop:
                     this.tryStopMove();
@@ -909,7 +910,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    tryMoveWithGamepad(x: number, y: number) {
+    tryAimWithGamepad(x: number, y: number) {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        this.calculateAimDirectionWithGamePad(x, y);
+        
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
+    }
+
+    tryAccelerateInAimDirection() {
+
+        if(this.deadUntilRespawnTime > 0) return;
+
+        this.body.velocity.x = this.aimX * this.getPlayerSpeed();
+        this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
+    }
+
+    tryAimAndMoveWithGamepad(x: number, y: number) {
 
         if(this.deadUntilRespawnTime > 0) return;
 
@@ -946,12 +964,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryAimAtLocation(destinationX: number, destinationY: number) {
-
        
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
-
-        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);
-       
+        this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);       
     }
 
     tryKill() {
