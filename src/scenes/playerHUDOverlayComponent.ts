@@ -4,13 +4,50 @@ import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
 
+export class WeaponHudItem {
+
+    scene: HudScene;
+
+    startX: integer;
+    startY: integer;
+
+    ammoCount: integer;
+    weaponText: Phaser.GameObjects.Text;
+    weaponIcon: Phaser.GameObjects.Image;
+
+    constructor(scene: HudScene, iconKey: string, startX: integer, startY: integer, ammoCount: integer) {
+
+        this.scene = scene;
+
+        this.startX = startX;
+        this.startY = startY;
+
+        this.ammoCount = ammoCount;
+
+        this.weaponText = this.scene.add.text(this.startX, this.startY - 60, this.ammoCount.toString());
+        this.weaponText.setOrigin(0.5, 0.5);
+        this.weaponText.setFontSize(32);
+
+        this.weaponIcon = this.scene.add.image(this.startX, this.startY, iconKey);
+        this.weaponIcon.setOrigin(0.5, 0.5);
+        this.weaponIcon.setAlpha(1.0);
+    }
+}
+
 export class PlayerHUDOverlayComponent {
 
     scene: HudScene;
     playerName: string;
     hudGroup: Phaser.GameObjects.Group;
 
-    weaponIcon: Phaser.GameObjects.Image;
+    weaponIcon1: Phaser.GameObjects.Image;
+    weaponIcon2: Phaser.GameObjects.Image;
+    weaponIcon3: Phaser.GameObjects.Image;
+    weaponIcon4: Phaser.GameObjects.Image;
+    weaponIcon5: Phaser.GameObjects.Image;
+
+    weaponHudItems: WeaponHudItem[] = [];
+
     ammoText: Phaser.GameObjects.Text;
     playerNameText: Phaser.GameObjects.Text;
 
@@ -97,9 +134,15 @@ export class PlayerHUDOverlayComponent {
             200, 20,
             0.5,
             HUDBarType.Shield);
+                    
+        //this.selectedWeaponIcon = this.scene.add.image(this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 'specialIcon');
+        //this.selectedWeaponIcon.setOrigin(0.5, 0.5);
+
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'specialIcon', this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 2));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.IsoBoxHealthStartX + 600, this.IsoBoxHealthStartY, 5));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'fireIcon', this.IsoBoxHealthStartX + 700, this.IsoBoxHealthStartY, 20));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'crosshair', this.IsoBoxHealthStartX + 800, this.IsoBoxHealthStartY, 1));
         
-        this.selectedWeaponIcon = this.scene.add.image(this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 'specialIcon');
-        this.selectedWeaponIcon.setOrigin(0.5, 0.5);
         /*
         this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
         this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);
