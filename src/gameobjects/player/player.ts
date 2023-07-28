@@ -170,6 +170,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private aimX: number = 0;
     private aimY: number = 0;
 
+    // TODO: see if this can work with calculateAimTargetDirectionWithGamePad()
+    private targetArctangent: number = 0;
+    private targetAimX: number = 0;
+    private targetAimY: number = 0;
+    
     private bulletLaunchX1: number = 0;
     private bulletLaunchY1: number = 0;
 
@@ -714,12 +719,38 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.debugCoordinatesText.setVisible(false);
     }
 
-
     calculateAimDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
         this.arctangent = arctangent;//Utility.SnapTo16DirectionAngle(arctangent);
 
+        this.setPlayerDrawOrientation();
+
+        this.calculateAimDirection(this.playerDrawOrientation);
+    }
+
+    // TODO: see if this can work
+    calculateAimTargetDirectionWithGamePad(x: number, y: number): void {
+        var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+        var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
+        this.targetArctangent = arctangent;
+        
+        let newArctangent = this.arctangent;
+        
+        if(this.arctangent < this.targetArctangent)
+            newArctangent += (1/16)*Math.PI;
+
+        if(this.arctangent > this.targetArctangent)
+            newArctangent -= (1/16)*Math.PI;
+                
+        if(Math.abs(this.targetArctangent - this.arctangent) > 1) {
+            if(this.arctangent < 0 && newArctangent > 0)
+                newArctangent = -this.arctangent;
+            else if(this.arctangent > 0 && newArctangent < 0)
+                newArctangent = -this.arctangent;
+        }
+        
+        this.arctangent = newArctangent;//Utility.SnapTo16DirectionAngle(arctangent);        
         this.setPlayerDrawOrientation();
 
         this.calculateAimDirection(this.playerDrawOrientation);
