@@ -702,6 +702,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
                     \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI
+                    \n target atan ${(this.targetArctangent / Math.PI).toFixed(2)} PI
                     \n Aim (${(this.aimX / Math.PI).toFixed(2)} PI, ${(this.aimY / Math.PI).toFixed(2)} PI)
                     \n Behavior: ${this.cpuPlayerPattern.toString()}
                     \n Depth: ${this.depth.toString()}`)
@@ -722,7 +723,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     calculateAimDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
         var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
+        
         this.arctangent = arctangent;//Utility.SnapTo16DirectionAngle(arctangent);
+        this.targetArctangent = arctangent;
 
         this.setPlayerDrawOrientation();
 
@@ -732,25 +735,106 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     // TODO: see if this can work
     calculateAimTargetDirectionWithGamePad(x: number, y: number): void {
         var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
-        var arctangent = Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y);
-        this.targetArctangent = arctangent;
+            
+        this.targetArctangent = Utility.SnapTo16DirectionAngle(Math.atan2(isometricGamepadAxes.x, isometricGamepadAxes.y));
         
-        let newArctangent = this.arctangent;
-        
-        if(this.arctangent < this.targetArctangent)
-            newArctangent += (1/16)*Math.PI;
+        //        -1 PI  1 PI 
+        //   -0.5PI           0.5 PI
+        //         0 PI  0 PI
 
-        if(this.arctangent > this.targetArctangent)
-            newArctangent -= (1/16)*Math.PI;
-                
-        if(Math.abs(this.targetArctangent - this.arctangent) > 1) {
-            if(this.arctangent < 0 && newArctangent > 0)
-                newArctangent = -this.arctangent;
-            else if(this.arctangent > 0 && newArctangent < 0)
-                newArctangent = -this.arctangent;
-        }
+
+        // -0.99 PI -> 1.01 PI
+        // -0.75 PI -> 1.25 PI
+        // -0.5 PI -> 0.5 PI        
         
-        this.arctangent = newArctangent;//Utility.SnapTo16DirectionAngle(arctangent);        
+        /*
+        if(//this.targetArctangent < -0.5 * Math.PI && this.arctangent > 0.5 * Math.PI
+           (Math.abs(this.targetArctangent - this.arctangent) >= 1 ||
+               Math.abs(-this.targetArctangent + this.arctangent) >= 1) {
+
+            this.targetArctangent = Math.PI + (Math.PI - Math.abs(this.targetArctangent))
+        }*/
+
+        let newArctangent = this.arctangent;
+
+        let useAllPositiveAtan = false;
+        let useAllNegativeAtan = false;
+
+        // adjust atan scale so that it's all positive
+        if (this.arctangent > 0 && this.targetArctangent < 0)
+            useAllPositiveAtan = true;
+        
+        // adjust atan scale so that it's all negative
+        if (this.arctangent < 0 && this.targetArctangent > 0)
+            useAllNegativeAtan = true;
+
+            
+        // -0.99 PI -> 1.01 PI
+        // -0.75 PI -> 1.25 PI
+        // -0.5 PI -> 0.5 PI    
+        if(useAllPositiveAtan)
+            this.targetArctangent = Math.PI + (Math.PI - Math.abs(this.targetArctangent))
+
+        // 1.01 PI -> -0.99 PI
+        // 1.25 PI -> -0.75 PI
+        // 1.5 PI -> -0.5 PI
+        if(useAllNegativeAtan)
+            this.targetArctangent = -Math.PI + (Math.PI - Math.abs(this.targetArctangent));
+        
+        //if(Math.abs(newArctangent) - (Math.abs(this.targetArctangent)) {
+            //this.arctangent = this.targetArctangent
+        //}
+        //else {
+            if(this.arctangent < this.targetArctangent)
+                newArctangent += (1/8)*Math.PI;
+
+            if(this.arctangent > this.targetArctangent)
+                newArctangent -= (1/8)*Math.PI;
+              
+            /*
+            if(Math.abs(this.targetArctangent - this.arctangent) >= 1 ||
+               Math.abs(-this.targetArctangent + this.arctangent) >= 1) {
+                if(this.arctangent < 0 && newArctangent > 0) {
+                    newArctangent -= (1/8)*Math.PI;
+                    if(Utility.SnapTo16DirectionAngle(newArctangent) == -Math.PI)
+                        newArctangent = Math.PI;
+                }
+                else if(this.arctangent > 0 && newArctangent < 0) {
+                    newArctangent += (1/8)*Math.PI;
+                    if(Utility.SnapTo16DirectionAngle(newArctangent) == Math.PI)
+                        newArctangent = -Math.PI;
+                }                
+            }
+            */
+        //}
+
+        //////////////////////////////////////////////////////////////////
+        // reset newArctangent and targetArctangent back to normal range
+        //////////////////////////////////////////////////////////////////
+
+        // 1.01 PI -> -0.99 PI
+        // 1.25 PI -> -0.75 PI
+        // 1.5 PI -> -0.5 PI
+        if(useAllPositiveAtan) {
+            if(newArctangent > Math.PI)
+                newArctangent = -Math.PI + (Math.PI - Math.abs(newArctangent));
+
+            if(this.targetArctangent > Math.PI)
+                this.targetArctangent = -Math.PI + (Math.PI - Math.abs(this.targetArctangent));
+        }
+
+        // -0.99 PI -> 1.01 PI
+        // -0.75 PI -> 1.25 PI
+        // -0.5 PI -> 0.5 PI    
+        if(useAllNegativeAtan) {
+            if(newArctangent < -Math.PI)
+                newArctangent = Math.PI - (Math.PI - Math.abs(newArctangent));
+
+            if(this.targetArctangent < -Math.PI)
+                this.targetArctangent = Math.PI - (Math.PI - Math.abs(this.targetArctangent));
+        }
+                   
+        this.arctangent = Utility.SnapTo16DirectionAngle(newArctangent);//Utility.SnapTo16DirectionAngle(arctangent);        
         this.setPlayerDrawOrientation();
 
         this.calculateAimDirection(this.playerDrawOrientation);
@@ -941,6 +1025,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    // only used with ControlStyle.LeftStickAims
     tryAimWithGamepad(x: number, y: number) {
 
         if(this.deadUntilRespawnTime > 0) return;
@@ -958,11 +1043,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
     }
 
+    // used with ControlStyle.LeftStickAimsAndMoves
     tryAimAndMoveWithGamepad(x: number, y: number) {
 
         if(this.deadUntilRespawnTime > 0) return;
 
         this.calculateAimDirectionWithGamePad(x, y);
+        //this.calculateAimTargetDirectionWithGamePad(x, y);
         
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   

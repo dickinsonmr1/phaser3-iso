@@ -898,18 +898,18 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryFireAirstrike();
             } 
             
-            if(pad.X) {
-                this.player.tryAccelerateInAimDirection();
-            }
-            else {
-                this.player.tryStopMove();        
+            if(this.controlStyle == ControlStyle.LeftStickAims) {
+                if(pad.X) {
+                    this.player.tryAccelerateInAimDirection();
+                }
+                else {
+                    this.player.tryStopMove();        
+                }
             }
             
-            //if(pad.L1)
             if(rightAxisY < -0.1)
                 this.cameras.main.zoom -= 0.01;
 
-            //if(pad.R1)
             if(rightAxisY > 0.1)
                 this.cameras.main.zoom += 0.01;
 
