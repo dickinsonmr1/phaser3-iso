@@ -928,6 +928,12 @@ export default class GameScene extends Phaser.Scene
                     this.player4.hideDebugText();
                 }
             }
+
+            if(pad.L1)
+                this.sceneController.hudScene.selectPreviousWeapon();
+
+            //if(pad.R1)
+                //this.sceneController.hudScene.selectNextWeapon();
         }
         if(pad == null) {
 

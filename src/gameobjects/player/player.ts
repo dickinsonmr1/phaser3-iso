@@ -416,9 +416,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             //.setOffset(-this.bodyDrawOffset, -this.bodyDrawOffset);
 
         this.setCircle(this.bodyDrawSize, this.bodyDrawOffset, this.bodyDrawOffset)
-
-        
-        
+            
         this.particleEmitterExplosion = this.scene.add.particles(this.x, this.y, 'explosion', {
             lifespan: 750,
             speed: { min: -50, max: 50 },

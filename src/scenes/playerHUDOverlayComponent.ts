@@ -32,6 +32,22 @@ export class WeaponHudItem {
         this.weaponIcon.setOrigin(0.5, 0.5);
         this.weaponIcon.setAlpha(1.0);
     }
+
+    selectItem() {
+        this.weaponIcon.setTint(0xffffff);
+        this.weaponIcon.setAlpha(1.0);
+
+        this.weaponText.setTint(0xffffff);
+        this.weaponText.setAlpha(1.0);
+    }
+
+    deselectItem() {
+        this.weaponIcon.setTint(0xcccccc);
+        this.weaponIcon.setAlpha(0.2);
+
+        this.weaponText.setTint(0xcccccc);
+        this.weaponText.setAlpha(0.2);
+    } 
 }
 
 export class PlayerHUDOverlayComponent {
@@ -81,6 +97,7 @@ export class PlayerHUDOverlayComponent {
     //isoBoxShield: Phaser.GameObjects.IsoBox;
 
     selectedWeaponIcon: Phaser.GameObjects.Image;
+    selectedWeaponItemIndex: integer = 0;
 
     constructor(scene: HudScene, playerName: string, x: number, y: number) {
         this.scene = scene;
@@ -142,22 +159,34 @@ export class PlayerHUDOverlayComponent {
         this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.IsoBoxHealthStartX + 600, this.IsoBoxHealthStartY, 5));
         this.weaponHudItems.push(new WeaponHudItem(this.scene, 'fireIcon', this.IsoBoxHealthStartX + 700, this.IsoBoxHealthStartY, 20));
         this.weaponHudItems.push(new WeaponHudItem(this.scene, 'crosshair', this.IsoBoxHealthStartX + 800, this.IsoBoxHealthStartY, 1));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'shockwaveIcon', this.IsoBoxHealthStartX + 900, this.IsoBoxHealthStartY, 3));
         
-        /*
-        this.isoBoxHealthBar = new IsoBoxHealthBar(this.scene);
-        this.isoBoxHealthBar.init(this.scene, this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth, 100, 200, IsoHudBarType.Health);
+        this.weaponHudItems[0].selectItem();
+        this.weaponHudItems[1].deselectItem();
+        this.weaponHudItems[2].deselectItem();
+        this.weaponHudItems[3].deselectItem();
+        this.weaponHudItems[4].deselectItem();
+    }
 
-        this.isoBoxTurboBar = new IsoBoxHealthBar(this.scene);
-        this.isoBoxTurboBar.init(this.scene, this.IsoBoxTurboStartX, this.IsoBoxHealthStartY, Player.maxTurbo, 50, 200, IsoHudBarType.Turbo);
-         
-        this.isoBoxShieldBar = new IsoBoxHealthBar(this.scene);
-        this.isoBoxShieldBar.init(this.scene, this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, Player.maxShield, 150, 200, IsoHudBarType.Shield);
-              
-        var isotriangle = this.scene.add.isotriangle(this.IsoBoxShieldStartX, this.IsoBoxHealthStartY, 100, 100, true);//, topColor, leftColor, rightColor);
-        isotriangle.showLeft = false;
-        isotriangle.showRight = false;
-        isotriangle.showTop = true;
-        */
+    selectNextWeapon(){
+
+        this.weaponHudItems[this.selectedWeaponItemIndex].deselectItem();
+
+        ++this.selectedWeaponItemIndex;
+        if(this.selectedWeaponItemIndex > this.weaponHudItems.length - 1)
+            this.selectedWeaponItemIndex = 0;
+
+        this.weaponHudItems[this.selectedWeaponItemIndex].selectItem();
+    }
+
+    selectPreviousWeapon() {
+        this.weaponHudItems[this.selectedWeaponItemIndex].deselectItem();
+
+        --this.selectedWeaponItemIndex;
+        if(this.selectedWeaponItemIndex < 0)
+            this.selectedWeaponItemIndex = this.weaponHudItems.length - 1;
+
+        this.weaponHudItems[this.selectedWeaponItemIndex].selectItem();
     }
 
     updateLocation(x: number, y: number) {

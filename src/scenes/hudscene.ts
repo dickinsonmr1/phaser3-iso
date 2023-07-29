@@ -53,13 +53,11 @@ import { SceneController } from "./sceneController";
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
+        this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon.png');
     }
 
     
-    create () {
-
-
-        
+    create () {        
         this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {
             font: 'bold 26px Arial'
         });
@@ -183,6 +181,14 @@ import { SceneController } from "./sceneController";
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].respawn();
         }
+    }
+
+    selectPreviousWeapon() {
+        this.playerHUDOverlayComponents[0].selectPreviousWeapon();
+    }
+
+    selectNextWeapon(){
+        this.playerHUDOverlayComponents[1].selectNextWeapon();
     }
     
     update(): void {
