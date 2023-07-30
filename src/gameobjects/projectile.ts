@@ -124,6 +124,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {
                 frame: 'white',
                 color: [ 0x96e0da, 0x937ef3 ],
+                tint: rocketColor, // gray: 808080                
                 colorEase: 'quart.out',
                 lifespan: 1000,
                 angle: { min: -100, max: -80 },

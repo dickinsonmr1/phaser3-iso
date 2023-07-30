@@ -944,7 +944,8 @@ export default class GameScene extends Phaser.Scene
 
             if(pad.L1) {
                 if(!this.mostRecentL1) {
-                    this.sceneController.hudScene.selectPreviousWeapon();
+                    //this.sceneController.hudScene.selectPreviousWeapon();
+                    this.player.trySelectPreviousWeapon();
                     this.mostRecentL1 = true;
                 }
             }
@@ -954,7 +955,8 @@ export default class GameScene extends Phaser.Scene
 
             if(pad.R1) {
                 if(!this.mostRecentR1) {
-                    this.sceneController.hudScene.selectNextWeapon();
+                    //this.sceneController.hudScene.selectNextWeapon();
+                    this.player.trySelectNextWeapon();
                     this.mostRecentR1 = true;
                 }
             }

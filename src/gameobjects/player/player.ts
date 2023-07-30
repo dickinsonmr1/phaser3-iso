@@ -155,7 +155,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
-    
+
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
     private turboLaunchPointOffsetLeft: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
     private turboLaunchPointOffsetRight: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
@@ -1612,6 +1612,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.health = Player.maxHealth;
         this.healthBar.updateHealth(this.health);
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+    }
+
+    trySelectPreviousWeapon() {
+        this.scene.events.emit('previousWeaponSelected', this.playerId, this.turbo);
+    }
+    
+    trySelectNextWeapon() {
+        this.scene.events.emit('nextWeaponSelected', this.playerId, this.turbo);
     }
 
     private createProjectile(projectileType) : Projectile {

@@ -98,8 +98,16 @@ import { SceneController } from "./sceneController";
             this.setInfoText(text);
         }, this);
 
-        ourGame.events.on('playerPositionUpdated', function(playerName, x, y) {
+        ourGame.events.on('playerPositionUpdated', function(playerName, x, y) {            
             this.updatePlayerPosition(playerName, x, y);
+        }, this);
+
+        ourGame.events.on('previousWeaponSelected', function(playerName) {
+            this.selectPreviousWeapon(playerName);
+        }, this);
+
+        ourGame.events.on('nextWeaponSelected', function(playerName) {
+            this.selectNextWeapon(playerName);
         }, this);
 
         this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();       
@@ -182,12 +190,18 @@ import { SceneController } from "./sceneController";
         }
     }
 
-    selectPreviousWeapon() {
-        this.playerHUDOverlayComponents[0].selectPreviousWeapon();
+    selectPreviousWeapon(name: string) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].selectPreviousWeapon();
+        }
     }
 
-    selectNextWeapon(){
-        this.playerHUDOverlayComponents[0].selectNextWeapon();
+    selectNextWeapon(name: string){
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].selectNextWeapon();
+        }
     }
     
     update(): void {
