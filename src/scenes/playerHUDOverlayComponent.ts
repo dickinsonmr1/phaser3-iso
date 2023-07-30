@@ -1,6 +1,5 @@
 import 'phaser';
 import { HUDBarType, HealthBar } from "../gameobjects/healthBar";
-import { IsoBoxHealthBar, IsoHudBarType } from "../gameobjects/isoBoxHealthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
 
@@ -78,23 +77,11 @@ export class PlayerHUDOverlayComponent {
     displayX: number;
     displayY: number;
 
-    private get IsoBoxHealthStartX(): number {return this.scene.game.canvas.width / 16; }
-    private get IsoBoxHealthStartY(): number {return this.scene.game.canvas.height - this.scene.game.canvas.height / 16; }   
+    private get HealthBarStartX(): number {return this.scene.game.canvas.width / 16; }
+    private get HealthBarStartY(): number {return this.scene.game.canvas.height - this.scene.game.canvas.height / 16; }   
 
-    private get IsoBoxTurboStartY(): number {return this.IsoBoxHealthStartY - 50 };
-    private get IsoBoxShieldStartY(): number {return this.IsoBoxHealthStartY - 100 };
-
-    //private get IsoBoxTurboStartX(): number {return this.IsoBoxHealthStartX + 110; }
-    //private get IsoBoxShieldStartX(): number {return this.IsoBoxTurboStartX - 110; }
-    //private get IsoBoxTextStartY(): number {return this.IsoBoxHealthStartY - 250; }
-
-    //isoBoxHealthBar: IsoBoxHealthBar;
-    //isoBoxTurboBar: IsoBoxHealthBar;
-    //isoBoxShieldBar: IsoBoxHealthBar;
-
-    //isoBoxHealth: Phaser.GameObjects.IsoBox;
-    //isoBoxTurbo: Phaser.GameObjects.IsoBox;
-    //isoBoxShield: Phaser.GameObjects.IsoBox;
+    private get TurboBarStartY(): number {return this.HealthBarStartY - 50 };
+    private get ShieldBarStartY(): number {return this.HealthBarStartY - 100 };
 
     selectedWeaponIcon: Phaser.GameObjects.Image;
     selectedWeaponItemIndex: integer = 0;
@@ -135,31 +122,28 @@ export class PlayerHUDOverlayComponent {
         */
 
         this.healthBar = new HealthBar(this.scene);
-        this.healthBar.init(this.IsoBoxHealthStartX, this.IsoBoxHealthStartY, Player.maxHealth,            
+        this.healthBar.init(this.HealthBarStartX, this.HealthBarStartY, Player.maxHealth,            
             400, 40,
             0.5,
             HUDBarType.Health);
 
         this.turboBar = new HealthBar(this.scene);
-        this.turboBar.init(this.IsoBoxHealthStartX, this.IsoBoxTurboStartY, Player.maxTurbo,
+        this.turboBar.init(this.HealthBarStartX, this.TurboBarStartY, Player.maxTurbo,
             200, 20,
             0.5,
             HUDBarType.Turbo);
 
         this.shieldBar = new HealthBar(this.scene);
-        this.shieldBar.init(this.IsoBoxHealthStartX, this.IsoBoxShieldStartY, Player.maxShield,
+        this.shieldBar.init(this.HealthBarStartX, this.ShieldBarStartY, Player.maxShield,
             200, 20,
             0.5,
             HUDBarType.Shield);
-                    
-        //this.selectedWeaponIcon = this.scene.add.image(this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 'specialIcon');
-        //this.selectedWeaponIcon.setOrigin(0.5, 0.5);
 
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'specialIcon', this.IsoBoxHealthStartX + 500, this.IsoBoxHealthStartY, 2));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.IsoBoxHealthStartX + 600, this.IsoBoxHealthStartY, 5));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'fireIcon', this.IsoBoxHealthStartX + 700, this.IsoBoxHealthStartY, 20));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'crosshair', this.IsoBoxHealthStartX + 800, this.IsoBoxHealthStartY, 1));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'shockwaveIcon', this.IsoBoxHealthStartX + 900, this.IsoBoxHealthStartY, 3));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'specialIcon', this.HealthBarStartX + 500, this.HealthBarStartY, 2));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.HealthBarStartX + 600, this.HealthBarStartY, 5));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'fireIcon', this.HealthBarStartX + 700, this.HealthBarStartY, 20));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'crosshair', this.HealthBarStartX + 800, this.HealthBarStartY, 1));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'shockwaveIcon', this.HealthBarStartX + 900, this.HealthBarStartY, 3));
         
         this.weaponHudItems[0].selectItem();
         this.weaponHudItems[1].deselectItem();

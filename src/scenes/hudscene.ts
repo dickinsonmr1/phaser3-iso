@@ -55,7 +55,6 @@ import { SceneController } from "./sceneController";
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
         this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon2.png');
     }
-
     
     create () {        
         this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {

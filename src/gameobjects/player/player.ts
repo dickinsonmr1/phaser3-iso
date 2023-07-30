@@ -155,7 +155,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
     private particleEmitterSparks: Phaser.GameObjects.Particles.ParticleEmitter;
+    
     private particleEmitterTurbo: Phaser.GameObjects.Particles.ParticleEmitter;
+    private turboLaunchPointOffsetLeft: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+    private turboLaunchPointOffsetRight: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+
     private particleEmitterDeathBurn: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private particleEmitterMuzzleFlash: Phaser.GameObjects.Particles.ParticleEmitter;
@@ -175,11 +179,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private targetAimX: number = 0;
     private targetAimY: number = 0;
     
-    private bulletLaunchX1: number = 0;
-    private bulletLaunchY1: number = 0;
+    private bulletLaunchPointOffsetLeft: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+    private bulletLaunchPointOffsetRight: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
 
-    private bulletLaunchX2: number = 0;
-    private bulletLaunchY2: number = 0;
+    //private bulletLaunchX1: number = 0;
+    //private bulletLaunchY1: number = 0;
+
+    //private bulletLaunchX2: number = 0;
+    //private bulletLaunchY2: number = 0;
 
     private launchLeft: boolean = true;
 
@@ -472,7 +479,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
         });
 
-
+        /*
         this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
             lifespan: 180,
             speed: 100, //{ min: 400, max: 400 },
@@ -487,6 +494,21 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             //frequency: 25,
             alpha: {start: 1.0, end: 0.5},
             //maxParticles: 25,
+            emitting: false
+        });
+        */
+
+        this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
+            frame: 'white',
+            color: [ 0x96e0da, 0x937ef3 ],
+            colorEase: 'quart.out',
+            lifespan: 250,
+            angle: { min: -100, max: -80 },
+            scale: { start: 0.10, end: 0.5, ease: 'sine.in' },
+            alpha: {start: 0.8, end: 0.0},
+            speed: { min: 50, max: 100 },
+            advance: 100,
+            blendMode: 'ADD',
             emitting: false
         });
 
@@ -862,11 +884,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.aimX = Math.cos(angle2);
         this.aimY = Math.sin(angle2);
 
-        this.bulletLaunchX1 = Math.cos(angle2 - Math.PI / 12);
-        this.bulletLaunchY1 = Math.sin(angle2 - Math.PI / 12);
-    
-        this.bulletLaunchX2 = Math.cos(angle2 + Math.PI / 12);
-        this.bulletLaunchY2 = Math.sin(angle2 + Math.PI / 12);
+        this.bulletLaunchPointOffsetLeft = new Phaser.Math.Vector2(Math.cos(angle2 - Math.PI / 12), Math.sin(angle2 - Math.PI / 12));
+        this.bulletLaunchPointOffsetRight = new Phaser.Math.Vector2(Math.cos(angle2 + Math.PI / 12), Math.sin(angle2 + Math.PI / 12));
+
+        this.turboLaunchPointOffsetLeft = new Phaser.Math.Vector2(Math.cos(angle2 - Math.PI / 12), Math.sin(angle2 - Math.PI / 12));
+        this.turboLaunchPointOffsetRight = new Phaser.Math.Vector2(Math.cos(angle2 + Math.PI / 12), Math.sin(angle2 + Math.PI / 12));
+
         return;
 
         /*
@@ -1525,7 +1548,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
             var distance = 15;
-            this.particleEmitterTurbo.emitParticleAt(this.x - this.aimX * distance, this.y - this.aimY * distance);               
+            //this.particleEmitterTurbo.emitParticleAt(this.x - this.aimX * distance, this.y - this.aimY * distance);        
+            this.particleEmitterTurbo.emitParticleAt(this.x - this.turboLaunchPointOffsetLeft.x * distance, this.y - this.turboLaunchPointOffsetLeft.y * distance);        
+            this.particleEmitterTurbo.emitParticleAt(this.x - this.turboLaunchPointOffsetRight.x * distance, this.y - this.turboLaunchPointOffsetRight.y * distance);     
+            
+            
         }        
         else {
             this.turboOn = false;
@@ -1629,7 +1656,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
         
-        var launchDistanceFromPlayerCenter = 22;
+        var bulletLaunchDistanceFromPlayerCenter = 22;
 
         //        -1 PI  1 PI 
         //   -0.5PI           0.5 PI
@@ -1713,15 +1740,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.launchLeft = !this.launchLeft;
             
             if(this.launchLeft)
-                launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX1, this.bulletLaunchY1);
+                launchPoint = this.bulletLaunchPointOffsetLeft;
             else
-                launchPoint = new Phaser.Math.Vector2(this.bulletLaunchX2, this.bulletLaunchY2);
+                launchPoint = this.bulletLaunchPointOffsetRight;
 
             //this.particleEmitterMuzzleFlash.setPosition(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);
 
             this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
-            this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * launchDistanceFromPlayerCenter);            
-            this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * launchDistanceFromPlayerCenter, launchPoint.y * launchDistanceFromPlayerCenter);               
+            this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter);            
+            this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * bulletLaunchDistanceFromPlayerCenter, launchPoint.y * bulletLaunchDistanceFromPlayerCenter);               
 
             //this.particleEmitterMuzzleFlash.emitParticleAt(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);               
        }
@@ -1729,8 +1756,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         var bullet = new Projectile({
             scene: this.scene,
             projectileType: projectileType,
-            isometricX: this.x + launchPoint.x * launchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            isometricY: this.y + launchPoint.y * launchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
+            isometricX: this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            isometricY: this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
             mapPositionX: this.MapPosition.x,
             mapPositionY: this.MapPosition.y,
             key: weaponImageKey,//this.currentWeaponBulletName,
