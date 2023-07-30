@@ -41,7 +41,7 @@ export class HealthBar extends Phaser.GameObjects.Group {
 
     icon: Phaser.GameObjects.Image;
     iconScale: number;
-    private static get iconOffsetX(): number {return -25;}
+    private static get iconOffsetX(): number {return -50;}
     private static get iconOffsetY(): number {return -5;}
 
     init(originX: number, originY: number, healthMax: number, healthMaxWidthInPixels: number, healthBarHeight: number, iconScale: number, hudBarType: HUDBarType): void {

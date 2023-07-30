@@ -63,6 +63,8 @@ export class PlayerHUDOverlayComponent {
 
     weaponHudItems: WeaponHudItem[] = [];
 
+    livesIcons: Phaser.GameObjects.Image[] = [];
+
     ammoText: Phaser.GameObjects.Text;
     playerNameText: Phaser.GameObjects.Text;
 
@@ -124,7 +126,7 @@ export class PlayerHUDOverlayComponent {
         this.healthBar = new HealthBar(this.scene);
         this.healthBar.init(this.HealthBarStartX, this.HealthBarStartY, Player.maxHealth,            
             400, 40,
-            0.5,
+            0.75,
             HUDBarType.Health);
 
         this.turboBar = new HealthBar(this.scene);
@@ -138,6 +140,9 @@ export class PlayerHUDOverlayComponent {
             200, 20,
             0.5,
             HUDBarType.Shield);
+
+        this.livesIcons.push(this.scene.add.image(this.HealthBarStartX, this.ShieldBarStartY - 100, 'carIcon'));
+        this.livesIcons.push(this.scene.add.image(this.HealthBarStartX + 100, this.ShieldBarStartY - 100, 'carIcon'));
 
         this.weaponHudItems.push(new WeaponHudItem(this.scene, 'specialIcon', this.HealthBarStartX + 500, this.HealthBarStartY, 2));
         this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.HealthBarStartX + 600, this.HealthBarStartY, 5));

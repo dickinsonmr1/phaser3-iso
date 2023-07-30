@@ -107,6 +107,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 .setColor(rocketColor)
                 .setIntensity(1.5);        
 
+            /*
             this.particleEmitter =  this.scene.add.particles(0, 0, 'smoke', {
                 speed: 10, //{ min: 400, max: 400 },                
                 lifespan: 400,
@@ -118,18 +119,20 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 alpha: {start: 1.0, end: 0.0},
                 //maxParticles: 25,    
                 emitting: false
-                /*
-                color: [ 0xfacc22, 0xf89800, 0xf83600, 0x9f0404 ],
-                colorEase: 'quad.out',
-                lifespan: 400,
-                //angle: { min: -280, max: -260 },
+            });*/
+
+            this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {
+                frame: 'white',
+                color: [ 0x96e0da, 0x937ef3 ],
+                colorEase: 'quart.out',
+                lifespan: 1000,
                 angle: { min: -100, max: -80 },
-                scale: { start: 0.20, end: 0, ease: 'sine.out' },
-                speed: 100,
-                //advance: 2000,
+                scale: { start: 0.10, end: 0.5, ease: 'sine.in' },
+                alpha: {start: 0.8, end: 0.0},
+                speed: { min: 20, max: 50 },
+                advance: 0,
                 blendMode: 'ADD',
                 emitting: false
-                */
             });
             this.particleEmitter.setDepth(Constants.depthTurboParticles)
         }
