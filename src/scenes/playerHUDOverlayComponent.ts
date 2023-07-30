@@ -2,6 +2,8 @@ import 'phaser';
 import { HUDBarType, HealthBar } from "../gameobjects/healthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
+import { ProjectileType } from '../gameobjects/projectile';
+import { PickupType } from '../gameobjects/pickup';
 
 export class WeaponHudItem {
 
@@ -14,9 +16,13 @@ export class WeaponHudItem {
     weaponText: Phaser.GameObjects.Text;
     weaponIcon: Phaser.GameObjects.Image;
 
-    constructor(scene: HudScene, iconKey: string, startX: integer, startY: integer, ammoCount: integer) {
+    pickupType: PickupType;
+
+    constructor(scene: HudScene, pickupType: PickupType, iconKey: string, startX: integer, startY: integer, ammoCount: integer) {
 
         this.scene = scene;
+
+        this.pickupType = pickupType;
 
         this.startX = startX;
         this.startY = startY;
@@ -46,6 +52,11 @@ export class WeaponHudItem {
 
         this.weaponText.setTint(0xcccccc);
         this.weaponText.setAlpha(0.2);
+    } 
+
+    updateAmmo(newAmmoCount: number) {
+        this.ammoCount = newAmmoCount;
+        this.weaponText.text = this.ammoCount.toString();
     } 
 }
 
@@ -144,17 +155,27 @@ export class PlayerHUDOverlayComponent {
         this.livesIcons.push(this.scene.add.image(this.HealthBarStartX, this.ShieldBarStartY - 100, 'carIcon'));
         this.livesIcons.push(this.scene.add.image(this.HealthBarStartX + 100, this.ShieldBarStartY - 100, 'carIcon'));
 
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'specialIcon', this.HealthBarStartX + 500, this.HealthBarStartY, 2));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'rocketIcon', this.HealthBarStartX + 600, this.HealthBarStartY, 5));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'fireIcon', this.HealthBarStartX + 700, this.HealthBarStartY, 20));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'crosshair', this.HealthBarStartX + 800, this.HealthBarStartY, 1));
-        this.weaponHudItems.push(new WeaponHudItem(this.scene, 'shockwaveIcon', this.HealthBarStartX + 900, this.HealthBarStartY, 3));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Special, 'specialIcon', this.HealthBarStartX + 500, this.HealthBarStartY, 2));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Rocket, 'rocketIcon', this.HealthBarStartX + 600, this.HealthBarStartY, 5));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Flamethrower, 'fireIcon', this.HealthBarStartX + 700, this.HealthBarStartY, 20));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Airstrike, 'crosshair', this.HealthBarStartX + 800, this.HealthBarStartY, 1));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Shockwave, 'shockwaveIcon', this.HealthBarStartX + 900, this.HealthBarStartY, 3));
         
         this.weaponHudItems[0].selectItem();
         this.weaponHudItems[1].deselectItem();
         this.weaponHudItems[2].deselectItem();
         this.weaponHudItems[3].deselectItem();
         this.weaponHudItems[4].deselectItem();
+    }
+
+    selectPreviousWeapon() {
+        this.weaponHudItems[this.selectedWeaponItemIndex].deselectItem();
+
+        --this.selectedWeaponItemIndex;
+        if(this.selectedWeaponItemIndex < 0)
+            this.selectedWeaponItemIndex = this.weaponHudItems.length - 1;
+
+        this.weaponHudItems[this.selectedWeaponItemIndex].selectItem();
     }
 
     selectNextWeapon(){
@@ -164,16 +185,6 @@ export class PlayerHUDOverlayComponent {
         ++this.selectedWeaponItemIndex;
         if(this.selectedWeaponItemIndex > this.weaponHudItems.length - 1)
             this.selectedWeaponItemIndex = 0;
-
-        this.weaponHudItems[this.selectedWeaponItemIndex].selectItem();
-    }
-
-    selectPreviousWeapon() {
-        this.weaponHudItems[this.selectedWeaponItemIndex].deselectItem();
-
-        --this.selectedWeaponItemIndex;
-        if(this.selectedWeaponItemIndex < 0)
-            this.selectedWeaponItemIndex = this.weaponHudItems.length - 1;
 
         this.weaponHudItems[this.selectedWeaponItemIndex].selectItem();
     }
@@ -193,6 +204,13 @@ export class PlayerHUDOverlayComponent {
         this.turboBar.updateHealth(currentTurbo);
         if(currentTurbo > 0)
             this.turboBar.show();   
+    }
+
+    updateAmmo(weaponType: PickupType, ammoCount: number) {
+        let filteredWeaponHudItems = this.weaponHudItems.filter(x => x.pickupType == weaponType);//.find(x => x.playerName == name);
+        if(filteredWeaponHudItems != null && filteredWeaponHudItems[0] != null) {
+            filteredWeaponHudItems[0].updateAmmo(ammoCount);
+        }
     }
 
     respawn() {

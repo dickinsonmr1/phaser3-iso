@@ -1620,7 +1620,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
     trySelectNextWeapon() {
         this.scene.events.emit('nextWeaponSelected', this.playerId, this.turbo);
-    }
+    }    
 
     private createProjectile(projectileType) : Projectile {
         //var body = <Phaser.Physics.Arcade.Body>this.body;

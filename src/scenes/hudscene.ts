@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
+import { PickupType } from '../gameobjects/pickup';
 
  
  export class HudScene extends Phaser.Scene {
@@ -110,6 +111,10 @@ import { SceneController } from "./sceneController";
             this.selectNextWeapon(playerName);
         }, this);
 
+        ourGame.events.on('ammoUpdated', function(playerName, weaponType, ammoCount) {
+            this.selectNextWeapon(playerName);
+        }, this);
+
         this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();       
 
         //var temp = this.add.nineslice(400, 300, 'buttons', 'enemy_hp_bar', 600, 400, 16, 16, 32, 16);        
@@ -201,6 +206,13 @@ import { SceneController } from "./sceneController";
         let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].selectNextWeapon();
+        }
+    }
+
+    updateAmmoCount(name: string, weaponType: PickupType, ammoCount: integer){
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].updateAmmo(weaponType, ammoCount);
         }
     }
     
