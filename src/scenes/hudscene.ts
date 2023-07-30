@@ -53,7 +53,7 @@ import { SceneController } from "./sceneController";
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
-        this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon.png');
+        this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon2.png');
     }
 
     
@@ -188,7 +188,7 @@ import { SceneController } from "./sceneController";
     }
 
     selectNextWeapon(){
-        this.playerHUDOverlayComponents[1].selectNextWeapon();
+        this.playerHUDOverlayComponents[0].selectNextWeapon();
     }
     
     update(): void {

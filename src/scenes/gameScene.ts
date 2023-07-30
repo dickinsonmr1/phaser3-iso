@@ -45,6 +45,8 @@ export default class GameScene extends Phaser.Scene
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
     mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
+    mostRecentL1: boolean = false;
+    mostRecentR1: boolean = false;
 
     light: any;
 
@@ -440,7 +442,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(7);
+            var rand = Utility.getRandomInt(8);
             var pickUpIconKey = "shieldIcon";
             switch(rand) {
                 case 0: // pink
@@ -491,6 +493,13 @@ export default class GameScene extends Phaser.Scene
                     rightColor = 0xFFAF5B;
                     pickupType = PickupType.Flamethrower;
                     pickUpIconKey = "fireIcon";
+                    break;
+                case 7: // blue
+                    topColor = 0x6F84FF;
+                    leftColor = 0x2D4DFF;
+                    rightColor = 0x5B74FF;
+                    pickupType = PickupType.Shockwave;
+                    pickUpIconKey = "shockwaveIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
@@ -768,6 +777,10 @@ export default class GameScene extends Phaser.Scene
                 console.log('refill airstrike');
                 this.sceneController.hudScene.setInfoText("Airstrike acquired - " + selectedPlayer.playerId, 2000);
                 break;
+            case PickupType.Shockwave:
+                console.log('refill airstrike');
+                this.sceneController.hudScene.setInfoText("Shockwave acquired - " + selectedPlayer.playerId, 2000);
+                break;
         }
         
         //selectedPlayer.
@@ -877,7 +890,7 @@ export default class GameScene extends Phaser.Scene
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
 
-            if(pad.R1) {
+            if(pad.X) {
                 this.player.tryFireFlamethrower();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
@@ -929,11 +942,25 @@ export default class GameScene extends Phaser.Scene
                 }
             }
 
-            if(pad.L1)
-                this.sceneController.hudScene.selectPreviousWeapon();
+            if(pad.L1) {
+                if(!this.mostRecentL1) {
+                    this.sceneController.hudScene.selectPreviousWeapon();
+                    this.mostRecentL1 = true;
+                }
+            }
+            else {
+                this.mostRecentL1 = false;
+            }
 
-            //if(pad.R1)
-                //this.sceneController.hudScene.selectNextWeapon();
+            if(pad.R1) {
+                if(!this.mostRecentR1) {
+                    this.sceneController.hudScene.selectNextWeapon();
+                    this.mostRecentR1 = true;
+                }
+            }
+            else {
+                this.mostRecentR1 = false;
+            }
         }
         if(pad == null) {
 
