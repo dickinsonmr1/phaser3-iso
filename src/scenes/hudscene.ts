@@ -150,9 +150,9 @@ import { PickupType } from '../gameobjects/pickup';
         this.scene.bringToTop();
     }
 
-    setOverlay(playerId: string) {
+    setOverlay(playerId: string, playerMaxHealth: number) {
         //this.playerId = playerId;
-        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, playerId, 100, 100));
+        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, playerId, 100, 100, playerMaxHealth));
     }
 
     setInfoText(text: string, infoTextDurationInMs: number): void {

@@ -151,6 +151,8 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
 
+        this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
+
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('muzzleFlash', './assets/sprites/explosions/tank_explosion10.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
@@ -251,7 +253,7 @@ export default class GameScene extends Phaser.Scene
         this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
         this.player.init();   
 
-        this.sceneController.addHudForPlayerId(this.player.playerId);
+        this.sceneController.addHudForPlayerId(this.player.playerId, this.player.maxHealth());
         
         //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
         //this.crosshairSprite.setOrigin(0.5, 0.5);

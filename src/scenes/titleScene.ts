@@ -64,6 +64,7 @@ import { Constants } from '../constants';
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
+        this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
     }
 
     
@@ -224,6 +225,30 @@ import { Constants } from '../constants';
             repeat: -1,            
         });
 
+        this.anims.create({
+            key: 'select-killdozer',//this.animPrefix + '-SSW',
+            frames: [
+                {key: 'killdozer256', frame: 'killdozer_SW'},
+                {key: 'killdozer256', frame: 'killdozer_W_SW'},
+                {key: 'killdozer256', frame: 'killdozer_W'},
+                {key: 'killdozer256', frame: 'killdozer_W_NW'},
+                {key: 'killdozer256', frame: 'killdozer_NW'},
+                {key: 'killdozer256', frame: 'killdozer_N_NW'},
+                {key: 'killdozer256', frame: 'killdozer_N'},
+                {key: 'killdozer256', frame: 'killdozer_N_NE'},
+                {key: 'killdozer256', frame: 'killdozer_NE'},
+                {key: 'killdozer256', frame: 'killdozer_E_NE'},
+                {key: 'killdozer256', frame: 'killdozer_E'},
+                {key: 'killdozer256', frame: 'killdozer_E_SE'},
+                {key: 'killdozer256', frame: 'killdozer_SE'},
+                {key: 'killdozer256', frame: 'killdozer_S_SE'},
+                {key: 'killdozer256', frame: 'killdozer_S'},
+                {key: 'killdozer256', frame: 'killdozer_S_SW'}
+            ],
+            frameRate: framerate,
+            repeat: -1,            
+        });
+
 
 
         //this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
@@ -257,9 +282,9 @@ import { Constants } from '../constants';
         mapSelectionMenu.setMarker(this, "•");
 
         var mapIcons = new Array<IconValueMapping>();
-        mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.Taxi}));
-        mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: VehicleType.Ambulance}));
-        mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: VehicleType.RaceCar}));
+        mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: 0}));
+        mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: 1}));
+        mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: 2}));
         mapSelectionMenu.addMenuComplexItemWithIcons(this, "Map", mapIcons);
         mapSelectionMenu.addMenuLinkItem(this, "Next", vehicleSelectionMenu);    
              
@@ -276,6 +301,7 @@ import { Constants } from '../constants';
         vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
         vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
         vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
+        vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 1, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
         var complexMenuItem = vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         
         vehicleSelectionMenu.setInitialStats(this, complexMenuItem);
@@ -415,7 +441,7 @@ import { Constants } from '../constants';
         if(selectedVehicleTypeMenuItem.selectedSubItemIndex != null)
             this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex);
         else
-            this.sceneController.launchGame(VehicleType.Hearse);
+            this.sceneController.launchGame(VehicleType.Killdozer);
     }
 
     addGamepadListeners(): void {

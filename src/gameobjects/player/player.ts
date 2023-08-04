@@ -50,7 +50,8 @@ export enum VehicleType {
     Ambulance,
     RaceCar,
     PickupTruck,
-    Hearse
+    Hearse,
+    Killdozer
 }
 
 enum CpuPlayerPattern {
@@ -70,8 +71,23 @@ enum PlayerAliveStatus {
 
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
-    private bodyDrawSize: number = 48;
-    private bodyDrawOffset: number = 10;
+    private bodyDrawSize() {
+        switch(this.vehicleType) {
+            case VehicleType.Killdozer:
+                return 72;                
+            default:
+                return 48;
+        }
+    }
+
+    private bodyDrawOffset(): Phaser.Math.Vector2 {
+        switch(this.vehicleType) {
+            case VehicleType.Killdozer:
+                return new Phaser.Math.Vector2(64, 80);                
+            default:
+                return new Phaser.Math.Vector2(10, 10);
+        }
+    }
 
     getPlayerSpeed(): number {
         if(this.turboOn) {
@@ -80,7 +96,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         else 
             return this.maxSpeed();
     }
-    private health: number = Player.maxHealth;
+    private health: number = this.maxHealth();
     private turbo: number = Player.maxTurbo;
     private shield: number = Player.maxShield / 2;   
 
@@ -97,7 +113,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public static get specialRating(): number { return 4; }
     public static get speedRating(): number { return 100; }
 
-    public static get maxHealth(): number { return 20; }
+    public maxHealth(): number {
+        switch(this.vehicleType) {
+            case VehicleType.Ambulance:
+                return 40;
+            case VehicleType.Taxi:                
+                return 30;
+            case VehicleType.RaceCar:
+                return 20;
+            case VehicleType.PickupTruck:
+                return 40;
+            case VehicleType.Hearse:
+                return 50;
+            case VehicleType.Killdozer:
+                return 60;                
+            default:
+                return 20;
+        }
+    }
     public static get maxShield(): number { return 4; }
     public static get maxTurbo(): number { return 100; }
 
@@ -119,6 +152,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 return 230;
             case VehicleType.Hearse:
                 return 220;
+            case VehicleType.Killdozer:
+                return 175;                
             default:
                 return 10;
         }
@@ -422,7 +457,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
           //  .setSize(this.bodyDrawSize, this.bodyDrawSize)
             //.setOffset(-this.bodyDrawOffset, -this.bodyDrawOffset);
 
-        this.setCircle(this.bodyDrawSize, this.bodyDrawOffset, this.bodyDrawOffset)
+        this.setCircle(this.bodyDrawSize(), this.bodyDrawOffset().x, this.bodyDrawOffset().y)
             
         this.particleEmitterExplosion = this.scene.add.particles(this.x, this.y, 'explosion', {
             lifespan: 750,
@@ -1170,7 +1205,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //this.x = screenPosition.x;
         //this.y = screenPosition.y;
 
-        this.health = Player.maxHealth;
+        this.health = this.maxHealth();
         this.healthBar.updateHealth(this.health);
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.healthBar.show();
@@ -1609,7 +1644,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     refillHealth() {
-        this.health = Player.maxHealth;
+        this.health = this.maxHealth();
         this.healthBar.updateHealth(this.health);
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
     }

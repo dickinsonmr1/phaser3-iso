@@ -99,7 +99,7 @@ export class PlayerHUDOverlayComponent {
     selectedWeaponIcon: Phaser.GameObjects.Image;
     selectedWeaponItemIndex: integer = 0;
 
-    constructor(scene: HudScene, playerName: string, x: number, y: number) {
+    constructor(scene: HudScene, playerName: string, x: number, y: number, playerMaxHealth: number) {
         this.scene = scene;
         this.displayX = x;
         this.displayY = y;
@@ -135,7 +135,7 @@ export class PlayerHUDOverlayComponent {
         */
 
         this.healthBar = new HealthBar(this.scene);
-        this.healthBar.init(this.HealthBarStartX, this.HealthBarStartY, Player.maxHealth,            
+        this.healthBar.init(this.HealthBarStartX, this.HealthBarStartY, playerMaxHealth,            
             400, 40,
             0.75,
             HUDBarType.Health);

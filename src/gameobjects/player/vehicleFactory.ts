@@ -5,6 +5,7 @@ import { RaceCarPlayer } from "./racecarplayer";
 import { TaxiPlayer } from "./taxiplayer";
 import { PickupTruckPlayer } from "./pickuptruckplayer";
 import { HearsePlayer } from "./hearseplayer";
+import { KilldozerPlayer } from "./killdozerPlayer";
 
 export class VehicleFactory {
     constructor() {
@@ -82,6 +83,19 @@ export class VehicleFactory {
                     key: "blackCars",
                     frame: 'hearseBlack-W',
                     playerId: "Undertaker",
+                    vehicleType: vehicleType
+                });
+                break;
+            case VehicleType.Killdozer:
+                return new KilldozerPlayer({                    
+                    scene: scene,
+                    drawScale: 0.5,
+                    isCpuPlayer: isCpuPlayer,
+                    mapX: 500,
+                    mapY: 500,
+                    key: "killdozer256",
+                    frame: 'killdozer_W',
+                    playerId: "Killdozer",
                     vehicleType: vehicleType
                 });
                 break;
