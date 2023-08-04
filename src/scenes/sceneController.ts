@@ -44,8 +44,8 @@ export class SceneController extends Phaser.Scene {
         this.scene.bringToTop("HudScene");
     }
 
-    addHudForPlayerId(playerId: string) {
-        this.hudScene.setOverlay(playerId);
+    addHudForPlayerId(playerId: string, playerMaxHealth: number) {
+        this.hudScene.setOverlay(playerId, playerMaxHealth);
     }
 
     update(): void {
