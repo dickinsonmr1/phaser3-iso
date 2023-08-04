@@ -65,8 +65,8 @@ import { Constants } from '../constants';
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
         this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
+        this.load.atlasXML('monstertruck256', './assets/vehicles/sprites-monstertruck256.png', './assets/vehicles/sprites-monstertruck256.xml');        
     }
-
     
     create () {
 
@@ -249,6 +249,30 @@ import { Constants } from '../constants';
             repeat: -1,            
         });
 
+        this.anims.create({
+            key: 'select-monstertruck',//this.animPrefix + '-SSW',
+            frames: [
+                {key: 'monstertruck256', frame: 'monstertruck256_SW'},
+                {key: 'monstertruck256', frame: 'monstertruck256_W_SW'},
+                {key: 'monstertruck256', frame: 'monstertruck256_W'},
+                {key: 'monstertruck256', frame: 'monstertruck256_W_NW'},
+                {key: 'monstertruck256', frame: 'monstertruck256_NW'},
+                {key: 'monstertruck256', frame: 'monstertruck256_N_NW'},
+                {key: 'monstertruck256', frame: 'monstertruck256_N'},
+                {key: 'monstertruck256', frame: 'monstertruck256_N_NE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_NE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_E_NE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_E'},
+                {key: 'monstertruck256', frame: 'monstertruck256_E_SE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_SE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_S_SE'},
+                {key: 'monstertruck256', frame: 'monstertruck256_S'},
+                {key: 'monstertruck256', frame: 'monstertruck256_S_SW'}
+            ],
+            frameRate: framerate,
+            repeat: -1,            
+        });
+
 
 
         //this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
@@ -301,7 +325,8 @@ import { Constants } from '../constants';
         vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 3, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
         vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 3, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
         vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 3, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
-        vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 1, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 0.75, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new IconValueMapping({description: 'Monster Truck', key: 'select-monstertruck', scale: 0.75, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
         var complexMenuItem = vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         
         vehicleSelectionMenu.setInitialStats(this, complexMenuItem);

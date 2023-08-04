@@ -1,0 +1,18 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="sprites-monstertruck256.png">
+    <SubTexture name="monstertruck256_E" x="0" y="0" width="256" height="256"/>
+    <SubTexture name="monstertruck256_E_NE" x="0" y="256" width="256" height="256"/>
+    <SubTexture name="monstertruck256_E_SE" x="256" y="0" width="256" height="256"/>
+    <SubTexture name="monstertruck256_N" x="256" y="256" width="256" height="256"/>
+    <SubTexture name="monstertruck256_NE" x="0" y="512" width="256" height="256"/>
+    <SubTexture name="monstertruck256_N_NE" x="256" y="512" width="256" height="256"/>
+    <SubTexture name="monstertruck256_N_NW" x="512" y="0" width="256" height="256"/>
+    <SubTexture name="monstertruck256_NW" x="512" y="256" width="256" height="256"/>
+    <SubTexture name="monstertruck256_S" x="512" y="512" width="256" height="256"/>
+    <SubTexture name="monstertruck256_SE" x="0" y="768" width="256" height="256"/>
+    <SubTexture name="monstertruck256_S_SE" x="256" y="768" width="256" height="256"/>
+    <SubTexture name="monstertruck256_S_SW" x="512" y="768" width="256" height="256"/>
+    <SubTexture name="monstertruck256_SW" x="768" y="0" width="256" height="256"/>
+    <SubTexture name="monstertruck256_W" x="768" y="256" width="256" height="256"/>
+    <SubTexture name="monstertruck256_W_NW" x="768" y="512" width="256" height="256"/>
+    <SubTexture name="monstertruck256_W_SW" x="768" y="768" width="256" height="256"/>
+</TextureAtlas>

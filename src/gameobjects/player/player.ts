@@ -51,7 +51,8 @@ export enum VehicleType {
     RaceCar,
     PickupTruck,
     Hearse,
-    Killdozer
+    Killdozer,
+    MonsterTruck
 }
 
 enum CpuPlayerPattern {
@@ -74,6 +75,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private bodyDrawSize() {
         switch(this.vehicleType) {
             case VehicleType.Killdozer:
+            case VehicleType.MonsterTruck:
                 return 72;                
             default:
                 return 48;
@@ -83,7 +85,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private bodyDrawOffset(): Phaser.Math.Vector2 {
         switch(this.vehicleType) {
             case VehicleType.Killdozer:
-                return new Phaser.Math.Vector2(64, 80);                
+                return new Phaser.Math.Vector2(64, 80); 
+            case VehicleType.MonsterTruck:
+                return new Phaser.Math.Vector2(64, 64);                     
             default:
                 return new Phaser.Math.Vector2(10, 10);
         }
@@ -126,7 +130,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case VehicleType.Hearse:
                 return 50;
             case VehicleType.Killdozer:
-                return 60;                
+                return 60;        
+            case VehicleType.Killdozer:
+                return 50;            
             default:
                 return 20;
         }
@@ -153,7 +159,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case VehicleType.Hearse:
                 return 220;
             case VehicleType.Killdozer:
-                return 175;                
+                return 175;    
+            case VehicleType.MonsterTruck:
+                return 200;                     
             default:
                 return 10;
         }
