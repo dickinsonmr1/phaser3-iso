@@ -156,6 +156,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('explosion', './assets/sprites/explosions/tank_explosion3.png');
         this.load.image('muzzleFlash', './assets/sprites/explosions/tank_explosion10.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
+        this.load.image('smokeDarker', './assets/sprites/explosions/tank_explosion12.png');
         this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
         this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');
 

@@ -211,6 +211,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     public particleEmitterShockwave: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    public particleEmitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -555,6 +557,21 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             emitting: false
         });
 
+        this.particleEmitterSmoke = this.scene.add.particles(0, 0, 'smokeDarker', {
+            color: [ 0x432244, 0x141315 ],
+            //tint: 808080,
+            colorEase: 'quart.out',
+            lifespan: 500,
+            angle: { min: -100, max: -80 },
+            scale: { start: 0.25, end: 1, ease: 'sine.in' },
+            alpha: {start: 0.8, end: 0.0},
+            speed: { min: 50, max: 100 },
+            advance: 0,
+            blendMode: 'ADD',
+            quantity: 2,
+            emitting: false
+        });
+
         // https://labs.phaser.io/edit.html?src=src/game%20objects/particle%20emitter/fire%20effects.js        
         this.particleEmitterFlamethrower = this.scene.add.particles(0, 0, 'smoke',
         {
@@ -724,6 +741,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
             this.particleEmitterMuzzleFlash.setDepth(this.y);
 
+            if(this.health <= 0.50 * this.maxHealth()) {
+                this.particleEmitterSmoke.setDepth(this.y + 64);
+                this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
+            }
+            
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
         }
         else {
@@ -1177,6 +1199,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.deathBurnSpotlight.setPosition(this.x, this.y);
         this.deathBurnSpotlight.setVisible(true);
 
+        //this.particleEmitterSmoke.stop();
+
         this.headlight.setVisible(false);
 
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
@@ -1415,6 +1439,19 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.health -= 2;
                 break;
         }
+
+        /*
+        if(this.health <= 0.25 * this.maxHealth()) {
+
+            //this.particleEmitterSmoke.emitting = true;// .emitParticleAt(this.x - this.turboLaunchPointOffsetLeft.x * distance, this.y - this.turboLaunchPointOffsetLeft.y * distance);        
+            this.particleEmitterSmoke.setPosition(this.x, this.y);
+            this.particleEmitterSmoke.start();
+
+            this.particleEmitterFlamethrower.emitParticleAt(this.x, );                       
+            
+            //this.particleEmitterExplosion.explode(10);//, this.x, this.y);
+        }
+        */
         
         this.healthBar.updateHealth(this.health);
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
