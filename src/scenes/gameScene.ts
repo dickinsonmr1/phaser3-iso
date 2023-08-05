@@ -691,12 +691,13 @@ export default class GameScene extends Phaser.Scene
 
         var otherPlayer = <Player>enemy;
         var projectile = <Projectile>bullet;
+        var projectileLocation = new Phaser.Math.Vector2(bullet.x, bullet.y);
         
         if(otherPlayer.deadUntilRespawnTime <= 0) {
 
             if(projectile.projectileType != ProjectileType.Airstrike
                 || (projectile.projectileType == ProjectileType.Airstrike && projectile.detonated)) {
-                    otherPlayer.tryDamage(projectile.projectileType);            
+                    otherPlayer.tryDamage(projectile.projectileType, projectileLocation);            
                 }
 
             if(projectile.projectileType != ProjectileType.Airstrike)

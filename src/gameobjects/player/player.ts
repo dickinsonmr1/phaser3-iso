@@ -131,8 +131,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 return 50;
             case VehicleType.Killdozer:
                 return 60;        
-            case VehicleType.Killdozer:
-                return 50;            
+            case VehicleType.MonsterTruck:
+                return 60;            
             default:
                 return 20;
         }
@@ -351,7 +351,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.healthBar = new HealthBar(this.scene)
         
         this.healthBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY,
-            this.health, 
+            this.maxHealth(), 
             50, 10,
             0.25,
             HUDBarType.Health);
@@ -1393,21 +1393,22 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
    
-    tryDamage(projectileType: ProjectileType): void {
+    tryDamage(projectileType: ProjectileType, damageLocation: Phaser.Math.Vector2): void {
 
+        var explosionLocation = new Phaser.Math.Vector2((this.x + damageLocation.x) / 2, (this.y + damageLocation.y)/2)
         switch(projectileType)
         {            
             case ProjectileType.Bullet:
                 this.health--;
-                this.particleEmitterSparks.setPosition(this.x, this.y);
-                this.particleEmitterSparks.setDepth(this.y + 64);
+                this.particleEmitterSparks.setPosition(explosionLocation.x, explosionLocation.y);
+                this.particleEmitterSparks.setDepth(explosionLocation.y + 64);
                 this.particleEmitterSparks.explode(5);//, this.x, this.y);
                 break;
             case ProjectileType.FireRocket:
             case ProjectileType.HomingRocket:
                 this.health -= 5;
-                this.particleEmitterExplosion.setPosition(this.x, this.y);
-                this.particleEmitterExplosion.setDepth(this.y + 64);
+                this.particleEmitterExplosion.setPosition(explosionLocation.x, explosionLocation.y);
+                this.particleEmitterExplosion.setDepth(explosionLocation.y + 64);
                 this.particleEmitterExplosion.explode(10);//, this.x, this.y);
                 break;
             case ProjectileType.Airstrike:
