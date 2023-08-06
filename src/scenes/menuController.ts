@@ -4,6 +4,7 @@ export class MenuController {
     menuPages: Array<MenuPage>;
     selectedMenuPageIndex: number = 0;
     selectedMenuPage: MenuPage;
+    previousMenuPage: MenuPage;
 
     constructor() {
         this.menuPages = new Array<MenuPage>();
@@ -37,6 +38,8 @@ export class MenuController {
 
         let selectedMenuPageItem = this.selectedMenuPage.items[this.selectedMenuPage.selectedItemIndex];
         if(selectedMenuPageItem instanceof MenuLinkItem) {
+
+            this.previousMenuPage = this.selectedMenuPage;
             this.selectedMenuPage.hide();
 
             var newMenuPage = selectedMenuPageItem.getDestinationMenu();
@@ -49,6 +52,21 @@ export class MenuController {
             this.selectedMenuPage.hide();
             
             return true;
+        }
+
+        return false;
+    }
+
+    returnToLastScreen(): boolean {
+
+        if(this.previousMenuPage != null) {
+            //let selectedMenuPageItem = this.selectedMenuPage.items[this.selectedMenuPage.selectedItemIndex];
+            //if(selectedMenuPageItem instanceof MenuLinkItem) {
+                this.selectedMenuPage.hide();
+
+                this.selectedMenuPage = this.previousMenuPage;
+                this.selectedMenuPage.show()
+            //;}
         }
 
         return false;

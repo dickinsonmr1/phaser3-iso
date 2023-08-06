@@ -47,6 +47,7 @@ export default class GameScene extends Phaser.Scene
     mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
     mostRecentL1: boolean = false;
     mostRecentR1: boolean = false;
+    mostRecentY: boolean = false;
 
     light: any;
 
@@ -126,7 +127,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('cpuIcon', './assets/sprites/HUD/cpu.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
-        this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square.png');
+        this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust.png');
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
 
         // tiles
@@ -912,9 +913,15 @@ export default class GameScene extends Phaser.Scene
             } 
 
             if(pad.Y) {
-                this.player.tryFireAirstrike();
-            } 
-            
+                if(!this.mostRecentY) {
+                    this.player.tryFireAirstrike();
+                    this.mostRecentY = true;
+                }
+            }
+            else {
+                this.mostRecentY = false;
+            }
+           
             if(this.controlStyle == ControlStyle.LeftStickAims) {
                 if(pad.X) {
                     this.player.tryAccelerateInAimDirection();

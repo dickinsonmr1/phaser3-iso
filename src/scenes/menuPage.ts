@@ -673,6 +673,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
         if(this.sprite != null) {
             //this.titleIcon.setTexture(subItem.texture, subItem.frame);
             this.sprite.play(subItem.key);// = this.itemTitle + ' - ' + subItem.description;
+            this.sprite.setScale(subItem.scale);
             //this.titleIcon.setVisible(true);            
         }
     }

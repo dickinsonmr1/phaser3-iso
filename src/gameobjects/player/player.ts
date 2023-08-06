@@ -741,7 +741,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
             this.particleEmitterMuzzleFlash.setDepth(this.y);
 
-            if(this.health <= 0.50 * this.maxHealth()) {
+            if(this.health <= 0.25 * this.maxHealth()) {
                 this.particleEmitterSmoke.setDepth(this.y + 64);
                 this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
             }
@@ -1522,11 +1522,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            var changeBehaviorRand = Utility.getRandomInt(2);
-            if(changeBehaviorRand == 0)
+            //var changeBehaviorRand = Utility.getRandomInt(2);
+            //if(changeBehaviorRand == 0)
                 this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
-            else
-                this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
+            //else
+                //this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
 
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
@@ -1672,10 +1672,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(gameTime > this.rocketTime) {
             
             var changeBehaviorRand = Utility.getRandomInt(2);
-            if(changeBehaviorRand == 0)
+            //if(changeBehaviorRand == 0)
                 this.createProjectile(ProjectileType.HomingRocket);//this.playerOrientation);
-            else if(changeBehaviorRand == 1)
-                this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
+            //else if(changeBehaviorRand == 1)
+                //this.createProjectile(ProjectileType.FireRocket);//this.playerOrientation);
             //else if(changeBehaviorRand == 2)
                 //this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
 

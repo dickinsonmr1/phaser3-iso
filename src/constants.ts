@@ -3,7 +3,8 @@ export class Constants {
 
     public static get depthTurboParticles(): number {return 3;}
 
-    public static get gamepadIndexSelect (): number {return 0;}   
+    public static get gamepadIndexSelect (): number {return 0;}  
+    public static get gamepadIndexBack (): number {return 1;}   
     public static get gamepadIndexInteract (): number {return 2;}   
     public static get gamepadIndexLeft (): number {return 14;}   
     public static get gamepadIndexRight (): number {return 15;}   
