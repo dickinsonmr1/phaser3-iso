@@ -59,17 +59,18 @@ import { Constants } from '../constants';
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('carIcon', './assets/sprites/HUD/carIcon.png');
 
-        this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
+        //this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
         this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
         this.load.atlasXML('monstertruck256', './assets/vehicles/sprites-monstertruck256.png', './assets/vehicles/sprites-monstertruck256.xml');        
+        this.load.atlasXML('police256', './assets/vehicles/spritesheet-police256.png', './assets/vehicles/sprites-police256.xml');        
+        this.load.atlasXML('racecar', './assets/vehicles/spritesheet-racecar256.png', './assets/vehicles/sprites-racecar256.xml');        
     }
     
     create () {
-
         this.backKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
         this.selectKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
         this.cursorDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -102,8 +103,25 @@ import { Constants } from '../constants';
 
         var startIndex = 272;
         this.anims.create({
-            key: 'select-raceCarBlue',//this.animPrefix + '-SSW',
+            key: 'select-raceCar',//this.animPrefix + '-SSW',
             frames: [
+                {key: 'racecar', frame: 'racecar-SW'},
+                {key: 'racecar', frame: 'racecar-W-SW'},
+                {key: 'racecar', frame: 'racecar-W'},
+                {key: 'racecar', frame: 'racecar-W-NW'},
+                {key: 'racecar', frame: 'racecar-NW'},
+                {key: 'racecar', frame: 'racecar-N-NW'},
+                {key: 'racecar', frame: 'racecar-N'},
+                {key: 'racecar', frame: 'racecar-N-NE'},
+                {key: 'racecar', frame: 'racecar-NE'},
+                {key: 'racecar', frame: 'racecar-E-NE'},
+                {key: 'racecar', frame: 'racecar-E'},
+                {key: 'racecar', frame: 'racecar-E-SE'},
+                {key: 'racecar', frame: 'racecar-SE'},
+                {key: 'racecar', frame: 'racecar-S-SE'},
+                {key: 'racecar', frame: 'racecar-S'},
+                {key: 'racecar', frame: 'racecar-S-SW'}
+                /*
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
@@ -120,6 +138,7 @@ import { Constants } from '../constants';
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}
+                */
             ],
             frameRate: framerate,
             repeat: -1,            
@@ -273,6 +292,30 @@ import { Constants } from '../constants';
             repeat: -1,            
         });
 
+        this.anims.create({
+            key: 'select-police',//this.animPrefix + '-SSW',
+            frames: [
+                {key: 'police256', frame: 'police256-SW'},
+                {key: 'police256', frame: 'police256-W-SW'},
+                {key: 'police256', frame: 'police256-W'},
+                {key: 'police256', frame: 'police256-W-NW'},
+                {key: 'police256', frame: 'police256-NW'},
+                {key: 'police256', frame: 'police256-N-NW'},
+                {key: 'police256', frame: 'police256-N'},
+                {key: 'police256', frame: 'police256-N-NE'},
+                {key: 'police256', frame: 'police256-NE'},
+                {key: 'police256', frame: 'police256-E-NE'},
+                {key: 'police256', frame: 'police256-E'},
+                {key: 'police256', frame: 'police256-E-SE'},
+                {key: 'police256', frame: 'police256-SE'},
+                {key: 'police256', frame: 'police256-S-SE'},
+                {key: 'police256', frame: 'police256-S'},
+                {key: 'police256', frame: 'police256-S-SW'}
+            ],
+            frameRate: framerate,
+            repeat: -1,            
+        });
+
 
 
         //this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
@@ -322,11 +365,12 @@ import { Constants } from '../constants';
         
         vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
         vehicleSprites.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
-        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCarBlue', scale: 1.5, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
+        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
         vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
         vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
         vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
         vehicleSprites.push(new IconValueMapping({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new IconValueMapping({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
         var complexMenuItem = vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         
         vehicleSelectionMenu.setInitialStats(this, complexMenuItem);

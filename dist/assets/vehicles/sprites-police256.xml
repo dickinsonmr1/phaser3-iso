@@ -1,0 +1,18 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-police256.png">
+    <SubTexture name="police256-W-SW" x="0" y="0" width="256" height="256"/>
+    <SubTexture name="police256-E" x="0" y="256" width="256" height="256"/>
+    <SubTexture name="police256-E-NE" x="256" y="0" width="256" height="256"/>
+    <SubTexture name="police256-E-SE" x="256" y="256" width="256" height="256"/>
+    <SubTexture name="police256-N" x="0" y="512" width="256" height="256"/>
+    <SubTexture name="police256-NE" x="256" y="512" width="256" height="256"/>
+    <SubTexture name="police256-N-NE" x="512" y="0" width="256" height="256"/>
+    <SubTexture name="police256-N-NW" x="512" y="256" width="256" height="256"/>
+    <SubTexture name="police256-NW" x="512" y="512" width="256" height="256"/>
+    <SubTexture name="police256-S" x="0" y="768" width="256" height="256"/>
+    <SubTexture name="police256-SE" x="256" y="768" width="256" height="256"/>
+    <SubTexture name="police256-S-SE" x="512" y="768" width="256" height="256"/>
+    <SubTexture name="police256-S-SW" x="768" y="0" width="256" height="256"/>
+    <SubTexture name="police256-SW" x="768" y="256" width="256" height="256"/>
+    <SubTexture name="police256-W" x="768" y="512" width="256" height="256"/>
+    <SubTexture name="police256-W-NW" x="768" y="768" width="256" height="256"/>
+</TextureAtlas>

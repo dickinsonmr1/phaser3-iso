@@ -44,7 +44,7 @@ export enum PlayerCartesianOrientation {
 }
 
 export enum VehicleType {
-    //Police,
+    
     //TrashMan,
     Taxi,
     Ambulance,
@@ -52,7 +52,8 @@ export enum VehicleType {
     PickupTruck,
     Hearse,
     Killdozer,
-    MonsterTruck
+    MonsterTruck,
+    Police
 }
 
 enum CpuPlayerPattern {
