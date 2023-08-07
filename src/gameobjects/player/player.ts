@@ -77,7 +77,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         switch(this.vehicleType) {
             case VehicleType.Killdozer:
             case VehicleType.MonsterTruck:
-                return 72;                
+                return 72;  
+            case VehicleType.Police:
+            case VehicleType.RaceCar:
+                return 64;               
             default:
                 return 48;
         }
@@ -88,7 +91,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case VehicleType.Killdozer:
                 return new Phaser.Math.Vector2(64, 80); 
             case VehicleType.MonsterTruck:
-                return new Phaser.Math.Vector2(64, 64);                     
+                return new Phaser.Math.Vector2(64, 64);           
+            case VehicleType.Police:
+            case VehicleType.RaceCar:
+                return new Phaser.Math.Vector2(72, 72);               
             default:
                 return new Phaser.Math.Vector2(10, 10);
         }
@@ -144,15 +150,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private maxSpeed(): number {
 
         switch(this.vehicleType) {
-            //case VehicleType.Police:
-                //return 220;
             case VehicleType.Ambulance:
                 return 210;
             //case VehicleType.TrashMan:
                 //return 210;
             case VehicleType.Taxi:                
                 return 210;
-
             case VehicleType.RaceCar:
                 return 250;
             case VehicleType.PickupTruck:
@@ -162,15 +165,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case VehicleType.Killdozer:
                 return 175;    
             case VehicleType.MonsterTruck:
-                return 200;                     
+                return 200;       
+            case VehicleType.Police:
+                return 220;              
             default:
                 return 10;
         }
     }
     private maxTurboSpeed(): number { 
         switch(this.vehicleType) {
-            //case VehicleType.Police:
-                //return this.maxSpeed() * 1.5;
             case VehicleType.Ambulance:
                 return this.maxSpeed() * 1.5;
             //case VehicleType.TrashMan:
@@ -178,6 +181,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case VehicleType.Taxi:
                 return this.maxSpeed() * 1.5;
             case VehicleType.RaceCar:
+                return this.maxSpeed() * 1.5;
+            case VehicleType.Police:
                 return this.maxSpeed() * 1.5;
             default:
                 return this.maxSpeed() * 1.5;                

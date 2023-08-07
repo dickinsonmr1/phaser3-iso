@@ -4,8 +4,6 @@ export class RaceCarPlayer extends Player
 {
     constructor(params){
         super(params);
-
-
     }
     
     init() {
@@ -13,6 +11,93 @@ export class RaceCarPlayer extends Player
     }
 
     createAnims() {
+
+        var sourceFrameKey = "raceCar";
+        this.animPrefix = "raceCar";                   
+                        
+        this.anims.create({
+            key: sourceFrameKey + '-SW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SW'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-WSW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-SW'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-W',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W'}],
+            frameRate: 10,
+        });
+
+        this.anims.create({
+            key: sourceFrameKey + '-WNW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-NW'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-NW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NW'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-NNW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NW'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-N',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N'}],
+            frameRate: 10,
+        });
+
+        this.anims.create({
+            key: sourceFrameKey + '-NNE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-NE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-ENE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-NE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-E',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E'}],
+            frameRate: 10,
+        });
+
+        this.anims.create({
+            key: sourceFrameKey + '-ESE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-SE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-SE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-SSE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SE'}],
+            frameRate: 10,
+        });
+        this.anims.create({
+            key: sourceFrameKey + '-S',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S'}],
+            frameRate: 10,
+        });            
+        this.anims.create({
+            key: sourceFrameKey + '-SSW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SW'}],
+            frameRate: 10,
+        });    
                 
         // https://en.wikipedia.org/wiki/Points_of_the_compass
 
@@ -36,6 +121,7 @@ export class RaceCarPlayer extends Player
         // 0286 - SSE
         // 0287 - S
         
+        /*
         var startIndex = 272;
 
         this.anims.create({
@@ -121,6 +207,7 @@ export class RaceCarPlayer extends Player
             frames: [{key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}],
             frameRate: 10,
         });
+        
 
         /*
         switch(this.vehicleType){          

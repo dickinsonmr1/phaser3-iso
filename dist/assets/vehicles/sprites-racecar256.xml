@@ -1,18 +1,18 @@
 <TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-racecar256.png">
-    <SubTexture name="racecar-SE" x="0" y="0" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-S-SE" x="0" y="257" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-S-SW" x="257" y="0" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-SW" x="257" y="257" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-W" x="0" y="514" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-W-NW" x="257" y="514" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-W-SW" x="514" y="0" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-E" x="514" y="257" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-E-NE" x="514" y="514" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-E-SE" x="0" y="771" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-N" x="257" y="771" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-NE" x="514" y="771" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-N-NE" x="771" y="0" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-N-NW" x="771" y="257" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-NW" x="771" y="514" width="256" height="256"></SubTexture>
-    <SubTexture name="racecar-S" x="771" y="771" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-SE" x="0" y="0" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-S-SE" x="0" y="257" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-S-SW" x="257" y="0" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-SW" x="257" y="257" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-W" x="0" y="514" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-W-NW" x="257" y="514" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-W-SW" x="514" y="0" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-E" x="514" y="257" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-E-NE" x="514" y="514" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-E-SE" x="0" y="771" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-N" x="257" y="771" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-NE" x="514" y="771" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-N-NE" x="771" y="0" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-N-NW" x="771" y="257" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-NW" x="771" y="514" width="256" height="256"></SubTexture>
+    <SubTexture name="raceCar-S" x="771" y="771" width="256" height="256"></SubTexture>
 </TextureAtlas>

@@ -67,7 +67,7 @@ import { Constants } from '../constants';
         this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
         this.load.atlasXML('monstertruck256', './assets/vehicles/sprites-monstertruck256.png', './assets/vehicles/sprites-monstertruck256.xml');        
         this.load.atlasXML('police256', './assets/vehicles/spritesheet-police256.png', './assets/vehicles/sprites-police256.xml');        
-        this.load.atlasXML('racecar', './assets/vehicles/spritesheet-racecar256.png', './assets/vehicles/sprites-racecar256.xml');        
+        this.load.atlasXML('raceCar', './assets/vehicles/spritesheet-raceCar256.png', './assets/vehicles/sprites-raceCar256.xml');        
     }
     
     create () {
@@ -105,22 +105,22 @@ import { Constants } from '../constants';
         this.anims.create({
             key: 'select-raceCar',//this.animPrefix + '-SSW',
             frames: [
-                {key: 'racecar', frame: 'racecar-SW'},
-                {key: 'racecar', frame: 'racecar-W-SW'},
-                {key: 'racecar', frame: 'racecar-W'},
-                {key: 'racecar', frame: 'racecar-W-NW'},
-                {key: 'racecar', frame: 'racecar-NW'},
-                {key: 'racecar', frame: 'racecar-N-NW'},
-                {key: 'racecar', frame: 'racecar-N'},
-                {key: 'racecar', frame: 'racecar-N-NE'},
-                {key: 'racecar', frame: 'racecar-NE'},
-                {key: 'racecar', frame: 'racecar-E-NE'},
-                {key: 'racecar', frame: 'racecar-E'},
-                {key: 'racecar', frame: 'racecar-E-SE'},
-                {key: 'racecar', frame: 'racecar-SE'},
-                {key: 'racecar', frame: 'racecar-S-SE'},
-                {key: 'racecar', frame: 'racecar-S'},
-                {key: 'racecar', frame: 'racecar-S-SW'}
+                {key: 'raceCar', frame: 'raceCar-SW'},
+                {key: 'raceCar', frame: 'raceCar-W-SW'},
+                {key: 'raceCar', frame: 'raceCar-W'},
+                {key: 'raceCar', frame: 'raceCar-W-NW'},
+                {key: 'raceCar', frame: 'raceCar-NW'},
+                {key: 'raceCar', frame: 'raceCar-N-NW'},
+                {key: 'raceCar', frame: 'raceCar-N'},
+                {key: 'raceCar', frame: 'raceCar-N-NE'},
+                {key: 'raceCar', frame: 'raceCar-NE'},
+                {key: 'raceCar', frame: 'raceCar-E-NE'},
+                {key: 'raceCar', frame: 'raceCar-E'},
+                {key: 'raceCar', frame: 'raceCar-E-SE'},
+                {key: 'raceCar', frame: 'raceCar-SE'},
+                {key: 'raceCar', frame: 'raceCar-S-SE'},
+                {key: 'raceCar', frame: 'raceCar-S'},
+                {key: 'raceCar', frame: 'raceCar-S-SW'}
                 /*
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
                 {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
@@ -383,7 +383,6 @@ import { Constants } from '../constants';
         this.menuController.addMenu(mapSelectionMenu);
         this.menuController.addMenu(vehicleSelectionMenu);
 
-
         /*
         var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
         text.setStroke('rgb(0,0,0)', 8);
@@ -495,7 +494,7 @@ import { Constants } from '../constants';
                 case VehicleType.Ambulance:
                     this.selectedVehicleSprite.play('select-vanWhite');
                     break;
-                case VehicleType.RaceCar:
+                case VehicleType.raceCar:
                     this.selectedVehicleSprite.play('select-raceCarBlue');
                     break;
                 case VehicleType.PickupTruck:

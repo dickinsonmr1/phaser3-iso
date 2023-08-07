@@ -7,6 +7,7 @@ import { PickupTruckPlayer } from "./pickuptruckplayer";
 import { HearsePlayer } from "./hearseplayer";
 import { KilldozerPlayer } from "./killdozerPlayer";
 import { MonsterTruckPlayer } from "./monstertruckPlayer";
+import { PolicePlayer } from "./policePlayer";
 
 export class VehicleFactory {
     constructor() {
@@ -21,14 +22,14 @@ export class VehicleFactory {
                 return new RaceCarPlayer({
                     
                     scene: scene,
-                    drawScale: 0.4,
+                    drawScale: 0.3,
                     isCpuPlayer: isCpuPlayer,
                     mapX: 200,
                     mapY: 200,
                     //mapX: 10,
                     //mapY: 10,
-                    key: "blueCars",
-                    frame: 'raceCarBlue-W',
+                    key: "raceCar",
+                    frame: 'raceCar-W',
                     playerId: "Speed Demon",
                     vehicleType: vehicleType
                 });
@@ -110,6 +111,19 @@ export class VehicleFactory {
                     key: "monstertruck256",
                     frame: 'monstertruck256_W',
                     playerId: "Monster Truck",
+                    vehicleType: vehicleType
+                });
+                break;
+            case VehicleType.Police:
+                return new PolicePlayer({                    
+                    scene: scene,
+                    drawScale: 0.3,
+                    isCpuPlayer: isCpuPlayer,
+                    mapX: 700,
+                    mapY: 700,
+                    key: "police256",
+                    frame: 'police256',
+                    playerId: "The Law",
                     vehicleType: vehicleType
                 });
                 break;
