@@ -323,7 +323,13 @@ export default class GameScene extends Phaser.Scene
         })        
         
         this.environmentDestructiblePhysicsObjects = this.physics.add.group();
-        this.environmentIndestructiblePhysicsObjects = this.physics.add.group();
+        this.environmentIndestructiblePhysicsObjects = this.physics.add.group({
+            key: 'buildings',
+            //frameQuantity: 3,
+            //setXY: { x: 400, y: 150, stepY: 150 },
+            //velocityX: 60,
+            immovable: true
+        });
 
         this.layer4.forEachTile(tile => {
 
@@ -362,7 +368,7 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player3.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
         this.physics.add.overlap(this.player4.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
 
-        //this.physics.add.collider(this.player, this.environmentIndestructiblePhysicsObjects);
+        this.physics.add.collider(this.player, this.environmentIndestructiblePhysicsObjects, (player, object) => this.colliderMethod(player, object));
         //this.physics.world.collide(this.player, this.environmentIndestructiblePhysicsObjects);
         
         //this.physics.add.overlap(this.player.bullets, this.layer4);
@@ -600,13 +606,18 @@ export default class GameScene extends Phaser.Scene
         
         var temp = Utility.cartesianToIsometric(new Point(x, y));
 
-        var sprite =  this.physics.add.staticImage(temp.x, temp.y, 'buildingTile');
-        sprite.setOrigin(0.5, 0);
+        var sprite =  this.physics.add.image(temp.x, temp.y, 'buildingTile');
+        //sprite.setOrigin(0, 1);
+        
         //sprite.setScale(0.75, 0.75);            
         sprite.setDepth(temp.y + 256);            
-        sprite.setBodySize(220, 25, true);
+        sprite.setBodySize(180, 25, false);
+        //sprite.setOrigin(0, 1);
+        sprite.setOffset(10, 170);
+        //sprite.body.position.y += 1000;
+        //sprite.setImmovable(true);
         
-        //this.environmentIndestructiblePhysicsObjects.add(sprite);
+        this.environmentIndestructiblePhysicsObjects.add(sprite);
 
         this.layer4.removeTileAt(tile.x, tile.y);
     }
@@ -833,6 +844,10 @@ export default class GameScene extends Phaser.Scene
 
         this.particleEmitter.explode(2, object.x, object.y);        
         object.destroy();
+    }
+
+    colliderMethod(playerOrWeapon: any, object: any) {
+       
     }
 
     update(time, delta) {
