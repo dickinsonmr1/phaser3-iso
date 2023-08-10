@@ -225,6 +225,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private aimX: number = 0;
     private aimY: number = 0;
 
+    private leftStickDistanceFromCenter: number = 0;
+
     // TODO: see if this can work with calculateAimTargetDirectionWithGamePad()
     private targetArctangent: number = 0;
     private targetAimX: number = 0;
@@ -794,6 +796,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
                     \n atan ${(this.arctangent / Math.PI).toFixed(2)} PI
                     \n target atan ${(this.targetArctangent / Math.PI).toFixed(2)} PI
+                    \n gamepad distance ${(this.leftStickDistanceFromCenter).toFixed(2)}
                     \n Aim (${(this.aimX / Math.PI).toFixed(2)} PI, ${(this.aimY / Math.PI).toFixed(2)} PI)
                     \n Behavior: ${this.cpuPlayerPattern.toString()}
                     \n Depth: ${this.depth.toString()}`)
@@ -1136,15 +1139,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // used with ControlStyle.LeftStickAimsAndMoves
-    tryAimAndMoveWithGamepad(x: number, y: number) {
+    tryAimAndMoveWithGamepad(x: number, y: number, leftAxisX: number, leftAxisY: number) {
 
         if(this.deadUntilRespawnTime > 0) return;
 
         this.calculateAimDirectionWithGamePad(x, y);
+
+        let speedMultiplier = Math.abs(Phaser.Math.Distance.Between(leftAxisX, leftAxisY, 0, 0));
+        if(speedMultiplier > 1) speedMultiplier = 1;
+
+        this.leftStickDistanceFromCenter = speedMultiplier;
         //this.calculateAimTargetDirectionWithGamePad(x, y);
         
-        this.body.velocity.x = this.aimX * this.getPlayerSpeed();
-        this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
+        this.body.velocity.x = this.aimX * this.getPlayerSpeed() * speedMultiplier;
+        this.body.velocity.y = this.aimY * this.getPlayerSpeed() * speedMultiplier;   
 
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
     }
@@ -1416,8 +1424,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //this.body.velocity.x = 0;
         //this.body.velocity.y = 0;
 
-        this.body.velocity.x *= 0.95;
-        this.body.velocity.y *= 0.95;
+        this.body.velocity.x *= 0.97;
+        this.body.velocity.y *= 0.97;
 
         this.tryTurboBoostOff();
     }

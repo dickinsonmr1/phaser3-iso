@@ -897,7 +897,8 @@ export default class GameScene extends Phaser.Scene
                 if(leftAxisX != 0 || leftAxisY != 0) {
 
                     this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
-                    this.player.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                    this.player.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y,
+                        leftAxisX, leftAxisY);
                 }
                 else {
                     this.player.tryStopMove();            
