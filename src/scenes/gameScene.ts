@@ -282,28 +282,12 @@ export default class GameScene extends Phaser.Scene
         var cursors = this.input.keyboard.createCursorKeys();
 
         this.cameras.main.setZoom(2);
-
-        /*
-        var controlConfig = {
-            camera: this.cameras.main,
-            left: cursors.left,
-            right: cursors.right,
-            up: cursors.up,
-            down: cursors.down,
-            acceleration: 0.04,
-            drag: 0.0005,
-            maxSpeed: 0.7
-        };
-        */
-
-        //this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         
         this.particleEmitter = this.add.particles(0, 0, 'explosion', {
             x: 0,
             y: 0,
             lifespan: 750,
             speed: { min: -50, max: 50 },
-            //tint: 0xff0000, 
             scale: {start: 0.5, end: 1.0},
             blendMode: 'ADD',
             frequency: -1,
@@ -436,14 +420,12 @@ export default class GameScene extends Phaser.Scene
             collidingTileColor: colldingTileColor, // Colliding tiles
             faceColor: faceColor // Interesting faces, i.e. colliding edges
         });
-
-        //this.cameras.main.postFX.addTiltShift(0.5, 0.1, 0.8, 0.5, 1, 1);
     }
 
     generatePickup(tile) {
         if(tile.index == Constants.pickupSpawnTile) {
-            const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-            const y = ((tile.y * tile.height));// / 2 + tile.height / 2; //tile.y;//tile.getCenterY();                
+            const x = ((tile.x * tile.width)) / 2 + tile.width / 2;
+            const y = ((tile.y * tile.height));
            
             var temp = Utility.cartesianToIsometric(new Point(x, y));
 
@@ -531,36 +513,9 @@ export default class GameScene extends Phaser.Scene
                 leftColor: leftColor,
                 rightColor: rightColor,
                 pickupIconKey: pickUpIconKey
-                //name: pickupType.toString(),
-                //depth: 2,
-                //alpha: 0.5
             });
 
-            this.pickupObjects.push(pickup);
-            
-            /*
-            var pickup = this.add.isobox(temp.x, temp.y, 30, 15, topColor, leftColor, rightColor);
-            pickup.name = pickupType.toString();        
-            pickup.depth = 2;
-            pickup.alpha = 0.5;
-            pickup.setOrigin(0.5, 0.5);
-            this.physics.world.enable(pickup);
-
-            this.pickups.push(pickup);
-
-            var pickupIcon = this.add.image(
-                temp.x,
-                temp.y,
-                pickUpIconKey);
-            pickupIcon.setScale(0.25);
-            pickupIcon.setOrigin(0.5, 0.85);
-                //this.deathIcon.setDisplayOrigin(0,0);
-            pickupIcon.alpha = 1.0;//0.2;    
-            pickupIcon.depth = 1;
-
-            this.pickupIcons.push(pickupIcon);
-            */
-
+            this.pickupObjects.push(pickup);                
             this.layerPickups.removeTileAt(tile.x, tile.y);
         }
     }
@@ -699,7 +654,6 @@ export default class GameScene extends Phaser.Scene
         return true;
     }  
 
-
     bulletTouchingEnemyHandler(enemy: any, bullet: any): void {       
 
         var otherPlayer = <Player>enemy;
@@ -716,28 +670,6 @@ export default class GameScene extends Phaser.Scene
             if(projectile.projectileType != ProjectileType.Airstrike)
                 bullet.remove();
         }
-        /*         
-        var scene = <MainScene>enemy.getScene();
-        scene.weaponHitParticleEmitter.explode(10, enemy.x, enemy.y);
-              
-        var damage = bullet.damage;
-        scene.addExpiringText(scene, enemy.x, enemy.y, damage.toString())
-
-        enemy.tryDamage(damage);
-        scene.player.score += damage;
-
-        scene.sound.play("enemyHurtSound");
-        
-        if(this.isMultiplayer) {
-            var socket = scene.getSocket();        
-            if(socket != null) {
-                // sends back to server
-                socket.emit('bulletDestruction', {bulletId: bullet.bulletId});                
-            }
-        }
-
-        bullet.destroy();
-        */
     }
 
     flameTouchingPlayerHandler(enemy: any, flame: any): void {       
@@ -1057,12 +989,6 @@ export default class GameScene extends Phaser.Scene
 
         this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);
 
-        var path = new Phaser.Curves.Path(400, 400).circleTo(5);
-
-        //var follower = this.add.foll
-        //this.player2.setPath(path);
-        //this.player2.body.gameObject.s
-        
         var temp = Utility.cartesianToIsometric(this.player.MapPosition);
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
@@ -1089,26 +1015,9 @@ export default class GameScene extends Phaser.Scene
         })
 
         this.pickups.forEach(item => {
-            let temp = <Phaser.GameObjects.IsoBox>(item);
-            temp.setScale(this.pickupScale);
-            
-            let topColor = new Phaser.Display.Color(150, 0, 0);
-            let leftColor = new Phaser.Display.Color(150, 0, 0);
-            let rightColor = new Phaser.Display.Color(150, 0, 0);
-
-            /*
-            if(this.pickupScaleTime > 30)
-                temp.alpha += 0.01;
-                //temp.y -= 0.1;
-            else if(this.pickupScaleTime < 30 && this.pickupScaleTime > 0)
-                temp.alpha -= 0.01;
-                //temp.y += 0.1;
-            */
-            //temp.setMask());//(this.sys.game.getTime() % (Math.PI * 2));
+            let pickupIsoBox = <Phaser.GameObjects.IsoBox>(item);
+            pickupIsoBox.setScale(this.pickupScale);
         });
-
-        //this.light.x = this.player.x;
-        //this.light.y = this.player.y;
 
         if(this.showDebug)
             this.debugGraphics.clear().fillStyle(0).fillRectShape(this.physics.world.bounds);

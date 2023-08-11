@@ -12,22 +12,18 @@ export enum PickupType {
     Shockwave
 }
 
-
-// not being used yet
-export class Pickup { //extends Phaser.GameObjects.IsoBox {
+export class Pickup {
 
     public PickupType: PickupType;
     public isoBox: Phaser.GameObjects.IsoBox;
     public icon: Phaser.GameObjects.Image;
 
     constructor(params) {     
-        //super(params.scene, params.x, params.y, params.size, params.height, params.topColor, params.leftColor, params.rightColor);        
         this.isoBox = params.scene.add.isobox(
             params.x, params.y,
             25, 12,
             params.topColor, params.leftColor, params.rightColor);
         
-        //this.isoBox = params.scene.add.isob
         this.PickupType = params.pickupType;
         this.isoBox.alpha = 0.5;
         this.isoBox.setOrigin(0.5, 0.5);
@@ -45,20 +41,11 @@ export class Pickup { //extends Phaser.GameObjects.IsoBox {
 
             this.icon.setScale(0.33);
             this.icon.setOrigin(0.5, 0.85);
-            //this.deathIcon.setDisplayOrigin(0,0);
-            this.icon.alpha = 1.0;//0.2;    
+            this.icon.alpha = 1.0;  
             this.icon.depth = 1;
-
-        //this.setVisible(true);
-                        
-                //var text = this.add.text(temp.x, temp.y, `Rockets (${temp.x}, ${temp.y})`, {                
-                //    font: 'bold 12px Arial'
-                //});
-                //text.depth = 10;
-
     }
 
-    update(scale: number) {//...args: any[]): void {
+    update(scale: number) {
 
         if(this.isoBox.active)
         { 
@@ -69,8 +56,4 @@ export class Pickup { //extends Phaser.GameObjects.IsoBox {
             this.icon.destroy();            
         }
     }
-
-    //setScale(scale: number) {
-        //this.isoBox.setScale(scale);
-    //}
 }

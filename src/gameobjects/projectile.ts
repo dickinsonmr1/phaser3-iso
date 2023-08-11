@@ -1,14 +1,7 @@
 // https://labs.phaser.io/edit.html?src=src\games\topdownShooter\topdown_combatMechanics.js
 import * as Phaser from 'phaser';
 import { Scene } from "phaser";
-import { Utility } from "../utility";
 import { Constants } from '../constants';
-/*
-import { Constants } from "../client/constants";
-import { MainScene } from "../client/scenes/mainScene";
-import { Socket } from "socket.io-client";
-import {v4 as uuidv4} from 'uuid';
-*/
 
 export enum ProjectileType {
     HomingRocket,
@@ -24,7 +17,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
     public damage: number;
     public velocityX: number;
     public velocityY: number;
-    //public bulletId: uuidv4;
     public initiated: boolean = false;
 
     public MapPosition: Phaser.Geom.Point;
@@ -60,7 +52,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.projectileType = params.projectileType;
 
         this.MapPosition = new Phaser.Geom.Point(params.mapPositionX, params.mapPositionY); 
-        //this.bulletId = uuidv4();
         this.rotation = params.angle;
         this.setScale(params.scaleX, params.scaleY);   
         
@@ -69,14 +60,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.creationGameTime = this.scene.game.getTime();
 
         this.scene.add.existing(this);
-               
-        //this.flipX = params.flipX;
+                       
         this.damage = params.damage;       
         this.velocityX = params.velocityX;
-        //if(params.velocityY != null)
-            this.velocityY = params.velocityY;
-        //else   
-            //this.velocityY = 0;
+        this.velocityY = params.velocityY;
 
         this.scene.physics.world.enable(this);
 
@@ -86,7 +73,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.setAlpha(0.2);
         else
             this.setAlpha(1.0);
-        this.setDepth(this.y);//Constants.depthBullets);
+        this.setDepth(this.y);
 
         if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
             // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
@@ -152,7 +139,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
             });
 
-
             this.particleEmitter.setDepth(Constants.depthTurboParticles)
         }
 
@@ -160,25 +146,17 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.crosshairSprite = this.scene.add.sprite(this.x, this.y, 'crosshair');
             this.crosshairSprite.setOrigin(0.5, 0.5);
             this.crosshairSprite.setAlpha(0.5);
-            //this.crosshairSprite.setAngle(45);
             this.crosshairSprite.setScale(1, 0.6);   
 
             this.particleEmitterExplosion = this.scene.add.particles(0,0, 'explosion', {
                 lifespan: 1000,
                 speed: { min: -50, max: 50 },
-                //tint: 0xff0000, 
                 scale: {start: 0.5, end: 1.25},
                 blendMode: 'ADD',
                 frequency: -1,
                 alpha: {start: 0.9, end: 0.0}
             });
         }
-
-        // https://www.phaser.io/examples/v3/view/game-objects/lights/create-point-light
-        // this.spotlight = this.scene.add.pointlight(this.x, this.y, 0, 20, 1);
-            //.setRadius(100)
-            //.setColor(0xff0000)
-            //.setIntensity(1);
     }
 
     public getScene(): Scene {
@@ -197,10 +175,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             if(this.scene.sys.game.loop.time > this.creationGameTime + 3000) {
                 this.remove();
             }
-
-            //if(this.scene.sys.game.loop.time > this.markedForRemovalGameTime) {
-                //this.remove();
-            //}
             
             var body = <Phaser.Physics.Arcade.Body>this.body;
             if(body != null && this.velocityX != null && this.velocityY != null) { // && this.markedForRemovalGameTime == 0) {
@@ -208,20 +182,11 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 body.setVelocityY(this.velocityY);
             }
             
-                        
-            //this.MapPosition.x += this.velocityX;
-            //this.MapPosition.y += this.velocityY;
-            
-            //var isoPosition = Utility.cartesianToIsometric(this.MapPosition);
-            //this.x = isoPosition.x;
-            //this.y = isoPosition.y;
-
             if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
                 this.spotlight.setPosition(this.x, this.y);
                 this.particleEmitter.setDepth(4)
                 
                 this.particleEmitter.emitParticleAt(this.x, this.y);
-                //this.particleEmitter.setPosition(this.x, this.y);
             }
 
             if(this.projectileType == ProjectileType.Airstrike) {
@@ -234,42 +199,17 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                     }
                 }               
             }
-
-
-            
-            /*
-            var body = <Phaser.Physics.Arcade.Body>this.body;
-            body.position.x = this.MapPosition.x; //isoPosition.x;
-            body.position.y = this.MapPosition.y; //isoPosition.y;
-            */
         }
-        /*
-        console.log('bulletMovement');
-
-        var socket = this.getSocket();        
-        if(socket != null) {
-            // sends back to server
-            socket.emit('bulletMovement', {bulletId: this.bulletId, x: this.x, y: this.y, velocityX: this.velocityX});                
-        }
-        */
     }
 
     update(...args: any[]): void {
         this.setDepth(this.y);
-
     }
 
     detonate() {
         if(this.projectileType == ProjectileType.Airstrike) {
             
             this.detonated = true;
-            //var body = <Phaser.Physics.Arcade.Body>this.body;
-            //body.setVelocityX(0);
-            //body.setVelocityY(0);
-
-            //this.particleEmitterExplosion.setPosition(this.x, this.y);
-            //this.particleEmitterExplosion.setDepth(this.y + 64);
-            //this.particleEmitterExplosion.emitParticle(10);    
 
             this.particleEmitterExplosion.setDepth(this.y + 64);
             this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
@@ -298,16 +238,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         if(this.projectileType == ProjectileType.Airstrike) {
             this.crosshairSprite.destroy();
 
-            //this.particleEmitterExplosion.setPosition(this.x, this.y);
-            //this.particleEmitterExplosion.setDepth(this.y + 64);
-            //this.particleEmitterExplosion.emitParticle(10, this.x, this.y);  
         }
         this.destroy();
     }
-    /*
-    getSocket(): Socket {
-        let scene = <MainScene>this.scene;            
-        return scene.sceneController.socketClient.socket;
-    }*/
 }
-
