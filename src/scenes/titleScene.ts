@@ -6,14 +6,10 @@ import { VehicleType } from '../gameobjects/player/player';
 import { ComplexMenuItem, IconValueMapping, MenuPage } from './menuPage';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
-
  
- export class TitleScene extends Phaser.Scene {
+export class TitleScene extends Phaser.Scene {
     
     fpsText: Phaser.GameObjects.Text;
-
-    //mapSelectionMenu: MenuPage;
-    //vehicleSelectionMenu: MenuPage;
 
     menuController: MenuController;
     
@@ -26,7 +22,6 @@ import { Constants } from '../constants';
     private get InfoTextStartX(): number {return this.game.canvas.width / 2; }
     private get InfoTextStartY(): number {return this.game.canvas.height - this.game.canvas.height / 4; }   
     private get infoTextFontSize(): number { return 48; }
-
     
     backKey: Phaser.Input.Keyboard.Key;
     selectKey: Phaser.Input.Keyboard.Key;
@@ -36,14 +31,6 @@ import { Constants } from '../constants';
     cursorRight: Phaser.Input.Keyboard.Key;
 
     gamepad: Phaser.Input.Gamepad.Gamepad;
-
-    //private selectedVehicleIndex: number = 0;
-    //private selectedVehicleSprite: Phaser.GameObjects.Sprite;
-
-    //healthText;
-    //turboText;
-    //rocketCountText;
-
     sceneController: SceneController
 
     constructor(sceneController: SceneController){
@@ -59,7 +46,6 @@ import { Constants } from '../constants';
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('carIcon', './assets/sprites/HUD/carIcon.png');
 
-        //this.load.atlasXML('blueCars', './assets/vehicles/spritesheet-bluecars-all.png', './assets/vehicles/sprites-bluecars-all.xml');        
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
@@ -87,23 +73,15 @@ import { Constants } from '../constants';
         this.infoText = this.add.text(this.InfoTextStartX, this.InfoTextStartY, 'test',
         {
             font: 'bold 26px Arial'
-            //fontFamily: 'Arial',
-            //align: 'center',            
-            //color:"rgb(255,255,255)",
         });
-        this.infoText.setOrigin(0.5, 0.5);
-        //this.infoText.setStroke('rgb(0,0,0)', 16);
-        //this.infoText.setFontSize(this.infoTextFontSize);
+        this.infoText.setOrigin(0.5, 0.5);        
         this.infoTextExpiryGameTime = this.game.getTime();
-
-        //  Grab a reference to the Game Scene        
-        //let ourGame = this.scene.get('GameScene');
 
         var framerate = 10;
 
         var startIndex = 272;
         this.anims.create({
-            key: 'select-raceCar',//this.animPrefix + '-SSW',
+            key: 'select-raceCar',
             frames: [
                 {key: 'raceCar', frame: 'raceCar-SW'},
                 {key: 'raceCar', frame: 'raceCar-W-SW'},
@@ -120,25 +98,7 @@ import { Constants } from '../constants';
                 {key: 'raceCar', frame: 'raceCar-SE'},
                 {key: 'raceCar', frame: 'raceCar-S-SE'},
                 {key: 'raceCar', frame: 'raceCar-S'},
-                {key: 'raceCar', frame: 'raceCar-S-SW'}
-                /*
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++},
-                {key: 'blueCars', frame: 'c02_s128_iso_0' + startIndex++}
-                */
+                {key: 'raceCar', frame: 'raceCar-S-SW'}              
             ],
             frameRate: framerate,
             repeat: -1,            
@@ -146,7 +106,7 @@ import { Constants } from '../constants';
 
         startIndex = 161;
         this.anims.create({
-            key: 'select-pickupTruckOrange',//this.animPrefix + '-SSW',
+            key: 'select-pickupTruckOrange',
             frames: [
                 {key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++},
                 {key: 'orangeCars', frame: 'c11_s128_iso_0' + startIndex++},
@@ -171,7 +131,7 @@ import { Constants } from '../constants';
 
         startIndex = 129;
         this.anims.create({
-            key: 'select-vanWhite',//this.animPrefix + '-SSW',
+            key: 'select-vanWhite',
             frames: [
                 {key: 'whiteCars', frame: 'c09_s128_iso_0' + startIndex++},
                 {key: 'whiteCars', frame: 'c09_s128_iso_0' + startIndex++},
@@ -196,7 +156,7 @@ import { Constants } from '../constants';
 
         startIndex = 1;
         this.anims.create({
-            key: 'select-taxiYellow',//this.animPrefix + '-SSW',
+            key: 'select-taxiYellow',
             frames: [
                 {key: 'yellowCars', frame: 'c10_s128_iso_000' + startIndex++},
                 {key: 'yellowCars', frame: 'c10_s128_iso_000' + startIndex++},
@@ -221,7 +181,7 @@ import { Constants } from '../constants';
 
         startIndex = 97;
         this.anims.create({
-            key: 'select-hearseBlack',//this.animPrefix + '-SSW',
+            key: 'select-hearseBlack',
             frames: [
                 {key: 'blackCars', frame: 'c07_s128_iso_00' + startIndex++},
                 {key: 'blackCars', frame: 'c07_s128_iso_00' + startIndex++},
@@ -245,7 +205,7 @@ import { Constants } from '../constants';
         });
 
         this.anims.create({
-            key: 'select-killdozer',//this.animPrefix + '-SSW',
+            key: 'select-killdozer',
             frames: [
                 {key: 'killdozer256', frame: 'killdozer_SW'},
                 {key: 'killdozer256', frame: 'killdozer_W_SW'},
@@ -325,42 +285,43 @@ import { Constants } from '../constants';
         this.menuController = new MenuController()
         
         
-        var titleMenu = new MenuPage(this, false);        
-        var mapSelectionMenu = new MenuPage(this, false);
-        var vehicleSelectionMenu = new MenuPage(this, false);
+        var titleMenuPage = new MenuPage(this, false);        
+        var mapSelectionMenuPage = new MenuPage(this, false);
+        var vehicleSelectionMenuPage = new MenuPage(this, false);
 
         ///////////////////////////////////
         // title menu
         ///////////////////////////////////
-        titleMenu.setTitle(this, "Vehicular Vengeance");
-        titleMenu.setMarker(this, "•")
-        titleMenu.setTitleIcon(this, 'carIcon', 'carIcon', 1);
-        titleMenu.setFooter(this, "Copyright 2023 by Mark Dickinson")
-        titleMenu.addStartGameMenuItem(this, "Instant Action");    
-        titleMenu.addMenuLinkItem(this, "Single Player", mapSelectionMenu);
-        titleMenu.addMenuLinkItem(this, "Multiplayer", mapSelectionMenu);
-        titleMenu.addMenuLinkItem(this, "Options", mapSelectionMenu);
+        titleMenuPage.setTitle(this, "Vehicular Vengeance");
+        titleMenuPage.setMarker(this, "•")
+        titleMenuPage.setTitleIcon(this, 'carIcon', 'carIcon', 1);
+        titleMenuPage.setFooter(this, "Copyright 2023 by Mark Dickinson")
+        titleMenuPage.addStartGameMenuItem(this, "Instant Action");    
+        titleMenuPage.addMenuLinkItem(this, "Single Player", mapSelectionMenuPage);
+        titleMenuPage.addMenuLinkItem(this, "Multiplayer", mapSelectionMenuPage);
+        titleMenuPage.addMenuLinkItem(this, "Options", mapSelectionMenuPage);
 
         ///////////////////////////////////
         // map selection menu  
         ///////////////////////////////////
-        mapSelectionMenu.setTitle(this, "Select Map");
-        mapSelectionMenu.setTitleIcon(this, 'shieldIcon', '', 1);
-        mapSelectionMenu.setMarker(this, "•");
+        mapSelectionMenuPage.setTitle(this, "Select Map");
+        mapSelectionMenuPage.setTitleIcon(this, 'shieldIcon', '', 1);
+        mapSelectionMenuPage.setMarker(this, "•");
 
         var mapIcons = new Array<IconValueMapping>();
         mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: 0}));
         mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: 1}));
         mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: 2}));
-        mapSelectionMenu.addMenuComplexItemWithIcons(this, "Map", mapIcons);
-        mapSelectionMenu.addMenuLinkItem(this, "Next", vehicleSelectionMenu);    
+        mapSelectionMenuPage.addMenuComplexItemWithIcons(this, "Map", mapIcons);
+        mapSelectionMenuPage.addMenuLinkItem(this, "Next", vehicleSelectionMenuPage);    
+        mapSelectionMenuPage.setBackMenu(this, titleMenuPage);
              
         ///////////////////////////////////
         // vehicle selection menu
         ///////////////////////////////////
-        vehicleSelectionMenu.setTitle(this, "Select Vehicle");
-        vehicleSelectionMenu.setTitleIcon(this, 'deathIcon', '', 1);
-        vehicleSelectionMenu.setMarker(this, "•");        
+        vehicleSelectionMenuPage.setTitle(this, "Select Vehicle");
+        vehicleSelectionMenuPage.setTitleIcon(this, 'deathIcon', '', 1);
+        vehicleSelectionMenuPage.setMarker(this, "•");        
         var vehicleSprites = new Array<IconValueMapping>();
         
         vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
@@ -371,44 +332,18 @@ import { Constants } from '../constants';
         vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
         vehicleSprites.push(new IconValueMapping({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
         vehicleSprites.push(new IconValueMapping({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
-        var complexMenuItem = vehicleSelectionMenu.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
+        var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         
-        vehicleSelectionMenu.setInitialStats(this, complexMenuItem);
+        vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
 
-        vehicleSelectionMenu.addStartGameMenuItem(this, "Confirm Selection");    
+        vehicleSelectionMenuPage.addStartGameMenuItem(this, "Confirm Selection");   
+        vehicleSelectionMenuPage.setBackMenu(this, mapSelectionMenuPage); 
         
 
         // adding menus to menu controller in order        
-        this.menuController.addMenu(titleMenu);
-        this.menuController.addMenu(mapSelectionMenu);
-        this.menuController.addMenu(vehicleSelectionMenu);
-
-        /*
-        var text = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5, "Armor:   • • • • •")
-        text.setStroke('rgb(0,0,0)', 8);
-        text.setOrigin(0, 0.5);
-        text.setFontSize(24);
-
-        var text2 = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5 + 50, "Speed:   • •")
-        text2.setStroke('rgb(0,0,0)', 8);
-        text2.setOrigin(0, 0.5);
-        text2.setFontSize(24);
-
-        var text3 = this.add.text(this.game.canvas.width * 0.75, this.game.canvas.height * 0.5 + 100, "Special: • • •")
-        text3.setStroke('rgb(0,0,0)', 8);
-        text3.setOrigin(0, 0.5);
-        text3.setFontSize(24);
-        */
-
-        /*
-        ourGame.events.on('updateFPS', function (delta) {
-            this.fpsText.setText('FPS: ' + (1000/delta).toFixed(3));// + '\n' +            
-            
-        }, this);
-        */
-
-        //this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();
-        //this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, "Police", 100, 100));
+        this.menuController.addMenu(titleMenuPage);
+        this.menuController.addMenu(mapSelectionMenuPage);
+        this.menuController.addMenu(vehicleSelectionMenuPage);
 
         this.scene.setVisible(true);
         this.scene.bringToTop();
@@ -416,10 +351,6 @@ import { Constants } from '../constants';
 
     
     update(): void {
-
-        //if(Phaser.Input.Keyboard.JustDown(this.pauseKey)) {
-            //this.returnToGame();
-        //}
 
         var selectionChanged = false;
 

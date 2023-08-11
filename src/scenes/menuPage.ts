@@ -233,8 +233,8 @@ export class MenuPage {
         return temp;
     }
 
-    setBackMenu(scene: Phaser.Scene, currentMenu: MenuPage) {
-        // TODO: implement        
+    setBackMenu(scene: Phaser.Scene, backMenu: MenuPage) {
+        this.backMenu = backMenu;
     }
 
     overrideStartY(startY: number) {
