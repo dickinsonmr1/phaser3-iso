@@ -319,7 +319,7 @@ export class TitleScene extends Phaser.Scene {
         ///////////////////////////////////
         // vehicle selection menu
         ///////////////////////////////////
-        vehicleSelectionMenuPage.setTitle(this, "Select Vehicle");
+        vehicleSelectionMenuPage.setTitle(this, "Player 1: Select Vehicle");
         vehicleSelectionMenuPage.setTitleIcon(this, 'deathIcon', '', 1);
         vehicleSelectionMenuPage.setMarker(this, "•");        
         var vehicleSprites = new Array<IconValueMapping>();
@@ -335,6 +335,12 @@ export class TitleScene extends Phaser.Scene {
         var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
         
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
+
+        vehicleSelectionMenuPage.addMenuComplexItemWithIcons(this, "Team",
+            [
+                new IconValueMapping({description:'Red', key: 'deathIcon', scale: 0.5, color: 0xFF0000, selectedIndex: 0}),
+                new IconValueMapping({description:'Blue', key: 'shieldIcon', scale: 0.5, color: 0x0000FF, selectedIndex: 1})
+            ]);
 
         vehicleSelectionMenuPage.addStartGameMenuItem(this, "Confirm Selection");   
         vehicleSelectionMenuPage.setBackMenu(this, mapSelectionMenuPage); 

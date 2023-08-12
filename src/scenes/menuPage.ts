@@ -176,8 +176,8 @@ export class MenuPage {
     */
 
     // TODO: fix
-    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<string>) {
-        var temp = new ComplexMenuItem({
+    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<string>): ComplexMenuItem {
+        var newComplexMenuPageItem = new ComplexMenuItem({
             scene: scene,
             x: this.menuStartX,
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
@@ -188,14 +188,16 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             },
             subItems});
-        temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0, 0.5);
-        temp.setFontSize(this.menuItemFontSize());
+        newComplexMenuPageItem.setStroke('rgb(0,0,0)', 16);
+        newComplexMenuPageItem.setOrigin(0, 0.5);
+        newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
 
-        scene.add.existing(temp);
-        this.items.push(temp);
+        scene.add.existing(newComplexMenuPageItem);
+        this.items.push(newComplexMenuPageItem);
 
-        this.refreshColorsAndMarker();        
+        this.refreshColorsAndMarker();   
+        
+        return newComplexMenuPageItem;
     }
 
     addMenuComplexItemWithIcons(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>): ComplexMenuItem  {
@@ -220,8 +222,10 @@ export class MenuPage {
         temp.setStroke('rgb(0,0,0)', 16);
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
-        if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null)
-            temp.setIcon(scene, iconMappings[0].key, iconMappings[0].scale);
+        if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null) {
+            temp.setIcon(scene, iconMappings[0].key, iconMappings[0].scale, iconMappings[0].color);
+
+        }
 
         scene.add.existing(temp);
         this.items.push(temp);
@@ -639,14 +643,16 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
         this.refreshText();
     }    
 
-    setIcon(scene: Phaser.Scene, key: string, scale: number) {
+    setIcon(scene: Phaser.Scene, key: string, scale: number, color: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
         this.sprite = scene.add.sprite(this.x, this.y - 150, key)
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setScale(scale, scale);
         this.sprite.play(key);
+        this.sprite.setTint(color);
         
         this.sprite.setDepth(1);
+        this.refreshText();
     }
 
     selectNextItem() {
@@ -666,15 +672,18 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     private refreshText() {
 
         var subItem = this.subItems[this.selectedSubItemIndex];
-        this.text = subItem.description; //this.itemTitle + ' - ' + subItem.description;
         this.setOrigin(0.5, 0.5);
-        
-        
+                
         if(this.sprite != null) {
+            this.text = subItem.description;
             //this.titleIcon.setTexture(subItem.texture, subItem.frame);
             this.sprite.play(subItem.key);// = this.itemTitle + ' - ' + subItem.description;
             this.sprite.setScale(subItem.scale);
+            this.sprite.setTint(subItem.color);
             //this.titleIcon.setVisible(true);            
+        }
+        else {            
+            this.text = this.itemTitle + ' - ' + subItem.description;
         }
     }
 }
@@ -690,6 +699,8 @@ export class IconValueMapping {
     specialDescription: string;
     specialRating: number;
 
+    color: number;
+
     constructor(params) {
         this.description = params.description;
         this.key = params.key;
@@ -700,5 +711,7 @@ export class IconValueMapping {
         this.speedRating = params.speedRating;
         this.specialDescription = params.specialDescription;
         this.specialRating = params.specialRating;
+
+        this.color = params.color ?? '0xFFFFFF';
     }
 }
