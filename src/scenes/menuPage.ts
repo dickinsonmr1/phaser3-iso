@@ -1,6 +1,11 @@
 import { use } from 'matter';
 import * as Phaser from 'phaser';
 
+export enum LocationOnMenuPage {
+    CenterScreen,
+    NextToMenuItem
+}
+
 export class MenuPage {
     title: Phaser.GameObjects.Text;
     subtitle: Phaser.GameObjects.Text;
@@ -200,18 +205,24 @@ export class MenuPage {
         return newComplexMenuPageItem;
     }
 
-    addMenuComplexItemWithIcons(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>): ComplexMenuItem  {
+    addMenuComplexItemWithSprites(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>, iconLocationOnMenu: LocationOnMenuPage, displayCategoryText: boolean = true): ComplexMenuItem  {
 
-        //var subItems = [];
+        let menuItemStartX = this.menuStartX;
+        let menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
+        let iconStartX = this.menuStartX;
+        let iconStartY = this.menuStartY - 150;
 
-        //iconMappings.forEach(x => {
-            //subItems.push(x.description);
-        //});
+        if(iconLocationOnMenu == LocationOnMenuPage.NextToMenuItem) {
+            menuItemStartX = this.menuStartX;
+            menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
+            iconStartX = menuItemStartX - 100;
+            iconStartY = menuItemStartY;
+        }
 
-        var temp = new ComplexMenuItem({
+        var newComplexMenuPageItem = new ComplexMenuItem({
             scene: scene,
-            x: this.menuStartX,
-            y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
+            x: menuItemStartX,
+            y: menuItemStartY,
             text: text,
             style: {
                 //fontFamily: 'KenneyRocketSquare',
@@ -219,22 +230,24 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             },
             subItems: iconMappings});
-        temp.setStroke('rgb(0,0,0)', 16);
-        temp.setOrigin(0.5, 0.5);
-        temp.setFontSize(this.menuItemFontSize());
+        newComplexMenuPageItem.setStroke('rgb(0,0,0)', 16);
+        newComplexMenuPageItem.setOrigin(0.5, 0.5);
+        newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
         if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null) {
-            temp.setIcon(scene, iconMappings[0].key, iconMappings[0].scale, iconMappings[0].color);
-
+            newComplexMenuPageItem.setIcon(scene, iconMappings[0].key,
+                iconStartX,
+                iconStartY,
+                iconMappings[0].scale, iconMappings[0].color);
         }
 
-        scene.add.existing(temp);
-        this.items.push(temp);
+        scene.add.existing(newComplexMenuPageItem);
+        this.items.push(newComplexMenuPageItem);
 
         this.refreshColorsAndMarker();     
         
         //this.refreshStats(temp.subItems[temp.selectedSubItemIndex]);   
 
-        return temp;
+        return newComplexMenuPageItem;
     }
 
     setBackMenu(scene: Phaser.Scene, backMenu: MenuPage) {
@@ -643,9 +656,9 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
         this.refreshText();
     }    
 
-    setIcon(scene: Phaser.Scene, key: string, scale: number, color: number) {
+    setIcon(scene: Phaser.Scene, key: string, x: number, y: number, scale: number, color: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
-        this.sprite = scene.add.sprite(this.x, this.y - 150, key)
+        this.sprite = scene.add.sprite(x, y, key)
         this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setScale(scale, scale);
         this.sprite.play(key);
@@ -694,6 +707,7 @@ export class IconValueMapping {
     key: string;
     scale: number;
     selectedIndex: number;
+
     armorRating: number;
     speedRating: number;
     specialDescription: string;
@@ -707,11 +721,29 @@ export class IconValueMapping {
         this.scale = params.scale;
         this.selectedIndex = params.selectedIndex;
 
+        this.color = params.color ?? '0xFFFFFF';
+    }
+}
+
+export class IconValueMappingWithStats extends IconValueMapping {
+    description: string;
+    key: string;
+    scale: number;
+    selectedIndex: number;
+    armorRating: number;
+    speedRating: number;
+    specialDescription: string;
+    specialRating: number;
+
+    color: number;
+
+    constructor(params) {
+
+        super(params);
+
         this.armorRating = params.armorRating;
         this.speedRating = params.speedRating;
         this.specialDescription = params.specialDescription;
         this.specialRating = params.specialRating;
-
-        this.color = params.color ?? '0xFFFFFF';
     }
 }

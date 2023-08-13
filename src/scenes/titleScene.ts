@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
-import { ComplexMenuItem, IconValueMapping, MenuPage } from './menuPage';
+import { ComplexMenuItem, IconValueMapping, IconValueMappingWithStats, LocationOnMenuPage, MenuPage } from './menuPage';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
  
@@ -312,7 +312,7 @@ export class TitleScene extends Phaser.Scene {
         mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: 0}));
         mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: 1}));
         mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: 2}));
-        mapSelectionMenuPage.addMenuComplexItemWithIcons(this, "Map", mapIcons);
+        mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Map", mapIcons, LocationOnMenuPage.CenterScreen);
         mapSelectionMenuPage.addMenuLinkItem(this, "Next", vehicleSelectionMenuPage);    
         mapSelectionMenuPage.setBackMenu(this, titleMenuPage);
              
@@ -324,23 +324,24 @@ export class TitleScene extends Phaser.Scene {
         vehicleSelectionMenuPage.setMarker(this, "•");        
         var vehicleSprites = new Array<IconValueMapping>();
         
-        vehicleSprites.push(new IconValueMapping({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
-        vehicleSprites.push(new IconValueMapping({description: 'Ambulance', key: 'select-vanWhite', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
-        vehicleSprites.push(new IconValueMapping({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
-        vehicleSprites.push(new IconValueMapping({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
-        vehicleSprites.push(new IconValueMapping({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
-        vehicleSprites.push(new IconValueMapping({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new IconValueMapping({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new IconValueMapping({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
-        var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithIcons(this, "Vehicle", vehicleSprites);
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Ambulance', key: 'select-vanWhite', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
+        var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);
         
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
 
-        vehicleSelectionMenuPage.addMenuComplexItemWithIcons(this, "Team",
+        vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Team",
             [
                 new IconValueMapping({description:'Red', key: 'deathIcon', scale: 0.5, color: 0xFF0000, selectedIndex: 0}),
                 new IconValueMapping({description:'Blue', key: 'shieldIcon', scale: 0.5, color: 0x0000FF, selectedIndex: 1})
-            ]);
+            ],
+            LocationOnMenuPage.NextToMenuItem);
 
         vehicleSelectionMenuPage.addStartGameMenuItem(this, "Confirm Selection");   
         vehicleSelectionMenuPage.setBackMenu(this, mapSelectionMenuPage); 
