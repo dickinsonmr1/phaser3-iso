@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { Constants } from "../constants";
 import { Pickup, PickupType } from "../gameobjects/pickup";
-import { Player, PlayerDrawOrientation, VehicleType } from "../gameobjects/player/player";
+import { Player, PlayerDrawOrientation, PlayerTeam, VehicleType } from "../gameobjects/player/player";
 import { Projectile, ProjectileType } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
@@ -252,7 +252,7 @@ export default class GameScene extends Phaser.Scene
 
         var vehicleFactory = new VehicleFactory();
 
-        this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, this);
+        this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, PlayerTeam.Red, this);
         this.player.init();   
 
         this.sceneController.addHudForPlayerId(this.player.playerId, this.player.maxHealth());
@@ -263,13 +263,13 @@ export default class GameScene extends Phaser.Scene
         //this.crosshairSprite.setScale(0.5, 0.3);        
         //this.crosshairSprite.play(key);
         
-        this.player2 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, this);
+        this.player2 = vehicleFactory.generatePlayer(VehicleType.Police, true, PlayerTeam.Blue, this);
         this.player2.init();
 
-        this.player3 = vehicleFactory.generatePlayer(VehicleType.Ambulance, true, this);
+        this.player3 = vehicleFactory.generatePlayer(VehicleType.RaceCar, true, PlayerTeam.Blue, this);
         this.player3.init();
 
-        this.player4 = vehicleFactory.generatePlayer(VehicleType.Taxi, true, this);
+        this.player4 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, PlayerTeam.Blue, this);
         this.player4.init();
 
         this.allPlayers = this.physics.add.group();

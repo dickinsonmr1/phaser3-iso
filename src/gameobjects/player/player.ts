@@ -71,6 +71,11 @@ enum PlayerAliveStatus {
     PermaDead
 }
 
+export enum PlayerTeam {
+    Red,
+    Blue
+}
+
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private bodyDrawSize() {
@@ -247,6 +252,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     public playerId: string;
 
+    public team: PlayerTeam;
+
+    private getPlayerTeamColor(): number {
+        switch(this.team) {
+            case PlayerTeam.Red:
+                return 0xFF0000;
+            case PlayerTeam.Blue:
+            default:
+                return 0x0000FF;
+        }
+    }
+
     private cpuPlayerPattern: CpuPlayerPattern = CpuPlayerPattern.Follow;
     
     private cpuFleeDirection: PlayerDrawOrientation = PlayerDrawOrientation.E;
@@ -401,13 +418,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
         this.cpuIcon = this.scene.add.image(
-            this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY,
+            this.x + this.GetPlayerNameOffsetX - 50, this.y + this.GetPlayerNameOffsetY,
             'cpuIcon');
         this.cpuIcon.setOrigin(0.5, 0.5);
         this.cpuIcon.setScale(0.25);
         this.cpuIcon.alpha = 1;    
         this.cpuIcon.setDepth(Constants.depthHealthBar);
-        this.cpuIcon.setVisible(this.isCpuPlayer);        
+        this.cpuIcon.setVisible(this.isCpuPlayer);    
+        this.cpuIcon.setTint(this.getPlayerTeamColor());
 
         this.deathIcon = this.scene.add.image(
             this.x,
@@ -796,7 +814,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         text.setOrigin(0.5, 0.5);
 
         if(this.isCpuPlayer && this.cpuIcon != null)
-            this.cpuIcon.setPosition(x, y);
+            this.cpuIcon.setPosition(x - 50, y);
         //text.setAlign('center');
     }
 

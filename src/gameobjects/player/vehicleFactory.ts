@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { AmbulancePlayer } from "./ambulanceplayer";
-import { Player, VehicleType } from "./player";
+import { Player, PlayerTeam, VehicleType } from "./player";
 import { RaceCarPlayer } from "./racecarplayer";
 import { TaxiPlayer } from "./taxiplayer";
 import { PickupTruckPlayer } from "./pickuptruckplayer";
@@ -14,7 +14,7 @@ export class VehicleFactory {
 
     }
 
-    generatePlayer(vehicleType: VehicleType, isCpuPlayer: boolean, scene: Scene): Player {
+    generatePlayer(vehicleType: VehicleType, isCpuPlayer: boolean, playerTeam: PlayerTeam, scene: Scene): Player {
 
         switch (vehicleType)
         {
@@ -31,7 +31,8 @@ export class VehicleFactory {
                     key: "raceCar",
                     frame: 'raceCar-W',
                     playerId: "Speed Demon",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.Taxi:
@@ -46,7 +47,8 @@ export class VehicleFactory {
                     key: "yellowCars",
                     frame: 'taxiYellow-W',
                     playerId: "Sideswipe",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.PickupTruck:
@@ -59,7 +61,8 @@ export class VehicleFactory {
                     key: "orangeCars",
                     frame: 'pickupTruckOrange-W',
                     playerId: "Redneck",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.Ambulance:
