@@ -352,6 +352,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.isCpuPlayer = params.isCpuPlayer;
         if(this.isCpuPlayer)
             this.cpuDestination = new Phaser.Math.Vector2(this.x, this.y);
+        this.team = params.playerTeam;
 
         var utilities = new Utility();
         //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
@@ -410,22 +411,23 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //playerNameText.setStroke('rgb(0,0,0)', 4);     
         //playerNameText.setFontSize(24); 
         
-        this.multiplayerNameText = playerNameText;
-        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-        this.multiplayerNameText.setOrigin(0.5, 0.5);
-        this.multiplayerNameText.setAlign('center');
-        this.multiplayerNameText.setFontSize(16);
-        this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
-
+        let playerTypeIcon = this.isCpuPlayer ? 'cpuIcon' : 'shieldIcon';
         this.cpuIcon = this.scene.add.image(
             this.x + this.GetPlayerNameOffsetX - 50, this.y + this.GetPlayerNameOffsetY,
-            'cpuIcon');
+            playerTypeIcon);
         this.cpuIcon.setOrigin(0.5, 0.5);
         this.cpuIcon.setScale(0.25);
         this.cpuIcon.alpha = 1;    
         this.cpuIcon.setDepth(Constants.depthHealthBar);
         this.cpuIcon.setVisible(this.isCpuPlayer);    
         this.cpuIcon.setTint(this.getPlayerTeamColor());
+
+        this.multiplayerNameText = playerNameText;
+        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+        this.multiplayerNameText.setOrigin(0.5, 0.5);
+        this.multiplayerNameText.setAlign('center');
+        this.multiplayerNameText.setFontSize(16);
+        this.multiplayerNameText.setVisible(true);//this.isMultiplayer);
 
         this.deathIcon = this.scene.add.image(
             this.x,
@@ -452,7 +454,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             .setIntensity(1.0)
             .setVisible(true);
     
-        var text  = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
+        var text = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
                 font: 'bold 1px Arial',
                 //fontFamily: 'KenneyRocketSquare',         
@@ -466,16 +468,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
         let gameScene = <GameScene>this.scene;        
         
-            this.debugCoordinatesText = text;
-            this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
-            this.debugCoordinatesText.setOrigin(0, 0.5);
-            this.debugCoordinatesText.setFontSize(12);
-            this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
+        this.debugCoordinatesText = text;
+        this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
+        this.debugCoordinatesText.setOrigin(0, 0.5);
+        this.debugCoordinatesText.setFontSize(12);
+        this.debugCoordinatesText.setVisible(true);//this.isMultiplayer);
 
         if(!gameScene.showDebug) {
             this.hideDebugText();
         }
-
         
         this.bullets = this.scene.physics.add.group({
             allowGravity: false
@@ -483,7 +484,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
     init() {
         this.scene.physics.world.enable(this);
-
         
         var body = <Phaser.Physics.Arcade.Body>this.body;
 
@@ -718,8 +718,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 case CpuPlayerPattern.Stop:
                     this.tryStopMove();
                     break;
-                case CpuPlayerPattern.Patrol:                                        
-                   
+                case CpuPlayerPattern.Patrol:                                                           
                     this.tryMoveToLocation(this.cpuDestination.x, this.cpuDestination.y);
                     this.tryAimAtLocation(this.cpuDestination.x, this.cpuDestination.y);
                     break;
@@ -742,7 +741,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
         if(this.deadUntilRespawnTime <= 0) 
         {
-
             this.MapPosition.x += this.body.velocity.x;
             this.MapPosition.y += this.body.velocity.y;
 
@@ -783,8 +781,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             if(this.health <= 0.25 * this.maxHealth()) {
                 this.particleEmitterSmoke.setDepth(this.y + 64);
                 this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
-            }
-            
+            }            
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
         }
         else {
@@ -813,7 +810,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0.5, 0.5);
 
-        if(this.isCpuPlayer && this.cpuIcon != null)
+        //if(this.isCpuPlayer && this.cpuIcon != null)
+        if(this.cpuIcon != null)
             this.cpuIcon.setPosition(x - 50, y);
         //text.setAlign('center');
     }
@@ -892,7 +890,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         // adjust atan scale so that it's all negative
         if (this.arctangent < 0 && this.targetArctangent > 0)
             useAllNegativeAtan = true;
-
             
         // -0.99 PI -> 1.01 PI
         // -0.75 PI -> 1.25 PI
@@ -997,8 +994,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         return;
 
-        /*
-        
+        /*        
         switch(playerDrawOrientation) {
             /////////////////////////////////////////////
             case PlayerDrawOrientation.N:
@@ -1231,8 +1227,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.setVisible(false);
         this.healthBar.setVisible(false);
         this.multiplayerNameText.setVisible(false);
-        if(this.isCpuPlayer)
-            this.cpuIcon.setVisible(false);
+        
+        //if(this.isCpuPlayer)
+        this.cpuIcon.setVisible(false);
 
         this.particleEmitterExplosion.setPosition(this.x, this.y);
         this.particleEmitterExplosion.setDepth(this.y + 64);
@@ -1256,7 +1253,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         let gameScene = <GameScene>this.scene;  
 
         gameScene.sceneController.hudScene.setInfoText(this.playerId + " destroyed (" + this.numberDeaths + " total)", 2000);
-
     }
 
     tryRespawn() {
@@ -1288,8 +1284,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.show();
 
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);        
-        
-
 
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
@@ -1309,8 +1303,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.setVisible(true);
         this.healthBar.setVisible(true);
         this.multiplayerNameText.setVisible(true);
-        if(this.isCpuPlayer)
-            this.cpuIcon.setVisible(true);
+        //if(this.isCpuPlayer)
+        this.cpuIcon.setVisible(true);
 
         this.particleEmitterDeathBurn.emitting = false;
         if(this.deathBurnSpotlight != null)

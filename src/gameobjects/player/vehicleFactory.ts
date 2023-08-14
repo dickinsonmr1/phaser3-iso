@@ -19,8 +19,7 @@ export class VehicleFactory {
         switch (vehicleType)
         {
             case VehicleType.RaceCar:
-                return new RaceCarPlayer({
-                    
+                return new RaceCarPlayer({                    
                     scene: scene,
                     drawScale: 0.3,
                     isCpuPlayer: isCpuPlayer,
@@ -75,7 +74,8 @@ export class VehicleFactory {
                     key: "whiteCars",
                     frame: 'vanWhite-NW',
                     playerId: "Ambulance",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.Hearse:
@@ -88,7 +88,8 @@ export class VehicleFactory {
                     key: "blackCars",
                     frame: 'hearseBlack-W',
                     playerId: "Undertaker",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.Killdozer:
@@ -101,7 +102,8 @@ export class VehicleFactory {
                     key: "killdozer256",
                     frame: 'killdozer_W',
                     playerId: "Killdozer",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.MonsterTruck:
@@ -114,7 +116,8 @@ export class VehicleFactory {
                     key: "monstertruck256",
                     frame: 'monstertruck256_W',
                     playerId: "Monster Truck",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
             case VehicleType.Police:
@@ -127,7 +130,8 @@ export class VehicleFactory {
                     key: "police256",
                     frame: 'police256',
                     playerId: "The Law",
-                    vehicleType: vehicleType
+                    vehicleType: vehicleType,
+                    playerTeam: playerTeam
                 });
                 break;
         }
