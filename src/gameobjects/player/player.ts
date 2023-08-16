@@ -73,7 +73,9 @@ enum PlayerAliveStatus {
 
 export enum PlayerTeam {
     Red,
-    Blue
+    Blue,
+    Green,
+    Yellow
 }
 
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
@@ -259,8 +261,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case PlayerTeam.Red:
                 return 0xFF0000;
             case PlayerTeam.Blue:
-            default:
                 return 0x0000FF;
+            case PlayerTeam.Green:
+                return 0x00FF00;
+            case PlayerTeam.Yellow:
+            default:
+                return 0xFFFF00;
         }
     }
 
@@ -269,6 +275,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private cpuFleeDirection: PlayerDrawOrientation = PlayerDrawOrientation.E;
 
     private cpuDestination: Phaser.Math.Vector2;
+    private cpuDestinationTargetIcon: Phaser.GameObjects.Image;
+    private cpuDestinationTargetText: Phaser.GameObjects.Text;
 
     private getMaxFlamethrowerDistance(): number {return 100;}
     private flamethrowerDistance: number = 0;
@@ -421,6 +429,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.cpuIcon.setDepth(Constants.depthHealthBar);
         this.cpuIcon.setVisible(this.isCpuPlayer);    
         this.cpuIcon.setTint(this.getPlayerTeamColor());
+
+        if(this.isCpuPlayer) {
+            this.cpuDestinationTargetIcon = this.scene.add.image(
+                this.cpuDestination.x, this.cpuDestination.y,
+                'crosshair');                        
+            this.cpuDestinationTargetIcon.setTint(this.getPlayerTeamColor());
+
+            this.cpuDestinationTargetText = this.scene.add.text(this.cpuDestination.x, this.cpuDestination.y, `${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+        }
 
         this.multiplayerNameText = playerNameText;
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);
@@ -647,7 +664,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     abstract createAnims();
 
-    updateCpuBehavior(playerX: number, playerY: number): void {
+    updateCpuBehavior(playerPosition: Phaser.Math.Vector2): void {
         if(this.isCpuPlayer) {
         
             var changeBehaviorRand = Utility.getRandomInt(500);
@@ -669,8 +686,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
                 var randX = Utility.getRandomInt(2000) - 1000;
                 var randY = Utility.getRandomInt(2000) - 1000;
-
-                this.cpuDestination = new Phaser.Math.Vector2(this.x + randX, this.y + randY);
+                this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY));
             }
             
             var turboRand = Utility.getRandomInt(25);
@@ -683,12 +699,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                         
             // distance behavior
             if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
-                && Phaser.Math.Distance.Between(playerX, playerY, this.x, this.y) < 100) {
+                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < 500) {
                 this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
             }   
 
             if(this.cpuPlayerPattern == CpuPlayerPattern.Follow
-                && Phaser.Math.Distance.Between(playerX, playerY, this.x, this.y) < 100) {
+                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < 500) {
                 this.cpuPlayerPattern = CpuPlayerPattern.Stop;
             }
 
@@ -696,35 +712,47 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 && Phaser.Math.Distance.Between(this.cpuDestination.x, this.cpuDestination.y, this.x, this.y) < 100) {
                 this.cpuPlayerPattern = CpuPlayerPattern.Stop;
             }
-
+        
             // movement
             switch(this.cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
-                    this.tryAimWithGamepad(playerX, playerY); // TODO: try move AWAY from location
+                    //this.tryAimWithGamepad(playerX, playerY); // TODO: try move AWAY from location
                     this.tryAccelerateInAimDirection();
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
-                    this.tryAimAtLocation(playerX, playerY);
-                    this.tryMoveToLocation(playerX, playerY);                    
+                    this.cpuDestination = playerPosition;
+                    this.tryAimAtLocation(playerPosition.x, playerPosition.y);
+                    this.tryMoveToLocation(playerPosition.x, playerPosition.y);                    
                     break;
                 case CpuPlayerPattern.Follow:
-                    this.tryAimAtLocation(playerX, playerY);
-                    this.tryMoveToLocation(playerX, playerY);
+                    this.cpuDestination = playerPosition;
+                    this.tryAimAtLocation(playerPosition.x, playerPosition.y);
+                    this.tryMoveToLocation(playerPosition.x, playerPosition.y);
                     break;
                 case CpuPlayerPattern.StopAndAttack:
-                    this.tryAimAtLocation(playerX, playerY);    
+                    this.cpuDestination = playerPosition;
+                    this.tryAimAtLocation(playerPosition.x, playerPosition.y);    
                     this.tryStopMove();                    
                     break;
                 case CpuPlayerPattern.Stop:
                     this.tryStopMove();
                     break;
                 case CpuPlayerPattern.Patrol:                                                           
-                    this.tryMoveToLocation(this.cpuDestination.x, this.cpuDestination.y);
-                    this.tryAimAtLocation(this.cpuDestination.x, this.cpuDestination.y);
+                    //this.tryMoveToLocation(this.cpuDestination.x, this.cpuDestination.y);
+                    //this.tryAimAtLocation(this.cpuDestination.x, this.cpuDestination.y);
+                    this.tryAccelerateInAimDirection();
+
+                    this.cpuDestination = new Phaser.Math.Vector2(this.x + this.aimX * 40, this.y + this.aimY * 40);
                     break;
                 default:
                     break;
             }       
+                                       
+            if(this.isCpuPlayer) {
+                this.cpuDestinationTargetIcon.setPosition(this.cpuDestination.x, this.cpuDestination.y);
+                this.cpuDestinationTargetText.setPosition(this.cpuDestination.x, this.cpuDestination.y);
+                this.cpuDestinationTargetText.setText(`${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+            }
             
             // weapon behavior
             if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack

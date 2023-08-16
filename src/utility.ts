@@ -40,14 +40,14 @@ export class Utility {
     // https://gamedevelopment.tutsplus.com/tutorials/creating-isometric-worlds-primer-for-game-developers-updated--cms-28392
 
     static cartesianToIsometric(cartPt) {
-        var tempPt = new Phaser.Geom.Point();
+        var tempPt = new Phaser.Math.Vector2();
         tempPt.x = cartPt.x - cartPt.y;
         tempPt.y = (cartPt.x + cartPt.y)/2;
         return (tempPt);
     }
 
     static isometricToCartesian(isoPt) {
-        var tempPt = new Phaser.Geom.Point();
+        var tempPt = new Phaser.Math.Vector2();
         tempPt.x = (2*isoPt.y + isoPt.x)/2;
         tempPt.y = (2*isoPt.y - isoPt.x)/2;
         return (tempPt);

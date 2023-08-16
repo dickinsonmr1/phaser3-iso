@@ -43,7 +43,7 @@ export default class GameScene extends Phaser.Scene
     fireSecondaryWeaponKey: Phaser.Input.Keyboard.Key;
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
-    mostRecentCartesianGamepadAxes: Phaser.Geom.Point = new Phaser.Geom.Point(0,0);
+    mostRecentCartesianGamepadAxes: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
     mostRecentL1: boolean = false;
     mostRecentR1: boolean = false;
     mostRecentY: boolean = false;
@@ -266,10 +266,10 @@ export default class GameScene extends Phaser.Scene
         this.player2 = vehicleFactory.generatePlayer(VehicleType.Police, true, PlayerTeam.Blue, this);
         this.player2.init();
 
-        this.player3 = vehicleFactory.generatePlayer(VehicleType.RaceCar, true, PlayerTeam.Blue, this);
+        this.player3 = vehicleFactory.generatePlayer(VehicleType.RaceCar, true, PlayerTeam.Green, this);
         this.player3.init();
 
-        this.player4 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, PlayerTeam.Blue, this);
+        this.player4 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, PlayerTeam.Yellow, this);
         this.player4.init();
 
         this.allPlayers = this.physics.add.group();
@@ -821,14 +821,14 @@ export default class GameScene extends Phaser.Scene
             if(this.controlStyle == ControlStyle.LeftStickAims) {
                 if(leftAxisX != 0 || leftAxisY != 0) {
 
-                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Math.Vector2(leftAxisX, leftAxisY));
                     this.player.tryAimWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 }                 
             }
             else if(this.controlStyle == ControlStyle.LeftStickAimsAndMoves) {
                 if(leftAxisX != 0 || leftAxisY != 0) {
 
-                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Geom.Point(leftAxisX, leftAxisY));
+                    this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Math.Vector2(leftAxisX, leftAxisY));
                     this.player.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y,
                         leftAxisX, leftAxisY);
                 }
@@ -1000,13 +1000,15 @@ export default class GameScene extends Phaser.Scene
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player4);
 
-        this.player2.updateCpuBehavior(this.player.x, this.player.y);
+        var playerPosition = new Phaser.Math.Vector2(this.player.x, this.player.y);
+
+        this.player2.updateCpuBehavior(playerPosition);
         this.player2.update();
 
-        this.player3.updateCpuBehavior(this.player.x, this.player.y);
+        this.player3.updateCpuBehavior(playerPosition);
         this.player3.update();
 
-        this.player4.updateCpuBehavior(this.player.x, this.player.y);
+        this.player4.updateCpuBehavior(playerPosition);
         this.player4.update();
 
         this.updatePickupScaleTime()
