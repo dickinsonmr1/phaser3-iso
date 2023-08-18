@@ -205,6 +205,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
     private cpuIcon: Phaser.GameObjects.Image;
+    private playerMarkerIcon: Phaser.GameObjects.Image;    
 
     private get GetPlayerNameOffsetX(): number { return 0; }
     private get GetPlayerNameOffsetY(): number { return -60; }
@@ -360,7 +361,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.isCpuPlayer = params.isCpuPlayer;
         if(this.isCpuPlayer)
             this.cpuDestination = new Phaser.Math.Vector2(this.x, this.y);
-        this.team = params.playerTeam;
+        this.team = params.playerTeam;      
 
         var utilities = new Utility();
         //this.ScreenLocation = utilities.MapToScreen(params.mapX, params.mapY);
@@ -437,6 +438,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.cpuDestinationTargetIcon.setTint(this.getPlayerTeamColor());
 
             this.cpuDestinationTargetText = this.scene.add.text(this.cpuDestination.x, this.cpuDestination.y, `${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+
+            this.playerMarkerIcon = this.scene.add.image(
+                this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5,
+                'playerMarkerIcon');       
+            this.playerMarkerIcon.setScale(0.25);
+            this.playerMarkerIcon.setTint(this.getPlayerTeamColor());
         }
 
         this.multiplayerNameText = playerNameText;
@@ -779,6 +786,16 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.setDepth(this.y);
 
+            /*
+            if(this.isCpuPlayer) {
+                this.path.getPoint(this.pathIndex, this.pathVector);
+
+                this.setPosition(this.pathVector.x, this.pathVector.y);
+        
+                this.pathIndex = Phaser.Math.Wrap(this.pathIndex + this.pathSpeed, 0, 1);
+            }
+            */
+
             //this.x = screenPosition.x;
             //this.y = screenPosition.y;
             //this.body.position.x = screenPosition.x;
@@ -811,7 +828,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
             }            
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
-        }
+        } 
         else {
             this.deadUntilRespawnTime--;
             if(this.deadUntilRespawnTime == 0)
@@ -841,6 +858,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //if(this.isCpuPlayer && this.cpuIcon != null)
         if(this.cpuIcon != null)
             this.cpuIcon.setPosition(x - 50, y);
+
+        if(this.playerMarkerIcon != null)
+            this.playerMarkerIcon.setPosition(x, y - 20);
         //text.setAlign('center');
     }
 
@@ -1256,8 +1276,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.setVisible(false);
         this.multiplayerNameText.setVisible(false);
         
-        //if(this.isCpuPlayer)
-        this.cpuIcon.setVisible(false);
+        if(this.cpuIcon != null)
+            this.cpuIcon.setVisible(false);
+
+        if(this.playerMarkerIcon != null)
+            this.playerMarkerIcon.setVisible(false);
 
         this.particleEmitterExplosion.setPosition(this.x, this.y);
         this.particleEmitterExplosion.setDepth(this.y + 64);
@@ -1333,6 +1356,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.multiplayerNameText.setVisible(true);
         //if(this.isCpuPlayer)
         this.cpuIcon.setVisible(true);
+        
+        if(this.isCpuPlayer)
+            this.playerMarkerIcon.setVisible(true);
 
         this.particleEmitterDeathBurn.emitting = false;
         if(this.deathBurnSpotlight != null)

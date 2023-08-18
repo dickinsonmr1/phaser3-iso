@@ -124,6 +124,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('fireIcon', './assets/sprites/HUD/fire.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
         this.load.image('cpuIcon', './assets/sprites/HUD/cpu.png');
+        this.load.image('playerMarkerIcon', './assets/sprites/HUD/playerMarkerIcon.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust.png');
@@ -176,7 +177,7 @@ export default class GameScene extends Phaser.Scene
         // https://labs.phaser.io/edit.html?src=src/tilemap/debug%20colliding%20tiles.js
 
         console.log(map);
-
+        
         //var tileset1 = map.addTilesetImage('iso-64x64-outside', 'tiles');
         //v
         //var tileset2 = map.addTilesetImage('iso-64x64-building', 'tiles2')
