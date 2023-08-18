@@ -6,6 +6,7 @@ import { Projectile, ProjectileType } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
+import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPattern';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -41,6 +42,16 @@ export default class GameScene extends Phaser.Scene
 
     firePrimaryWeaponKey: Phaser.Input.Keyboard.Key;
     fireSecondaryWeaponKey: Phaser.Input.Keyboard.Key;
+    
+    setCpuBehavior0Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior1Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior2Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior3Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior4Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior5Key: Phaser.Input.Keyboard.Key;
+    setCpuBehavior6Key: Phaser.Input.Keyboard.Key;
+
+    cpuPlayerPatternOverride: CpuPlayerPattern = CpuPlayerPattern.Follow;
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
     mostRecentCartesianGamepadAxes: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
@@ -395,6 +406,14 @@ export default class GameScene extends Phaser.Scene
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.toggleDebugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
 
+        this.setCpuBehavior0Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO);
+        this.setCpuBehavior1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.setCpuBehavior2Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+        this.setCpuBehavior3Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+        this.setCpuBehavior4Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
+        this.setCpuBehavior5Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+        this.setCpuBehavior6Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+        
         this.moveUpKey = cursors.up;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.moveDownKey = cursors.down; //this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         this.moveRightKey = cursors.right;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -986,6 +1005,28 @@ export default class GameScene extends Phaser.Scene
             }
         }
 
+        if(this.setCpuBehavior0Key.isDown) {
+            this.cpuPlayerPatternOverride = null;
+        }
+        if(this.setCpuBehavior1Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.FollowAndAttack;
+        }
+        if(this.setCpuBehavior2Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.Stop;
+        }
+        if(this.setCpuBehavior3Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.StopAndAttack;
+        }
+        if(this.setCpuBehavior4Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.Flee;
+        }
+        if(this.setCpuBehavior5Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.Patrol;
+        }
+        if(this.setCpuBehavior6Key.isDown) {
+            this.cpuPlayerPatternOverride = CpuPlayerPattern.Follow;
+        }
+
         this.player.update();
 
         this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);
@@ -1003,13 +1044,13 @@ export default class GameScene extends Phaser.Scene
 
         var playerPosition = new Phaser.Math.Vector2(this.player.x, this.player.y);
 
-        this.player2.updateCpuBehavior(playerPosition);
+        this.player2.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
         this.player2.update();
 
-        this.player3.updateCpuBehavior(playerPosition);
+        this.player3.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
         this.player3.update();
 
-        this.player4.updateCpuBehavior(playerPosition);
+        this.player4.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
         this.player4.update();
 
         this.updatePickupScaleTime()

@@ -4,6 +4,7 @@ import { HealthBar, HUDBarType } from './../healthBar';
 import { Projectile, ProjectileType } from './../projectile';
 import { Point, Utility } from '../../utility';
 import GameScene from '../../scenes/gameScene';
+import { CpuPlayerPattern } from './cpuPlayerPattern';
 
 export enum PlayerDrawOrientation {
     N,
@@ -54,15 +55,6 @@ export enum VehicleType {
     Killdozer,
     MonsterTruck,
     Police
-}
-
-enum CpuPlayerPattern {
-    Follow,
-    FollowAndAttack,
-    Stop,
-    StopAndAttack,
-    Flee,
-    Patrol
 }
 
 enum PlayerAliveStatus {
@@ -671,29 +663,34 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     abstract createAnims();
 
-    updateCpuBehavior(playerPosition: Phaser.Math.Vector2): void {
+    updateCpuBehavior(playerPosition: Phaser.Math.Vector2, cpuPlayerPatternOverride: CpuPlayerPattern): void {
         if(this.isCpuPlayer) {
         
-            var changeBehaviorRand = Utility.getRandomInt(500);
-            if(changeBehaviorRand == 0) {
-                this.cpuPlayerPattern = CpuPlayerPattern.Flee;
-
-                this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
+            if(cpuPlayerPatternOverride != null) {
+                this.cpuPlayerPattern = cpuPlayerPatternOverride;
             }
-            if(changeBehaviorRand == 1)
-                this.cpuPlayerPattern = CpuPlayerPattern.Follow;
-            if(changeBehaviorRand == 2)
-                this.cpuPlayerPattern = CpuPlayerPattern.FollowAndAttack;
-            if(changeBehaviorRand == 3)
-                this.cpuPlayerPattern = CpuPlayerPattern.Stop;
-            if(changeBehaviorRand == 4)                
-                this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
-            if(changeBehaviorRand == 5) {
-                this.cpuPlayerPattern = CpuPlayerPattern.Patrol;
+            else {
+                var changeBehaviorRand = Utility.getRandomInt(500);
+                if(changeBehaviorRand == 0) {
+                    this.cpuPlayerPattern = CpuPlayerPattern.Flee;
 
-                var randX = Utility.getRandomInt(2000) - 1000;
-                var randY = Utility.getRandomInt(2000) - 1000;
-                this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY));
+                    this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
+                }
+                if(changeBehaviorRand == 1)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Follow;
+                if(changeBehaviorRand == 2)
+                    this.cpuPlayerPattern = CpuPlayerPattern.FollowAndAttack;
+                if(changeBehaviorRand == 3)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+                if(changeBehaviorRand == 4)                
+                    this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
+                if(changeBehaviorRand == 5) {
+                    this.cpuPlayerPattern = CpuPlayerPattern.Patrol;
+
+                    var randX = Utility.getRandomInt(2000) - 1000;
+                    var randY = Utility.getRandomInt(2000) - 1000;
+                    this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY));
+                }
             }
             
             var turboRand = Utility.getRandomInt(25);
