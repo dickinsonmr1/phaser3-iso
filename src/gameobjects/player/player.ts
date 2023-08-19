@@ -188,6 +188,29 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    private getDistanceBeforeStopping(): number { 
+        switch(this.vehicleType) {
+            case VehicleType.Ambulance:
+                return 300;
+            case VehicleType.Taxi:
+                return 300;
+            case VehicleType.RaceCar:
+                return 300;
+            case VehicleType.PickupTruck:
+                return 300;
+            case VehicleType.Police:
+                return 300;
+            case VehicleType.Hearse:
+                return 300;
+            case VehicleType.Killdozer:
+                return 200;
+            case VehicleType.MonsterTruck:
+                return 200;
+            default:
+                return 200;
+        }
+    }
+
     private get GetTextOffsetY(): number { return -100; }
 
     turboBar: HealthBar;
@@ -703,12 +726,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                         
             // distance behavior
             if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
-                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < 500) {
+                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < this.getDistanceBeforeStopping()) {
                 this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
             }   
 
             if(this.cpuPlayerPattern == CpuPlayerPattern.Follow
-                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < 500) {
+                && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < this.getDistanceBeforeStopping()) {
                 this.cpuPlayerPattern = CpuPlayerPattern.Stop;
             }
 

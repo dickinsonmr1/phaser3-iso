@@ -1027,6 +1027,8 @@ export default class GameScene extends Phaser.Scene
             this.cpuPlayerPatternOverride = CpuPlayerPattern.Follow;
         }
 
+        this.sceneController.hudScene.updateCpuBehaviorOverrideText(this.player.playerId, CpuPlayerPattern[this.cpuPlayerPatternOverride]);
+
         this.player.update();
 
         this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);

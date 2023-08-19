@@ -215,6 +215,13 @@ import { PickupType } from '../gameobjects/pickup';
             selectedPlayerGroup[0].updateAmmo(weaponType, ammoCount);
         }
     }
+
+    updateCpuBehaviorOverrideText(name: string, behaviorString: string) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].updateCpuBehaviorOverrideText(behaviorString);
+        }
+    }
     
     update(): void {
         if(this.game.getTime() < this.infoTextExpiryGameTime) {
