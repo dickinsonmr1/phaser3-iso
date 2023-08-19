@@ -683,9 +683,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             else {
                 var changeBehaviorRand = Utility.getRandomInt(500);
                 if(changeBehaviorRand == 0) {
-                    this.cpuPlayerPattern = CpuPlayerPattern.Flee;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Flee);
 
-                    this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
+                    //this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
                 }
                 if(changeBehaviorRand == 1)
                     this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Follow);
