@@ -5,25 +5,9 @@ import { Projectile, ProjectileType } from './../projectile';
 import { Point, Utility } from '../../utility';
 import GameScene from '../../scenes/gameScene';
 import { CpuPlayerPattern } from './cpuPlayerPattern';
+import { PlayerDrawOrientation } from './playerDrawOrientation';
+import { CpuPlayerBehavior } from './cpuPlayerBehavior';
 
-export enum PlayerDrawOrientation {    
-    W,
-    W_SW,
-    SW,
-    S_SW,
-    S,
-    S_SE,
-    SE,
-    E_SE,
-    E,
-    E_NE,
-    NE,
-    N_NE,
-    N,
-    N_NW,
-    NW,
-    W_NW    
-}
 
 export enum PlayerCartesianOrientation {
     N,
@@ -286,13 +270,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    private cpuPlayerPattern: CpuPlayerPattern = CpuPlayerPattern.Follow;
-    
-    private cpuFleeDirection: PlayerDrawOrientation = PlayerDrawOrientation.E;
-
-    private cpuDestination: Phaser.Math.Vector2;
-    private cpuDestinationTargetIcon: Phaser.GameObjects.Image;
-    private cpuDestinationTargetText: Phaser.GameObjects.Text;
 
     private getMaxFlamethrowerDistance(): number {return 100;}
     private flamethrowerDistance: number = 0;
@@ -364,6 +341,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public animPrefix: string;
 
     private isCpuPlayer: boolean;
+    private cpuPlayerBehavior: CpuPlayerBehavior;
 
     deathIcon: Phaser.GameObjects.Image;
     deathIconScale: number = 0.5;
@@ -374,8 +352,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
         this.isCpuPlayer = params.isCpuPlayer;
-        if(this.isCpuPlayer)
-            this.cpuDestination = new Phaser.Math.Vector2(this.x, this.y);
+
         this.team = params.playerTeam;      
 
         var utilities = new Utility();
@@ -447,13 +424,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.cpuIcon.setTint(this.getPlayerTeamColor());
 
         if(this.isCpuPlayer) {
-            this.cpuDestinationTargetIcon = this.scene.add.image(
-                this.cpuDestination.x, this.cpuDestination.y,
+            
+            let cpuDestination = new Phaser.Math.Vector2(this.x, this.y);
+            let cpuDestinationTargetIcon = this.scene.add.image(
+                cpuDestination.x, cpuDestination.y,
                 'crosshair');                        
-            this.cpuDestinationTargetIcon.setTint(this.getPlayerTeamColor());
+            cpuDestinationTargetIcon.setTint(this.getPlayerTeamColor());
 
-            this.cpuDestinationTargetText = this.scene.add.text(this.cpuDestination.x, this.cpuDestination.y, `${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+            let cpuDestinationTargetText = this.scene.add.text(cpuDestination.x, cpuDestination.y,
+                `${(this.playerId)} target: (${(cpuDestination.x).toFixed(2)}, ${(cpuDestination.y).toFixed(2)})`);
 
+            this.cpuPlayerBehavior = new CpuPlayerBehavior(this.playerId, cpuDestination, cpuDestinationTargetIcon, cpuDestinationTargetText);
             this.playerMarkerIcon = this.scene.add.image(
                 this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5,
                 'playerMarkerIcon');       
@@ -691,13 +672,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
             if(cpuPlayerPatternOverride != null) {
                 
-                if(cpuPlayerPatternOverride == CpuPlayerPattern.Patrol && this.cpuPlayerPattern != CpuPlayerPattern.Patrol) {
+                if(cpuPlayerPatternOverride == CpuPlayerPattern.Patrol && this.cpuPlayerBehavior.getCpuPlayerPattern() != CpuPlayerPattern.Patrol) {
                     var randX = Utility.getRandomInt(200) - 100;
                     var randY = Utility.getRandomInt(200) - 100;
-                    this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(playerPosition.x, playerPosition.y));
+                    this.cpuPlayerBehavior.setCpuDestination(Utility.cartesianToIsometric(new Phaser.Math.Vector2(playerPosition.x, playerPosition.y)));
                 }
 
-                this.cpuPlayerPattern = cpuPlayerPatternOverride;
+                this.cpuPlayerBehavior.setCpuPlayerPattern(cpuPlayerPatternOverride);
             }
             else {
                 var changeBehaviorRand = Utility.getRandomInt(500);
@@ -707,45 +688,45 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     this.cpuFleeDirection = <PlayerDrawOrientation>(Utility.getRandomInt(16));
                 }
                 if(changeBehaviorRand == 1)
-                    this.cpuPlayerPattern = CpuPlayerPattern.Follow;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Follow);
                 if(changeBehaviorRand == 2)
-                    this.cpuPlayerPattern = CpuPlayerPattern.FollowAndAttack;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.FollowAndAttack);
                 if(changeBehaviorRand == 3)
-                    this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+                this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Stop);
                 if(changeBehaviorRand == 4)                
-                    this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.StopAndAttack);
                 if(changeBehaviorRand == 5) {
-                    this.cpuPlayerPattern = CpuPlayerPattern.Patrol;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Patrol);
 
                     var randX = Utility.getRandomInt(2000) - 1000;
                     var randY = Utility.getRandomInt(2000) - 1000;
-                    this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY));
+                    this.cpuPlayerBehavior.setCpuDestination(Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY)));
                 }
 
                 if(this.health / this.maxHealth() < 0.3 && changeBehaviorRand > 475)
-                    this.cpuPlayerPattern = CpuPlayerPattern.Flee;
+                this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Flee);
             }
             
             var turboRand = Utility.getRandomInt(25);
                 if(turboRand == 0 &&
-                    (this.cpuPlayerPattern == CpuPlayerPattern.Flee
-                    || this.cpuPlayerPattern == CpuPlayerPattern.Follow
-                    || this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack)) {
+                    (this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.Flee
+                    || this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.Follow
+                    || this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.FollowAndAttack)) {
                         this.tryTurboBoostOn();
                     }
                         
             // distance behavior
-            if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
+            if(this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.FollowAndAttack
                 && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < this.getDistanceBeforeStopping()) {
-                this.cpuPlayerPattern = CpuPlayerPattern.StopAndAttack;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.StopAndAttack);
             }   
 
-            if(this.cpuPlayerPattern == CpuPlayerPattern.Follow
+            if(this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.Follow
                 && Phaser.Math.Distance.Between(playerPosition.x, playerPosition.y, this.x, this.y) < this.getDistanceBeforeStopping()) {
-                this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+                    this.cpuPlayerBehavior.setCpuPlayerPattern(CpuPlayerPattern.Stop);
             }
 
-            if(this.cpuPlayerPattern == CpuPlayerPattern.Patrol) {
+            if(this.cpuPlayerBehavior.getCpuPlayerPattern() == CpuPlayerPattern.Patrol) {
                 //&& Phaser.Math.Distance.Between(this.cpuDestination.x, this.cpuDestination.y, this.x, this.y) < 500) {
                 
                 //        -1 PI  1 PI 
@@ -769,23 +750,25 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             }
         
             // movement
-            switch(this.cpuPlayerPattern){
+            let cpuPlayerPattern = this.cpuPlayerBehavior.getCpuPlayerPattern();
+
+            switch(cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
                     //this.tryAimWithGamepad(playerX, playerY); // TODO: try move AWAY from location
                     this.tryAccelerateInAimDirection();
                     break;
                 case CpuPlayerPattern.FollowAndAttack:
-                    this.cpuDestination = playerPosition;
+                    this.cpuPlayerBehavior.setCpuDestination(playerPosition);
                     this.tryAimAtLocation(playerPosition.x, playerPosition.y);
                     this.tryMoveToLocation(playerPosition.x, playerPosition.y);                    
                     break;
                 case CpuPlayerPattern.Follow:
-                    this.cpuDestination = playerPosition;
+                    this.cpuPlayerBehavior.setCpuDestination(playerPosition);
                     this.tryAimAtLocation(playerPosition.x, playerPosition.y);
                     this.tryMoveToLocation(playerPosition.x, playerPosition.y);
                     break;
                 case CpuPlayerPattern.StopAndAttack:
-                    this.cpuDestination = playerPosition;
+                    this.cpuPlayerBehavior.setCpuDestination(playerPosition);
                     this.tryAimAtLocation(playerPosition.x, playerPosition.y);    
                     this.tryStopMove();                    
                     break;
@@ -807,14 +790,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             }       
                                        
             if(this.isCpuPlayer) {
-                this.cpuDestinationTargetIcon.setPosition(this.cpuDestination.x, this.cpuDestination.y);
-                this.cpuDestinationTargetText.setPosition(this.cpuDestination.x, this.cpuDestination.y);
-                this.cpuDestinationTargetText.setText(`${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+
+                this.cpuPlayerBehavior.updateDebugElementsLocation()
             }
             
             // weapon behavior
-            if(this.cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
-                || this.cpuPlayerPattern == CpuPlayerPattern.StopAndAttack) {
+            if(cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
+                || cpuPlayerPattern == CpuPlayerPattern.StopAndAttack) {
                     var weaponRand = Utility.getRandomInt(25);
                     if(weaponRand <= 5) this.tryFirePrimaryWeapon();
                     if(weaponRand >= 10 && weaponRand <= 12) this.tryFireSecondaryWeapon();
@@ -926,7 +908,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     \n target atan ${(this.targetArctangent / Math.PI).toFixed(2)} PI
                     \n gamepad distance ${(this.leftStickDistanceFromCenter).toFixed(2)}
                     \n Aim (${(this.aimX / Math.PI).toFixed(2)} PI, ${(this.aimY / Math.PI).toFixed(2)} PI)
-                    \n Behavior: ${this.cpuPlayerPattern.toString()}
+                    \n Behavior: ${this.cpuPlayerBehavior.getCpuPlayerPattern().toString()}
                     \n Depth: ${this.depth.toString()}`)
 
         text.setX(x);
@@ -1966,3 +1948,5 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         return bullet;
     }
 }
+
+export { PlayerDrawOrientation };
