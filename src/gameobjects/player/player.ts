@@ -6,23 +6,23 @@ import { Point, Utility } from '../../utility';
 import GameScene from '../../scenes/gameScene';
 import { CpuPlayerPattern } from './cpuPlayerPattern';
 
-export enum PlayerDrawOrientation {
-    N,
-    S,
-    E,
+export enum PlayerDrawOrientation {    
     W,
-    NE,
-    SE,
-    NW,
+    W_SW,
     SW,
     S_SW,
-    W_SW,
-    W_NW,
-    N_NW,
-    N_NE,
-    E_NE,
+    S,
+    S_SE,
+    SE,
     E_SE,
-    S_SE
+    E,
+    E_NE,
+    NE,
+    N_NE,
+    N,
+    N_NW,
+    NW,
+    W_NW    
 }
 
 export enum PlayerCartesianOrientation {
@@ -690,6 +690,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.isCpuPlayer) {
         
             if(cpuPlayerPatternOverride != null) {
+                
+                if(cpuPlayerPatternOverride == CpuPlayerPattern.Patrol && this.cpuPlayerPattern != CpuPlayerPattern.Patrol) {
+                    var randX = Utility.getRandomInt(200) - 100;
+                    var randY = Utility.getRandomInt(200) - 100;
+                    this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(playerPosition.x, playerPosition.y));
+                }
+
                 this.cpuPlayerPattern = cpuPlayerPatternOverride;
             }
             else {
@@ -714,6 +721,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     var randY = Utility.getRandomInt(2000) - 1000;
                     this.cpuDestination = Utility.cartesianToIsometric(new Phaser.Math.Vector2(this.x + randX, this.y + randY));
                 }
+
+                if(this.health / this.maxHealth() < 0.3 && changeBehaviorRand > 475)
+                    this.cpuPlayerPattern = CpuPlayerPattern.Flee;
             }
             
             var turboRand = Utility.getRandomInt(25);
@@ -735,9 +745,27 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.cpuPlayerPattern = CpuPlayerPattern.Stop;
             }
 
-            if(this.cpuPlayerPattern == CpuPlayerPattern.Patrol
-                && Phaser.Math.Distance.Between(this.cpuDestination.x, this.cpuDestination.y, this.x, this.y) < 100) {
-                this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+            if(this.cpuPlayerPattern == CpuPlayerPattern.Patrol) {
+                //&& Phaser.Math.Distance.Between(this.cpuDestination.x, this.cpuDestination.y, this.x, this.y) < 500) {
+                
+                //        -1 PI  1 PI 
+                //   -0.5PI           0.5 PI
+                //         0 PI  0 PI
+
+                this.arctangent += 0.01 * Math.PI;
+                if(this.arctangent > Math.PI)
+                    this.arctangent = - Math.PI;
+                this.setPlayerDrawOrientation();
+                this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
+
+                /*
+                    //this.cpuPlayerPattern = CpuPlayerPattern.Stop;
+                if(this.playerDrawOrientation == PlayerDrawOrientation.W_NW)
+                    this.playerDrawOrientation = PlayerDrawOrientation.W;
+                else
+                    this.playerDrawOrientation++;
+                */
+
             }
         
             // movement
@@ -767,9 +795,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 case CpuPlayerPattern.Patrol:                                                           
                     //this.tryMoveToLocation(this.cpuDestination.x, this.cpuDestination.y);
                     //this.tryAimAtLocation(this.cpuDestination.x, this.cpuDestination.y);
+                  
+                    //this.cpuDestination = playerPosition;
+                    this.calculateAimDirection(this.playerDrawOrientation);
                     this.tryAccelerateInAimDirection();
 
-                    this.cpuDestination = new Phaser.Math.Vector2(this.x + this.aimX * 40, this.y + this.aimY * 40);
+                    //this.cpuDestination = new Phaser.Math.Vector2(this.x + this.aimX * 40, this.y + this.aimY * 40);
                     break;
                 default:
                     break;

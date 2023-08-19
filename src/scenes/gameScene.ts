@@ -412,7 +412,7 @@ export default class GameScene extends Phaser.Scene
         this.setCpuBehavior3Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
         this.setCpuBehavior4Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
         this.setCpuBehavior5Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
-        this.setCpuBehavior6Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
+        this.setCpuBehavior6Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX);
         
         this.moveUpKey = cursors.up;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.moveDownKey = cursors.down; //this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
