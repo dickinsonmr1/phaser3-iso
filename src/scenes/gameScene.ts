@@ -6,7 +6,7 @@ import { Projectile, ProjectileType } from "../gameobjects/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
-import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPattern';
+import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPatternEnums';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -899,11 +899,11 @@ export default class GameScene extends Phaser.Scene
                 }
             }
             
-            if(rightAxisY < -0.1)
-                this.cameras.main.zoom -= 0.01;
-
-            if(rightAxisY > 0.1)
+            if(rightAxisY < -0.2)
                 this.cameras.main.zoom += 0.01;
+
+            if(rightAxisY > 0.2)
+                this.cameras.main.zoom -= 0.01;
 
             if(pad.isButtonDown(8)) {
                 this.showDebug = !this.showDebug;

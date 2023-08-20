@@ -1,4 +1,4 @@
-import { CpuPlayerPattern } from "./cpuPlayerPattern";
+import { CpuPlayerPattern } from "./cpuPlayerPatternEnums";
 import { PlayerDrawOrientation } from "./playerDrawOrientation";
 
 export class CpuPlayerBehavior {
@@ -37,6 +37,10 @@ export class CpuPlayerBehavior {
 
     getCpuDestination(): Phaser.Math.Vector2 {
         return this.cpuDestination;
+    }
+
+    updateCpuBehavior(playerPosition: Phaser.Math.Vector2, cpuPlayerPatternOverride: CpuPlayerPattern, healthPercentage: number) {
+        // TODO: implement
     }
 
     updateDebugElementsLocation () {

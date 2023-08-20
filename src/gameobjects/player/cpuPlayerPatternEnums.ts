@@ -6,3 +6,9 @@ export enum CpuPlayerPattern {
     Flee,
     Patrol
 }
+
+export enum CpuAwarenessPattern {
+    Unaware,
+    Looking,
+    TargetLocated
+}
