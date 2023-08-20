@@ -136,6 +136,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
         this.load.image('cpuIcon', './assets/sprites/HUD/cpu.png');
         this.load.image('playerMarkerIcon', './assets/sprites/HUD/playerMarkerIcon.png');
+        this.load.image('freezeIcon', './assets/sprites/HUD/freezeIcon.png');
         //
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust.png');
@@ -454,7 +455,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(8);
+            var rand = Utility.getRandomInt(9);
             var pickUpIconKey = "shieldIcon";
             switch(rand) {
                 case 0: // pink
@@ -512,6 +513,13 @@ export default class GameScene extends Phaser.Scene
                     rightColor = 0x5B74FF;
                     pickupType = PickupType.Shockwave;
                     pickUpIconKey = "shockwaveIcon";
+                    break;
+                case 8: // light blue
+                    topColor = 0x6FE4FF;
+                    leftColor = 0x2DD9FF;
+                    rightColor = 0x5BE2FF;
+                    pickupType = PickupType.Freeze;
+                    pickUpIconKey = "freezeIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
@@ -748,6 +756,10 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Shockwave:
                 console.log('refill airstrike');
                 this.sceneController.hudScene.setInfoText("Shockwave acquired - " + selectedPlayer.playerId, 2000);
+                break;
+            case PickupType.Freeze:
+                console.log('refill freeze');
+                this.sceneController.hudScene.setInfoText("freeze acquired - " + selectedPlayer.playerId, 2000);
                 break;
         }
         

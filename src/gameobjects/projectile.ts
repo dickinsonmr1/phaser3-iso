@@ -7,8 +7,8 @@ export enum ProjectileType {
     HomingRocket,
     FireRocket,
     Bullet,
-    Airstrike
-    // Freeze
+    Airstrike,
+    Freeze
     // EMP
 }
 
