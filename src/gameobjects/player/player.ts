@@ -1633,7 +1633,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.rocketTime) {        
-            this.createProjectile(ProjectileType.HomingRocket);
+            this.createProjectile(ProjectileType.Freeze);
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
@@ -1745,7 +1745,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(gameTime > this.rocketTime) {
             
-            this.createProjectile(ProjectileType.HomingRocket);
+            this.createProjectile(ProjectileType.Freeze);
             this.rocketTime = gameTime + this.rocketTimeInterval;
         }
     }  
@@ -1804,6 +1804,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 weaponImageKey = "deathIcon";
                 scaleX = 1.25;
                 scaleY = 1.25;
+                break;
+            case ProjectileType.Freeze:
+                bulletVelocity = 400;
+                weaponImageKey = "freezeRocket";
+                scaleX = 0.5;
+                scaleY = 0.5;
                 break;
         }            
 
@@ -1909,7 +1915,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             //this.particleEmitterMuzzleFlash.emitParticleAt(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);               
        }
 
-        var bullet = new Projectile({
+        var projectile = new Projectile({
             scene: this.scene,
             projectileType: projectileType,
             isometricX: this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
@@ -1924,11 +1930,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             scaleY: scaleY,
             angle: -drawAngle
         });
-        bullet.init();
+        projectile.init();
 
-        this.bullets.add(bullet);
+        this.bullets.add(projectile);
 
-        return bullet;
+        return projectile;
     }
 }
 

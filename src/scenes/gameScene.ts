@@ -141,6 +141,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('playerGunLaser1', './assets/sprites/weapons/laserPurpleDot15x15.png');
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust.png');
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
+        this.load.image('freezeRocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust - blue.png');
 
         // tiles
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
@@ -675,8 +676,11 @@ export default class GameScene extends Phaser.Scene
         if(sprite instanceof Projectile)
         {
             var projectile = <Projectile>sprite;
-            if(projectile.projectileType != ProjectileType.Airstrike)
+            if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
                 projectile.remove();
+            else if(projectile.projectileType == ProjectileType.Freeze)
+                projectile.detonate();
+
         }
                 
         return true;
@@ -695,8 +699,11 @@ export default class GameScene extends Phaser.Scene
                     otherPlayer.tryDamage(projectile.projectileType, projectileLocation);            
                 }
 
-            if(projectile.projectileType != ProjectileType.Airstrike)
+            if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
                 bullet.remove();
+            else if(projectile.projectileType == ProjectileType.Freeze)
+                projectile.detonate();
+
         }
     }
 

@@ -8,7 +8,7 @@ export enum ProjectileType {
     FireRocket,
     Bullet,
     Airstrike,
-    Freeze
+    Freeze    
     // EMP
 }
 
@@ -75,16 +75,25 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             this.setAlpha(1.0);
         this.setDepth(this.y);
 
-        if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
+        if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket
+            || this.projectileType == ProjectileType.Freeze) {
             // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
+
+            let particleColors = [];
 
             var rocketColor = 0xFFFFFF;
             switch(this.projectileType) {
                 case ProjectileType.HomingRocket:
                     rocketColor = 0xFF00FF;
+                    particleColors = [ rocketColor, 0x96e0da, 0x937ef3 ];
                     break;
                 case ProjectileType.FireRocket:
                     rocketColor = 0x808080;
+                    particleColors = [ rocketColor, 0x96e0da, 0x937ef3 ];
+                    break;
+                case ProjectileType.Freeze:
+                    rocketColor = 0x6FE4FF;
+                    particleColors = [ rocketColor ];
                     break;
             }
 
@@ -107,21 +116,45 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 //maxParticles: 25,    
                 emitting: false
             });*/
+            
 
-            this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
-                frame: 'white',
-                color: [ rocketColor, 0x96e0da, 0x937ef3 ],
-                //tint: rocketColor, // gray: 808080                
-                colorEase: 'quart.out',
-                lifespan: 1000,
-                angle: { min: -100, max: -80 },
-                scale: { start: 0.10, end: 0.5, ease: 'sine.in' },
-                alpha: {start: 0.8, end: 0.0},
-                speed: { min: 20, max: 50 },
-                advance: 0,
-                blendMode: 'ADD',
-                emitting: false
-                
+            if(this.projectileType == ProjectileType.FireRocket || this.projectileType == ProjectileType.HomingRocket) {
+
+                this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
+                    frame: 'white',
+                    color: particleColors,
+                    //tint: rocketColor, // gray: 808080                
+                    colorEase: 'quart.out',
+                    lifespan: 1000,
+                    angle: { min: -100, max: -80 },
+                    scale: { start: 0.10, end: 0.5, ease: 'sine.in' },
+                    alpha: {start: 0.8, end: 0.0},
+                    speed: { min: 20, max: 50 },
+                    advance: 0,
+                    blendMode: 'ADD',
+                    emitting: false
+                });
+
+                this.particleEmitter.setDepth(Constants.depthTurboParticles);
+            }
+            if(this.projectileType == ProjectileType.Freeze) {
+                this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
+                    frame: 'white',
+                    color: particleColors,
+                    //tint: rocketColor, // gray: 808080                
+                    colorEase: 'quart.out',
+                    lifespan: 250,
+                    angle: { min: -100, max: -80 },
+                    scale: { start: 0.1, end: 0.3, ease: 'sine.in' },
+                    alpha: {start: 0.8, end: 0.0},
+                    speed: { min: 20, max: 50 },
+                    advance: 0,
+                    blendMode: 'ADD',
+                    emitting: false
+                });
+
+                this.particleEmitter.setDepth(Constants.depthTurboParticles);
+            }
                 /*
                 frame: 'white',
                 //color: [ 0x96e0da, 0x937ef3 ],
@@ -137,9 +170,7 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 blendMode: 'ADD'
                 */
 
-            });
-
-            this.particleEmitter.setDepth(Constants.depthTurboParticles)
+            
         }
 
         if(this.projectileType == ProjectileType.Airstrike) {
@@ -152,6 +183,18 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 lifespan: 1000,
                 speed: { min: -50, max: 50 },
                 scale: {start: 0.5, end: 1.25},
+                blendMode: 'ADD',
+                frequency: -1,
+                alpha: {start: 0.9, end: 0.0}
+            });
+        }
+        else if(this.projectileType == ProjectileType.Freeze) {
+            this.particleEmitterExplosion = this.scene.add.particles(0,0, 'smoke', {
+                lifespan: 1000,
+                angle: { min: -100, max: -80 },
+                speed: { min: -50, max: 50 },
+                scale: {start: 0.5, end: 0.1},
+                color: [0x6FE4FF],
                 blendMode: 'ADD',
                 frequency: -1,
                 alpha: {start: 0.9, end: 0.0}
@@ -182,7 +225,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 body.setVelocityY(this.velocityY);
             }
             
-            if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
+            if(this.projectileType == ProjectileType.HomingRocket
+                || this.projectileType == ProjectileType.FireRocket
+                || this.projectileType == ProjectileType.Freeze) {
                 this.spotlight.setPosition(this.x, this.y);
                 this.particleEmitter.setDepth(4)
                 
@@ -226,10 +271,18 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             if(this.detonationCount > this.maxDetonationCount)
                 this.remove();
         } 
+        else if(this.projectileType == ProjectileType.Freeze) {
+
+            this.particleEmitterExplosion.setDepth(this.y + 64);
+            this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
+            this.remove();
+        }
     }
 
     remove() {
-        if(this.projectileType == ProjectileType.HomingRocket || this.projectileType == ProjectileType.FireRocket) {
+        if(this.projectileType == ProjectileType.HomingRocket
+            || this.projectileType == ProjectileType.FireRocket
+            || this.projectileType == ProjectileType.Freeze) {
             if(this.scene != null && this.spotlight != null)
                 this.scene.lights.removeLight(this.spotlight);
 
