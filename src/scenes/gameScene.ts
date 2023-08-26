@@ -701,8 +701,10 @@ export default class GameScene extends Phaser.Scene
 
             if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
                 bullet.remove();
-            else if(projectile.projectileType == ProjectileType.Freeze)
+            else if(projectile.projectileType == ProjectileType.Freeze) {
                 projectile.detonate();
+                otherPlayer.tryFreeze();
+            }
 
         }
     }

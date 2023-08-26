@@ -226,6 +226,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     public particleEmitterSmoke: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    private frozenCarSprite: Phaser.GameObjects.Sprite;
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -332,6 +334,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public shockwaveTime: number = 0;
     public shockwaveTimeInterval: number = 1000;
 
+    public frozenTime: number = 0;
+
     public deadUntilRespawnTime: number = 0;
 
     public MapPosition: Phaser.Geom.Point;
@@ -369,7 +373,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.drawScale = params.drawScale ?? 1;
         this.scale = this.drawScale;
 
-        this.createAnims();
+        this.createAnims(params.scene);
 
         this.setDisplayOrigin(0, 0);
 
@@ -501,6 +505,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.bullets = this.scene.physics.add.group({
             allowGravity: false
         });
+
+        
+        this.frozenCarSprite = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
+        //this.frozenCarSprite.anims.play('select-police', true);
+        this.frozenCarSprite.anims.play(`${(this.animPrefix)}-N`, true);
+        // '', frame: '
+        //this.frozenCarSprite.setTint(0x6FE4FF);
+        this.frozenCarSprite.setTintFill(0x6FE4FF)
+        this.frozenCarSprite.setAlpha(0.6);
+        //this.frozenCarSprite.setBlendMode(Phaser.BlendModes.SCREEN);
+        this.frozenCarSprite.setScale(this.scaleX * 1.25, this.scaleY * 1.25);
+        this.frozenCarSprite.setDepth(this.depth + this.bodyDrawOffset().y + 1);
+
+        
     }
     init() {
         this.scene.physics.world.enable(this);
@@ -665,7 +683,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
-    abstract createAnims();
+    abstract createAnims(scene: Phaser.Scene);
 
     updateCpuBehavior(playerPosition: Phaser.Math.Vector2, cpuPlayerPatternOverride: CpuPlayerPattern): void {
         if(this.isCpuPlayer) {
@@ -866,6 +884,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.airstrikeTime > 0)
             this.airstrikeTime--;
+
+        if(this.frozenTime > 0)
+            this.frozenTime--;
+
+        if(this.frozenCarSprite != null) {
+            if(this.frozenTime > 0) {
+                this.frozenCarSprite.setVisible(true);
+                this.frozenCarSprite.setPosition(this.x, this.y);
+                this.frozenCarSprite.anims.play(this.anims.getName(), true);            
+                this.frozenCarSprite.setDepth(this.depth + 1);
+            }
+            else
+                this.frozenCarSprite.setVisible(false);
+        }
     }
 
     alignPlayerNameText(x: number, y: number) {
@@ -1611,6 +1643,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.health <= 0 && this.deadUntilRespawnTime == 0){
             this.tryKill();
         }
+    }
+
+    tryFreeze() {
+        this.frozenTime = 100;
     }
 
     tryFireSecondaryWeapon() {
