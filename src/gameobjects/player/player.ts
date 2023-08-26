@@ -748,12 +748,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.arctangent += 0.01 * Math.PI;
                 if(this.arctangent > Math.PI)
                     this.arctangent = - Math.PI;
+
                 this.setPlayerDrawOrientation();
                 this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
             }
         
             // movement
             let cpuPlayerPattern = this.cpuPlayerBehavior.getCpuPlayerPattern();
+
+            if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
             switch(cpuPlayerPattern){
                 case CpuPlayerPattern.Flee:
@@ -889,7 +892,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.frozenTime--;
 
         if(this.frozenCarSprite != null) {
-            if(this.frozenTime > 0) {
+            if(this.frozenTime > 0 && this.deadUntilRespawnTime <= 0) {
                 this.frozenCarSprite.setVisible(true);
                 this.frozenCarSprite.setPosition(this.x, this.y);
                 this.frozenCarSprite.anims.play(this.anims.getName(), true);            
@@ -1078,6 +1081,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
     calculateAimDirection(playerDrawOrientation: PlayerDrawOrientation): void{        
 
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
+
         //let angle2 = -this.arctangent + (Math.PI / 2) + (3 * Math.PI / 4);
 
         let angle2 = -this.arctangent + (Math.PI / 2);// + (3 * Math.PI / 4);
@@ -1182,7 +1187,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryMoveWithKeyboard(direction: PlayerDrawOrientation) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         switch(direction) {
             case PlayerDrawOrientation.N:
@@ -1250,16 +1255,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     // only used with ControlStyle.LeftStickAims
     tryAimWithGamepad(x: number, y: number) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.calculateAimDirectionWithGamePad(x, y);
         
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);  
     }
 
-    tryAccelerateInAimDirection() {
-
-        if(this.deadUntilRespawnTime > 0) return;
+    tryAccelerateInAimDirection() {    
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.body.velocity.x = this.aimX * this.getPlayerSpeed();
         this.body.velocity.y = this.aimY * this.getPlayerSpeed();   
@@ -1268,7 +1272,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     // used with ControlStyle.LeftStickAimsAndMoves
     tryAimAndMoveWithGamepad(x: number, y: number, leftAxisX: number, leftAxisY: number) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.calculateAimDirectionWithGamePad(x, y);
 
@@ -1286,7 +1290,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryMoveToLocation(destinationX: number, destinationY: number) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
@@ -1298,7 +1302,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryMoveAwayFromLocation(destinationX: number, destinationY: number) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
 
@@ -1310,6 +1314,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryAimAtLocation(destinationX: number, destinationY: number) {
        
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
+
         this.calculateAimDirectionByTarget(destinationX, destinationY);        
         this.playAnimFromPlayerDrawOrientation(this.playerDrawOrientation);       
     }
@@ -1347,6 +1353,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //this.particleEmitterSmoke.stop();
 
         this.headlight.setVisible(false);
+
+        this.frozenCarSprite.setVisible(false);
 
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
@@ -1396,6 +1404,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
         this.deadUntilRespawnTime = 0;
+
+        this.frozenTime = 0;
 
         this.deathIcon.setVisible(false);
 
@@ -1647,11 +1657,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFreeze() {
         this.frozenTime = 100;
+        this.tryStopMove();
     }
 
     tryFireSecondaryWeapon() {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
@@ -1664,7 +1675,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
     tryFirePrimaryWeapon() {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
@@ -1676,7 +1687,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFireFlamethrower() {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         this.particleEmitterFlamethrower.setDepth(this.y);
 
@@ -1693,7 +1704,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFireShockwave() {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
@@ -1713,7 +1724,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFireAirstrike(): void {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
@@ -1733,7 +1744,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryTurboBoostOn(): void {
         
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         if(this.turbo > 0) {
             this.turboOn = true;
@@ -1753,7 +1764,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
     tryTurboBoostOff(): void {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        //if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         if(this.turboOn) {
             this.turboOn = false;            
@@ -1762,7 +1773,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFireSecondaryWeaponWithGamepad() { //x, y) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
@@ -1775,7 +1786,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFirePrimaryWeaponWithGamepad() { //x, y) {
 
-        if(this.deadUntilRespawnTime > 0) return;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
 
         var gameTime = this.scene.game.loop.time;
 
