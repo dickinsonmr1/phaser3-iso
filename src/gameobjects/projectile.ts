@@ -121,7 +121,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             if(this.projectileType == ProjectileType.FireRocket || this.projectileType == ProjectileType.HomingRocket) {
 
                 this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
-                    frame: 'white',
                     color: particleColors,
                     //tint: rocketColor, // gray: 808080                
                     colorEase: 'quart.out',
@@ -139,13 +138,12 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
             }
             if(this.projectileType == ProjectileType.Freeze) {
                 this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
-                    frame: 'white',
                     color: particleColors,
                     //tint: rocketColor, // gray: 808080                
                     colorEase: 'quart.out',
                     lifespan: 250,
                     angle: { min: -120, max: -60 },
-                    scale: { start: 0.1, end: 0.3, ease: 'sine.in' },
+                    scale: { start: 0.1, end: 0.5, ease: 'sine.in' },
                     alpha: {start: 0.8, end: 0.0},
                     speed: { min: 20, max: 50 },
                     advance: 0,

@@ -768,7 +768,7 @@ export default class GameScene extends Phaser.Scene
                 break;
             case PickupType.Freeze:
                 console.log('refill freeze');
-                this.sceneController.hudScene.setInfoText("freeze acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Freeze acquired - " + selectedPlayer.playerId, 2000);
                 break;
         }
         

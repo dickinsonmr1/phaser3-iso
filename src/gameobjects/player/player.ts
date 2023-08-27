@@ -172,6 +172,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    private maxFrozenTime(): number { 
+        return 100;
+    }
+
+    private freezeTransitionTime(): number { 
+        return 30;
+    }
+
+    private maxFreezeAlpha(): number { 
+        return 0.6;
+    }
+
     private getDistanceBeforeStopping(): number { 
         switch(this.vehicleType) {
             case VehicleType.Ambulance:
@@ -509,11 +521,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
         this.frozenCarSprite = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
         //this.frozenCarSprite.anims.play('select-police', true);
-        this.frozenCarSprite.anims.play(`${(this.animPrefix)}-N`, true);
+        this.frozenCarSprite.anims.play(this.anims.getName(), true);
         // '', frame: '
         //this.frozenCarSprite.setTint(0x6FE4FF);
         this.frozenCarSprite.setTintFill(0x6FE4FF)
-        this.frozenCarSprite.setAlpha(0.6);
+        this.frozenCarSprite.setAlpha(this.maxFreezeAlpha());
         //this.frozenCarSprite.setBlendMode(Phaser.BlendModes.SCREEN);
         this.frozenCarSprite.setScale(this.scaleX * 1.25, this.scaleY * 1.25);
         this.frozenCarSprite.setDepth(this.depth + this.bodyDrawOffset().y + 1);
@@ -608,7 +620,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         */
 
         this.particleEmitterTurbo = this.scene.add.particles(0, 0, 'smoke', {
-            frame: 'white',
             color: [ 0x96e0da, 0x937ef3 ],
             colorEase: 'quart.out',
             lifespan: 250,
@@ -681,6 +692,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
             emitting: true
         });
+
+        this.setPlayerDrawOrientation();
+        this.calculateAimDirection(this.playerDrawOrientation);
     }
 
     abstract createAnims(scene: Phaser.Scene);
@@ -897,6 +911,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.frozenCarSprite.setPosition(this.x, this.y);
                 this.frozenCarSprite.anims.play(this.anims.getName(), true);            
                 this.frozenCarSprite.setDepth(this.depth + 1);
+
+                if(this.frozenTime > this.maxFrozenTime() - this.freezeTransitionTime()) {
+                    var freezeStartTime = (this.maxFrozenTime() - this.frozenTime);
+                    this.frozenCarSprite.setAlpha((freezeStartTime / this.freezeTransitionTime()) * this.maxFreezeAlpha());
+                }
+                else if(this.frozenTime < this.freezeTransitionTime()) {
+                    var freezeStartTime = (this.freezeTransitionTime() - this.frozenTime);
+                    this.frozenCarSprite.setAlpha((1 - freezeStartTime / this.freezeTransitionTime()) * this.maxFreezeAlpha());
+                }
             }
             else
                 this.frozenCarSprite.setVisible(false);
@@ -1656,7 +1679,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryFreeze() {
-        this.frozenTime = 100;
+        if(this.deadUntilRespawnTime > 0 || this.frozenTime > 0) return;
+
+        this.frozenTime = this.maxFrozenTime();
+        this.frozenCarSprite.setVisible(true);
+        this.frozenCarSprite.setAlpha(0);
         this.tryStopMove();
     }
 
