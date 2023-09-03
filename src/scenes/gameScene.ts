@@ -692,7 +692,7 @@ export default class GameScene extends Phaser.Scene
         var projectile = <Projectile>bullet;
         var projectileLocation = new Phaser.Math.Vector2(bullet.x, bullet.y);
         
-        if(otherPlayer.deadUntilRespawnTime <= 0) {
+        if(!otherPlayer.deadUntilRespawnTimer.isActive()) {
 
             if(projectile.projectileType != ProjectileType.Airstrike
                 || (projectile.projectileType == ProjectileType.Airstrike && projectile.detonated)) {
@@ -713,7 +713,7 @@ export default class GameScene extends Phaser.Scene
 
         var otherPlayer = <Player>enemy;
         
-        if(otherPlayer.deadUntilRespawnTime <= 0) {
+        if(!otherPlayer.deadUntilRespawnTimer.isActive()) {
             otherPlayer.tryDamageWithFlames(0.01);
             //bullet.remove();
         }

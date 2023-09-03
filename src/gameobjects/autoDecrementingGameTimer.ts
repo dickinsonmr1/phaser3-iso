@@ -10,6 +10,7 @@ export class AutoDecrementingGameTimer {
         this.maxDuration = maxDuration;
         this.transitionInThresholdTime = inTime ?? 0;
         this.transitionOutThresholdTime = outTime ?? 0;
+        this.currentTime = 0;
     }
 
     startTimer() {
@@ -17,7 +18,8 @@ export class AutoDecrementingGameTimer {
     }
     
     update() {
-        this.currentTime--;
+        if(this.currentTime > 0)
+            this.currentTime--;
 
         if(this.currentTime <= 0)
             this.stopTimer();
