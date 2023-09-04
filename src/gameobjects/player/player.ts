@@ -337,8 +337,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public nextBulletTimer: GameTimeDelayTimer = new GameTimeDelayTimer(100);
     public nextRocketTimer: GameTimeDelayTimer = new GameTimeDelayTimer(500);
 
-    public airstrikeTime: number = 0;
-    public airstrikeTimeInterval: number = 200;
+    //public airstrikeTime: number = 0;
+    //public airstrikeTimeInterval: number = 200;
+    public airStrikeTimer: GameTimeDelayTimer = new GameTimeDelayTimer(200);
     public activeAirstrike: Projectile;
     //private bulletVelocity: number = 7;
 
@@ -892,8 +893,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.tryRespawn();
         }
 
-        if(this.airstrikeTime > 0)
-            this.airstrikeTime--;
+        //if(this.airstrikeTime > 0)
+            //this.airstrikeTime--;
 
         this.frozenTimer.update();
 
@@ -1759,18 +1760,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var gameTime = this.scene.game.loop.time;
 
-        if(gameTime > this.airstrikeTime) {
-            
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.airStrikeTimer.isExpired(gameTimeNow)) {
             if(this.activeAirstrike == null || this.activeAirstrike.detonated == true)  {
-                this.activeAirstrike = this.createProjectile(ProjectileType.Airstrike);//this.playerOrientation);
-
-                this.airstrikeTime = gameTime + this.airstrikeTimeInterval;
+                this.activeAirstrike = this.createProjectile(ProjectileType.Airstrike);
+                this.airStrikeTimer.startTimer(gameTimeNow);
             }
             else {               
                 this.activeAirstrike.detonate();
-                this.airstrikeTime = gameTime + this.airstrikeTimeInterval
+                this.airStrikeTimer.startTimer(gameTimeNow);
             }
-        }
+        }       
     }
 
     tryTurboBoostOn(): void {
