@@ -8,6 +8,7 @@ import { CpuPlayerPattern } from './cpuPlayerPatternEnums';
 import { PlayerDrawOrientation } from './playerDrawOrientation';
 import { CpuPlayerBehavior } from './cpuPlayerBehavior';
 import { AutoDecrementingGameTimer } from '../autoDecrementingGameTimer';
+import { GameTimeDelayTimer } from '../gameTimeDelayTimer';
 
 
 export enum PlayerCartesianOrientation {
@@ -333,8 +334,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public bullets: Phaser.GameObjects.Group;
     public lastUsedBulletIndex: number;
     
-    public bulletTime: number = 0;
-    public bulletTimeInterval: number = 100;
+    //public bulletTime: number = 0;
+    //public bulletTimeInterval: number = 100;
+    public nextBulletTimer: GameTimeDelayTimer = new GameTimeDelayTimer(100);
 
     public rocketTime: number = 0;
     public rocketTimeInterval: number = 500;
@@ -895,11 +897,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.tryRespawn();
         }
 
-        if(this.bulletTime > 0)
-            this.bulletTime--;
+        //if(this.bulletTime > 0)
+            //this.bulletTime--;
 
-        if(this.rocketTime > 0)
-            this.rocketTime--;
+        //if(this.rocketTime > 0)
+            //this.rocketTime--;
 
         if(this.shockwaveTime > 0)
             this.shockwaveTime--;
@@ -1713,14 +1715,19 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
-        var gameTime = this.scene.game.loop.time;
-
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextBulletTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.Bullet);
+            this.nextBulletTimer.startTimer(gameTimeNow);
+        }        
+        /*
         if(gameTime > this.bulletTime) {            
             this.createProjectile(ProjectileType.Bullet);//this.playerOrientation);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
+        */
     }  
-
     
     tryFirePrimaryWeapon() {
 
@@ -1824,6 +1831,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextBulletTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.Bullet);
+            this.nextBulletTimer.startTimer(gameTimeNow);
+        }   
+
+        /*
         var gameTime = this.scene.game.loop.time;
 
         if(gameTime > this.bulletTime) {
@@ -1831,6 +1846,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.createProjectile(ProjectileType.Bullet);
             this.bulletTime = gameTime + this.bulletTimeInterval;
         }
+        */
     }  
 
     tryFirePrimaryWeaponWithGamepad() { //x, y) {
