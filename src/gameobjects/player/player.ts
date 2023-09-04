@@ -334,20 +334,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     public bullets: Phaser.GameObjects.Group;
     public lastUsedBulletIndex: number;
     
-    //public bulletTime: number = 0;
-    //public bulletTimeInterval: number = 100;
     public nextBulletTimer: GameTimeDelayTimer = new GameTimeDelayTimer(100);
-
-    public rocketTime: number = 0;
-    public rocketTimeInterval: number = 500;
+    public nextRocketTimer: GameTimeDelayTimer = new GameTimeDelayTimer(500);
 
     public airstrikeTime: number = 0;
     public airstrikeTimeInterval: number = 200;
     public activeAirstrike: Projectile;
     //private bulletVelocity: number = 7;
 
-    public shockwaveTime: number = 0;
-    public shockwaveTimeInterval: number = 1000;
+    public nextshockwaveTimer: GameTimeDelayTimer = new GameTimeDelayTimer(1000);
 
     public frozenTimer: AutoDecrementingGameTimer;
 
@@ -896,17 +891,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if (currentlyDeadAndWaitingUntilRespawn && !this.deadUntilRespawnTimer.isActive()){
             this.tryRespawn();
         }
-
-        //if(this.bulletTime > 0)
-            //this.bulletTime--;
-
-        //if(this.rocketTime > 0)
-            //this.rocketTime--;
-
-        if(this.shockwaveTime > 0)
-            this.shockwaveTime--;
-        
-        //this.shockwaveTimer.update();
 
         if(this.airstrikeTime > 0)
             this.airstrikeTime--;
@@ -1721,24 +1705,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.createProjectile(ProjectileType.Bullet);
             this.nextBulletTimer.startTimer(gameTimeNow);
         }        
-        /*
-        if(gameTime > this.bulletTime) {            
-            this.createProjectile(ProjectileType.Bullet);//this.playerOrientation);
-            this.bulletTime = gameTime + this.bulletTimeInterval;
-        }
-        */
     }  
     
     tryFirePrimaryWeapon() {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
-        var gameTime = this.scene.game.loop.time;
-
-        if(gameTime > this.rocketTime) {        
-            this.createProjectile(ProjectileType.Freeze);
-            this.rocketTime = gameTime + this.rocketTimeInterval;
-        }
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextRocketTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.FireRocket);
+            this.nextRocketTimer.startTimer(gameTimeNow);
+        }        
     }  
 
     tryFireFlamethrower() {
@@ -1762,18 +1740,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
-        var gameTime = this.scene.game.loop.time;
-
-        if(gameTime > this.shockwaveTime) {
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextshockwaveTimer.isExpired(gameTimeNow)) {
             
             this.particleEmitterShockwave.explode(2);
-            
-            this.shockwaveTime = gameTime + this.shockwaveTimeInterval;
-        }
+            this.nextshockwaveTimer.startTimer(gameTimeNow);
+        }        
     }  
 
-    tryStopFireFlamethrower() {
-        
+    tryStopFireFlamethrower() {        
         if(this.flamethrowerDistance > 0)
             this.flamethrowerDistance -= 10;
     }
@@ -1837,29 +1812,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.createProjectile(ProjectileType.Bullet);
             this.nextBulletTimer.startTimer(gameTimeNow);
         }   
-
-        /*
-        var gameTime = this.scene.game.loop.time;
-
-        if(gameTime > this.bulletTime) {
-            
-            this.createProjectile(ProjectileType.Bullet);
-            this.bulletTime = gameTime + this.bulletTimeInterval;
-        }
-        */
     }  
 
     tryFirePrimaryWeaponWithGamepad() { //x, y) {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
-        var gameTime = this.scene.game.loop.time;
-
-        if(gameTime > this.rocketTime) {
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextRocketTimer.isExpired(gameTimeNow)) {
             
-            this.createProjectile(ProjectileType.Freeze);
-            this.rocketTime = gameTime + this.rocketTimeInterval;
-        }
+            this.createProjectile(ProjectileType.FireRocket);
+            this.nextRocketTimer.startTimer(gameTimeNow);
+        }        
     }  
 
     refillTurbo() {
