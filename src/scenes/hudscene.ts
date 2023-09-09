@@ -103,15 +103,18 @@ import { PickupType } from '../gameobjects/pickup';
             this.updatePlayerPosition(playerName, x, y);
         }, this);
 
-        ourGame.events.on('previousWeaponSelected', function(playerName) {
+        ourGame.events.on('previousWeaponSelected', function(playerName, selectedWeaponType) {
+            // todo: use selectedWeaponType from event
             this.selectPreviousWeapon(playerName);
         }, this);
 
-        ourGame.events.on('nextWeaponSelected', function(playerName) {
+        ourGame.events.on('nextWeaponSelected', function(playerName, selectedWeaponType) {
+            // todo: use selectedWeaponType from event
             this.selectNextWeapon(playerName);
         }, this);
 
-        ourGame.events.on('ammoUpdated', function(playerName, weaponType, ammoCount) {
+        ourGame.events.on('ammoUpdated', function(playerName, selectedWeaponType, ammoCount) {
+            // todo: use selectedWeaponType from event
             this.selectNextWeapon(playerName);
         }, this);
 

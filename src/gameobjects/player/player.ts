@@ -9,6 +9,8 @@ import { PlayerDrawOrientation } from './playerDrawOrientation';
 import { CpuPlayerBehavior } from './cpuPlayerBehavior';
 import { AutoDecrementingGameTimer } from '../autoDecrementingGameTimer';
 import { GameTimeDelayTimer } from '../gameTimeDelayTimer';
+import { PlayerWeaponInventoryItem } from './playerWeaponInventoryItem';
+import { PickupType } from '../pickup';
 
 
 export enum PlayerCartesianOrientation {
@@ -364,6 +366,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private static get deathIconOffsetX(): number {return 0;}
     private static get deathIconOffsetY(): number {return 0;}
 
+    weaponInventoryItems: PlayerWeaponInventoryItem[] = [];
+    selectedWeaponInventoryItem: PlayerWeaponInventoryItem;
+    selectedWeaponInventoryItemIndex: integer = 0;
+
     constructor(params) {
         super(params.scene, params.mapX, params.mapY, params.key, params.frame);
 
@@ -531,6 +537,16 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.frozenCarSprite.setDepth(this.depth + this.bodyDrawOffset().y + 1);
 
         this.frozenTimer = new AutoDecrementingGameTimer(this.maxFrozenTime(), this.freezeTransitionTime(), this.freezeTransitionTime());
+
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Special, 3));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Rocket, 3));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Flamethrower, 100));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Airstrike, 1));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Shockwave, 2));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Freeze, 1));
+
+        this.selectedWeaponInventoryItemIndex = 0;
+        this.selectedWeaponInventoryItem = this.weaponInventoryItems[this.selectedWeaponInventoryItemIndex];
         
     }
     init() {
@@ -1712,6 +1728,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
+        var selectedWeapon = this.selectedWeaponInventoryItem;
+
         var gameTimeNow = this.scene.game.loop.time;
         if(this.nextRocketTimer.isExpired(gameTimeNow)) {
             
@@ -1839,11 +1857,27 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     trySelectPreviousWeapon() {
-        this.scene.events.emit('previousWeaponSelected', this.playerId, this.turbo);
+
+        --this.selectedWeaponInventoryItemIndex;
+        if(this.selectedWeaponInventoryItemIndex < 0)
+            this.selectedWeaponInventoryItemIndex = this.weaponInventoryItems.length - 1;
+        
+            this.selectedWeaponInventoryItem = this.weaponInventoryItems[this.selectedWeaponInventoryItemIndex];
+
+        var selectedWeaponType = this.selectedWeaponInventoryItem.pickupType;
+        this.scene.events.emit('previousWeaponSelected', this.playerId, selectedWeaponType);
     }
     
     trySelectNextWeapon() {
-        this.scene.events.emit('nextWeaponSelected', this.playerId, this.turbo);
+
+        ++this.selectedWeaponInventoryItemIndex;
+        if(this.selectedWeaponInventoryItemIndex > this.weaponInventoryItems.length - 1)
+            this.selectedWeaponInventoryItemIndex = 0;
+
+        this.selectedWeaponInventoryItem = this.weaponInventoryItems[this.selectedWeaponInventoryItemIndex];
+
+        var selectedWeaponType = this.selectedWeaponInventoryItem.pickupType;
+        this.scene.events.emit('nextWeaponSelected', this.playerId, selectedWeaponType);
     }    
 
     private createProjectile(projectileType) : Projectile {
