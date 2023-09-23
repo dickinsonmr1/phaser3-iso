@@ -1730,13 +1730,46 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var selectedWeapon = this.selectedWeaponInventoryItem;
 
+        if(selectedWeapon != null && this.selectedWeaponInventoryItem.ammoCount > 0) {
+            switch(selectedWeapon.pickupType) {
+                case PickupType.Special:
+                    break;
+                case PickupType.Rocket:
+                    this.tryFireRocket();
+                    break;
+                case PickupType.Flamethrower:
+                    this.tryFireFlamethrower();
+                    break;
+                case PickupType.Airstrike:
+                    this.tryFireAirstrike();
+                    break;
+                case PickupType.Shockwave:
+                    this.tryFireShockwave();
+                    break;
+                case PickupType.Freeze:
+                    this.tryFireFreeze();
+                    break;
+            }
+        }        
+    }  
+
+    tryFireRocket() {
         var gameTimeNow = this.scene.game.loop.time;
         if(this.nextRocketTimer.isExpired(gameTimeNow)) {
             
             this.createProjectile(ProjectileType.FireRocket);
             this.nextRocketTimer.startTimer(gameTimeNow);
         }        
-    }  
+    }
+
+    tryFireFreeze() {
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextRocketTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.Freeze);
+            this.nextRocketTimer.startTimer(gameTimeNow);
+        }        
+    }
 
     tryFireFlamethrower() {
 
@@ -1834,6 +1867,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     tryFirePrimaryWeaponWithGamepad() { //x, y) {
 
+        this.tryFirePrimaryWeapon();
+
+        /*
         if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
 
         var gameTimeNow = this.scene.game.loop.time;
@@ -1841,7 +1877,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             
             this.createProjectile(ProjectileType.FireRocket);
             this.nextRocketTimer.startTimer(gameTimeNow);
-        }        
+        } 
+        */       
     }  
 
     refillTurbo() {

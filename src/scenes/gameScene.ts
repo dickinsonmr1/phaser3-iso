@@ -853,10 +853,7 @@ export default class GameScene extends Phaser.Scene
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
             if(pad.L2) {
-                this.player.tryTurboBoostOn();
-            }
-            else {
-                this.player.tryTurboBoostOff();
+                this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
             }
 
             if(this.controlStyle == ControlStyle.LeftStickAims) {
@@ -883,7 +880,20 @@ export default class GameScene extends Phaser.Scene
                 this.player.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
+            else {
+                this.player.tryStopFireFlamethrower();
+            }
 
+
+            if(pad.X) {
+                //this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
+                this.player.tryTurboBoostOn();
+            }
+            else {
+                this.player.tryTurboBoostOff();
+            }
+
+            /*
             if(pad.X) {
                 this.player.tryFireFlamethrower();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
@@ -891,6 +901,7 @@ export default class GameScene extends Phaser.Scene
             else {
                 this.player.tryStopFireFlamethrower();
             }
+            */
             
             if(pad.B) {
                 this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
