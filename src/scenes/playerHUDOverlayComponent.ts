@@ -79,6 +79,7 @@ export class PlayerHUDOverlayComponent {
     ammoText: Phaser.GameObjects.Text;
     playerNameText: Phaser.GameObjects.Text;
     cpuBehaviorOverrideText: Phaser.GameObjects.Text;
+    cpuWeaponOverrideText: Phaser.GameObjects.Text;
 
     healthText: Phaser.GameObjects.Text;
     turboText: Phaser.GameObjects.Text;
@@ -117,7 +118,13 @@ export class PlayerHUDOverlayComponent {
         {
             font: 'bold 26px Arial'
         });
-        this.cpuBehaviorOverrideText.setOrigin(0.5, 0.5);
+        this.cpuBehaviorOverrideText.setOrigin(0, 0.5);
+
+        this.cpuWeaponOverrideText = this.scene.add.text(x, 350, 'CPU weapon override',
+        {
+            font: 'bold 26px Arial'
+        });
+        this.cpuWeaponOverrideText.setOrigin(0, 0.5);
 
         /*
         this.healthText = this.scene.add.text(this.IsoBoxHealthStartX, this.IsoBoxTextStartY, "+",
@@ -226,6 +233,19 @@ export class PlayerHUDOverlayComponent {
         else {
             if(this.cpuBehaviorOverrideText.visible)
                 this.cpuBehaviorOverrideText.setVisible(false);        
+        }            
+    }
+
+    updateCpuWeaponOverrideText(behavior: string) {        
+        if(behavior != null) {
+            if(!this.cpuWeaponOverrideText.visible)
+                this.cpuWeaponOverrideText.setVisible(true);
+
+            this.cpuWeaponOverrideText.setText('CPU weapon: ' + behavior);
+        }
+        else {
+            if(this.cpuWeaponOverrideText.visible)
+                this.cpuWeaponOverrideText.setVisible(false);        
         }            
     }
 

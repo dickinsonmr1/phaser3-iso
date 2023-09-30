@@ -51,7 +51,10 @@ export default class GameScene extends Phaser.Scene
     setCpuBehavior5Key: Phaser.Input.Keyboard.Key;
     setCpuBehavior6Key: Phaser.Input.Keyboard.Key;
 
-    cpuPlayerPatternOverride: CpuPlayerPattern = CpuPlayerPattern.Follow;
+    setCpuWeaponOverrideShiftKey: Phaser.Input.Keyboard.Key;
+
+    cpuPlayerPatternOverride: CpuPlayerPattern = null;//CpuPlayerPattern.Follow;
+    cpuSelectedWeaponOverride: PickupType =  null;//PickupType.Rocket;
     
     gamepad: Phaser.Input.Gamepad.Gamepad;
     mostRecentCartesianGamepadAxes: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
@@ -415,7 +418,9 @@ export default class GameScene extends Phaser.Scene
         this.setCpuBehavior4Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
         this.setCpuBehavior5Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE);
         this.setCpuBehavior6Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SIX);
-        
+
+        this.setCpuWeaponOverrideShiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+          
         this.moveUpKey = cursors.up;// this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         this.moveDownKey = cursors.down; //this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         this.moveRightKey = cursors.right;//this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
@@ -1037,29 +1042,52 @@ export default class GameScene extends Phaser.Scene
             }
         }
 
-        if(this.setCpuBehavior0Key.isDown) {
+        if(this.setCpuBehavior0Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown ) {
             this.cpuPlayerPatternOverride = null;
         }
-        if(this.setCpuBehavior1Key.isDown) {
+        if(this.setCpuBehavior1Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.FollowAndAttack;
         }
-        if(this.setCpuBehavior2Key.isDown) {
+        if(this.setCpuBehavior2Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.Stop;
         }
-        if(this.setCpuBehavior3Key.isDown) {
+        if(this.setCpuBehavior3Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.StopAndAttack;
         }
-        if(this.setCpuBehavior4Key.isDown) {
+        if(this.setCpuBehavior4Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.Flee;
         }
-        if(this.setCpuBehavior5Key.isDown) {
+        if(this.setCpuBehavior5Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.Patrol;
         }
-        if(this.setCpuBehavior6Key.isDown) {
+        if(this.setCpuBehavior6Key.isDown && !this.setCpuWeaponOverrideShiftKey.isDown) {
             this.cpuPlayerPatternOverride = CpuPlayerPattern.Follow;
         }
 
+        if(this.setCpuBehavior0Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown ) {
+            this.cpuSelectedWeaponOverride = null;
+        }
+        if(this.setCpuBehavior1Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Special;
+        }
+        if(this.setCpuBehavior2Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Rocket;
+        }
+        if(this.setCpuBehavior3Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Flamethrower;
+        }
+        if(this.setCpuBehavior4Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Airstrike;
+        }
+        if(this.setCpuBehavior5Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Shockwave;
+        }
+        if(this.setCpuBehavior6Key.isDown && this.setCpuWeaponOverrideShiftKey.isDown) {
+            this.cpuSelectedWeaponOverride = PickupType.Freeze;
+        }
+
         this.sceneController.hudScene.updateCpuBehaviorOverrideText(this.player.playerId, CpuPlayerPattern[this.cpuPlayerPatternOverride]);
+        this.sceneController.hudScene.updateCpuWeaponOverrideText(this.player.playerId, PickupType[this.cpuSelectedWeaponOverride]);
 
         this.player.update();
 
@@ -1078,13 +1106,13 @@ export default class GameScene extends Phaser.Scene
 
         var playerPosition = new Phaser.Math.Vector2(this.player.x, this.player.y);
 
-        this.player2.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
+        this.player2.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player2.update();
 
-        this.player3.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
+        this.player3.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player3.update();
 
-        this.player4.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride);
+        this.player4.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player4.update();
 
         this.updatePickupScaleTime()

@@ -716,7 +716,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     abstract createAnims(scene: Phaser.Scene);
 
-    updateCpuBehavior(playerPosition: Phaser.Math.Vector2, cpuPlayerPatternOverride: CpuPlayerPattern): void {
+    updateCpuBehavior(playerPosition: Phaser.Math.Vector2, cpuPlayerPatternOverride: CpuPlayerPattern, cpuSelectedWeaponOverride: PickupType): void {
         if(this.isCpuPlayer) {
         
             if(cpuPlayerPatternOverride != null) {
@@ -833,13 +833,28 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                                        
             this.cpuPlayerBehavior.updateDebugElementsLocation()
             
+            if(cpuSelectedWeaponOverride != null) {
+                this.selectedWeaponInventoryItem = this.weaponInventoryItems.filter(x => x.pickupType == cpuSelectedWeaponOverride)[0];
+            }
+
             // weapon behavior
             if(cpuPlayerPattern == CpuPlayerPattern.FollowAndAttack
                 || cpuPlayerPattern == CpuPlayerPattern.StopAndAttack) {
-                    var weaponRand = Utility.getRandomInt(25);
-                    if(weaponRand <= 5) this.tryFirePrimaryWeapon();
-                    if(weaponRand >= 10 && weaponRand <= 12) this.tryFireSecondaryWeapon();
-                    if(weaponRand == 20) this.tryFireShockwave();
+
+                var weaponRand = Utility.getRandomInt(50);
+
+                if(weaponRand == 0)
+                    this.trySelectPreviousWeapon();
+                if(weaponRand == 1)
+                    this.trySelectNextWeapon();
+
+                if(this.selectedWeaponInventoryItem.pickupType == PickupType.Flamethrower
+                    && Phaser.Math.Distance.Between(this.x, this.y, playerPosition.x, playerPosition.y) < 500)
+                    this.tryFirePrimaryWeapon();
+
+                if(weaponRand >= 5 && weaponRand < 10) this.tryFirePrimaryWeapon();
+                if(weaponRand >= 10 && weaponRand <= 12) this.tryFireSecondaryWeapon();
+                //if(weaponRand == 20) this.tryFireShockwave();
             }
         }
     }
