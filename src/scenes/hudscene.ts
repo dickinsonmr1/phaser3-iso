@@ -82,7 +82,7 @@ import { PickupType } from '../gameobjects/pickup';
         }, this);
 
         ourGame.events.on('updatePlayerHealth', function (playerName, health) {
-            this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
+            //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
             this.updatePlayerHealth(playerName, health);
         }, this);
 

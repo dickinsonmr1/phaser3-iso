@@ -853,7 +853,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     this.tryFirePrimaryWeapon();
 
                 if(weaponRand >= 5 && weaponRand < 10) this.tryFirePrimaryWeapon();
-                if(weaponRand >= 10 && weaponRand <= 12) this.tryFireSecondaryWeapon();
+                //if(weaponRand >= 10 && weaponRand <= 12) this.tryFireSecondaryWeapon();
                 //if(weaponRand == 20) this.tryFireShockwave();
             }
         }

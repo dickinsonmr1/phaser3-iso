@@ -378,10 +378,24 @@ export default class GameScene extends Phaser.Scene
         //this.physics.add.overlap(this.player4.bullets, this.layer4);
 
         //const particles = this.player.particleEmitterFlamethrower.overlap(this.player2);
-        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player2, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player3, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player.particleEmitterFlamethrower, this.player4, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        /*
+        this.physics.add.overlap(this.player2, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player3, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player4, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
 
+        this.physics.add.overlap(this.player, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player3, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player4, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+
+        this.physics.add.overlap(this.player, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player2, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player4, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+
+        this.physics.add.overlap(this.player, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player2, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        this.physics.add.overlap(this.player3, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
+        */
+       
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
         
@@ -719,7 +733,7 @@ export default class GameScene extends Phaser.Scene
         var otherPlayer = <Player>enemy;
         
         if(!otherPlayer.deadUntilRespawnTimer.isActive()) {
-            otherPlayer.tryDamageWithFlames(0.01);
+            otherPlayer.tryDamageWithFlames(0.1);
             //bullet.remove();
         }
     }
@@ -1096,9 +1110,22 @@ export default class GameScene extends Phaser.Scene
         var temp = Utility.cartesianToIsometric(this.player.MapPosition);
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
-        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player2);
-        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player3);
-        this.intersectPlayer1FlamethrowerParticlesWithEnemies(this.player4);
+
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player3);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player4);
+        
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player3);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player4);
+
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player4);
+
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player3);
 
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player2);
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
@@ -1143,6 +1170,22 @@ export default class GameScene extends Phaser.Scene
                 //particle.kill();
             });
             player.tryDamageWithFlames(totalDamage);
+        }
+    }
+
+    intersectPlayerFlamethrowerParticlesWithOtherPlayer(player: Player, otherPlayer: Player) {
+        
+        var otherPlayerBody = <Phaser.Physics.Arcade.Body>otherPlayer.body;
+
+        const particles = player.particleEmitterFlamethrower.overlap(otherPlayerBody);
+        if (particles.length > 0)
+        {
+            let totalDamage = 0;
+            particles.forEach(particle => {
+
+                totalDamage += 0.01;                
+            });
+            otherPlayer.tryDamageWithFlames(totalDamage);
         }
     }
 
