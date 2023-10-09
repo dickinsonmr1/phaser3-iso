@@ -18,7 +18,7 @@ export default class GameScene extends Phaser.Scene
     sceneController: SceneController;
 
     //playerSpeed: number = 0.25;
-    public player: Player;
+    public player1: Player;
     player2: Player;
     player3: Player;
     player4: Player;
@@ -269,10 +269,10 @@ export default class GameScene extends Phaser.Scene
 
         var vehicleFactory = new VehicleFactory();
 
-        this.player = vehicleFactory.generatePlayer(this.player1VehicleType, false, PlayerTeam.Red, this);
-        this.player.init();   
+        this.player1 = vehicleFactory.generatePlayer(this.player1VehicleType, false, PlayerTeam.Red, this);
+        this.player1.init();   
 
-        this.sceneController.addHudForPlayerId(this.player.playerId, this.player.maxHealth());
+        this.sceneController.addHudForPlayerId(this.player1.playerId, this.player1.maxHealth());
         
         //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
         //this.crosshairSprite.setOrigin(0.5, 0.5);
@@ -291,7 +291,7 @@ export default class GameScene extends Phaser.Scene
 
         this.allPlayers = this.physics.add.group();
 
-        this.allPlayers.add(this.player);
+        this.allPlayers.add(this.player1);
         this.allPlayers.add(this.player2);
         this.allPlayers.add(this.player3);
         this.allPlayers.add(this.player4);
@@ -311,7 +311,7 @@ export default class GameScene extends Phaser.Scene
             alpha: {start: 0.9, end: 0.0},
         });
 
-        this.physics.add.overlap(this.player, this.layerPickups);
+        this.physics.add.overlap(this.player1, this.layerPickups);
         this.layerPickups.setTileIndexCallback(Constants.pickupSpawnTile, this.playerTouchingTileHandler, this);
 
         this.pickupPhysicsObjects = this.physics.add.group();
@@ -364,12 +364,12 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.allPlayers, this.environmentDestructiblePhysicsObjects, (player, object) => this.playerOrWeaponTouchingEnvironmentObject(player, object));
         //this.physics.add.overlap(this.allBullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
 
-        this.physics.add.overlap(this.player.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player1.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
         this.physics.add.overlap(this.player2.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
         this.physics.add.overlap(this.player3.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
         this.physics.add.overlap(this.player4.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
 
-        this.physics.add.collider(this.player, this.environmentIndestructiblePhysicsObjects, (player, object) => this.colliderMethod(player, object));
+        this.physics.add.collider(this.player1, this.environmentIndestructiblePhysicsObjects, (player, object) => this.colliderMethod(player, object));
         //this.physics.world.collide(this.player, this.environmentIndestructiblePhysicsObjects);
         
         //this.physics.add.overlap(this.player.bullets, this.layer4);
@@ -404,13 +404,13 @@ export default class GameScene extends Phaser.Scene
 
         this.physics.add.collider(this.allPlayers, this.allPlayers);
 
-        this.physics.add.overlap(this.player2, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
-        this.physics.add.overlap(this.player3, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
-        this.physics.add.overlap(this.player4, this.player.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+        this.physics.add.overlap(this.player2, this.player1.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+        this.physics.add.overlap(this.player3, this.player1.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
+        this.physics.add.overlap(this.player4, this.player1.bullets, (enemy, bullet) => this.bulletTouchingEnemyHandler(enemy, bullet));
 
-        this.physics.add.overlap(this.player, this.player2.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
-        this.physics.add.overlap(this.player, this.player3.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
-        this.physics.add.overlap(this.player, this.player4.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+        this.physics.add.overlap(this.player1, this.player2.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+        this.physics.add.overlap(this.player1, this.player3.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
+        this.physics.add.overlap(this.player1, this.player4.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
 
         
 
@@ -419,7 +419,7 @@ export default class GameScene extends Phaser.Scene
         //this.physics.add.overlap(this.player3, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
         //this.physics.add.overlap(this.player4, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
-        this.cameras.main.startFollow(this.player, true, 0.6, 0.6, 0, 0);
+        this.cameras.main.startFollow(this.player1, true, 0.6, 0.6, 0, 0);
 
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
@@ -854,7 +854,7 @@ export default class GameScene extends Phaser.Scene
         if(this.zoomOutKey.isDown)
             this.cameras.main.zoom += 0.01;  
        
-        var body = <Phaser.Physics.Arcade.Body>this.player.body;
+        var body = <Phaser.Physics.Arcade.Body>this.player1.body;
 
         const pad = this.gamepad;
         const threshold = 0.25;
@@ -872,44 +872,44 @@ export default class GameScene extends Phaser.Scene
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
             if(pad.L2) {
-                this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
+                this.player1.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
             }
 
             if(this.controlStyle == ControlStyle.LeftStickAims) {
                 if(leftAxisX != 0 || leftAxisY != 0) {
 
                     this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Math.Vector2(leftAxisX, leftAxisY));
-                    this.player.tryAimWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                    this.player1.tryAimWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 }                 
             }
             else if(this.controlStyle == ControlStyle.LeftStickAimsAndMoves) {
                 if(leftAxisX != 0 || leftAxisY != 0) {
 
                     this.mostRecentCartesianGamepadAxes = Utility.isometricToCartesian(new Phaser.Math.Vector2(leftAxisX, leftAxisY));
-                    this.player.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y,
+                    this.player1.tryAimAndMoveWithGamepad(this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y,
                         leftAxisX, leftAxisY);
                 }
                 else {
-                    this.player.tryStopMove();            
+                    this.player1.tryStopMove();            
                 }           
             }
 
 
             if(pad.R2) {
-                this.player.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                this.player1.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             } 
             else {
-                this.player.tryStopFireFlamethrower();
+                this.player1.tryStopFireFlamethrower();
             }
 
 
             if(pad.X) {
                 //this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
-                this.player.tryTurboBoostOn();
+                this.player1.tryTurboBoostOn();
             }
             else {
-                this.player.tryTurboBoostOff();
+                this.player1.tryTurboBoostOff();
             }
 
             /*
@@ -923,17 +923,17 @@ export default class GameScene extends Phaser.Scene
             */
             
             if(pad.B) {
-                this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
+                this.player1.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
                 //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
             }  
 
             if(pad.A) {
-                this.player.tryFireShockwave();
+                this.player1.tryFireShockwave();
             } 
 
             if(pad.Y) {
                 if(!this.mostRecentY) {
-                    this.player.tryFireAirstrike();
+                    this.player1.tryFireAirstrike();
                     this.mostRecentY = true;
                 }
             }
@@ -943,10 +943,10 @@ export default class GameScene extends Phaser.Scene
            
             if(this.controlStyle == ControlStyle.LeftStickAims) {
                 if(pad.X) {
-                    this.player.tryAccelerateInAimDirection();
+                    this.player1.tryAccelerateInAimDirection();
                 }
                 else {
-                    this.player.tryStopMove();        
+                    this.player1.tryStopMove();        
                 }
             }
             
@@ -959,13 +959,13 @@ export default class GameScene extends Phaser.Scene
             if(pad.isButtonDown(8)) {
                 this.showDebug = !this.showDebug;
                 if(this.showDebug) {
-                    this.player.showDebugText();
+                    this.player1.showDebugText();
                     this.player2.showDebugText();
                     this.player3.showDebugText();
                     this.player4.showDebugText();
                 }
                 if(!this.showDebug) {
-                    this.player.hideDebugText();
+                    this.player1.hideDebugText();
                     this.player2.hideDebugText();
                     this.player3.hideDebugText();
                     this.player4.hideDebugText();
@@ -975,7 +975,7 @@ export default class GameScene extends Phaser.Scene
             if(pad.L1) {
                 if(!this.mostRecentL1) {
                     //this.sceneController.hudScene.selectPreviousWeapon();
-                    this.player.trySelectPreviousWeapon();
+                    this.player1.trySelectPreviousWeapon();
                     this.mostRecentL1 = true;
                 }
             }
@@ -986,7 +986,7 @@ export default class GameScene extends Phaser.Scene
             if(pad.R1) {
                 if(!this.mostRecentR1) {
                     //this.sceneController.hudScene.selectNextWeapon();
-                    this.player.trySelectNextWeapon();
+                    this.player1.trySelectNextWeapon();
                     this.mostRecentR1 = true;
                 }
             }
@@ -997,32 +997,32 @@ export default class GameScene extends Phaser.Scene
         if(pad == null) {
 
             if(this.moveUpKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.N);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.N);
             }
             else if(this.moveDownKey.isDown && !this.moveLeftKey.isDown && !this.moveRightKey.isDown) {            
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.S);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.S);
             }
             else if(this.moveRightKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.E);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.E);
             }
             else if(this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.W);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.W);
             }
             else if(this.moveUpKey.isDown && this.moveRightKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.NE);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.NE);
             }
             else if(this.moveRightKey.isDown && this.moveDownKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.SE);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.SE);
             }
             if(this.moveUpKey.isDown && this.moveLeftKey.isDown) {
-               this.player.tryMoveWithKeyboard(PlayerDrawOrientation.NW);
+               this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.NW);
             }
             else if(this.moveDownKey.isDown && this.moveLeftKey.isDown) {
-                this.player.tryMoveWithKeyboard(PlayerDrawOrientation.SW);
+                this.player1.tryMoveWithKeyboard(PlayerDrawOrientation.SW);
             }
             else if(!this.moveLeftKey.isDown && !this.moveUpKey.isDown && !this.moveDownKey.isDown && !this.moveRightKey.isDown) 
             {
-                this.player.tryStopMove();
+                this.player1.tryStopMove();
                 //this.player.body.velocity.x = 0;
                 //this.player.body.velocity.y = 0;
             }
@@ -1032,23 +1032,23 @@ export default class GameScene extends Phaser.Scene
             }
     
             if(this.firePrimaryWeaponKey.isDown) {
-                this.player.tryFirePrimaryWeapon();
+                this.player1.tryFirePrimaryWeapon();
             }
 
             if(this.fireSecondaryWeaponKey.isDown) {
-                this.player.tryFireSecondaryWeapon();
+                this.player1.tryFireSecondaryWeapon();
             }
 
             if(this.toggleDebugKey.isDown) {
                 this.showDebug = !this.showDebug;
                 if(this.showDebug) {
-                    this.player.showDebugText();
+                    this.player1.showDebugText();
                     this.player2.showDebugText();
                     this.player3.showDebugText();
                     this.player4.showDebugText();
                 }
                 if(!this.showDebug) {
-                    this.player.hideDebugText();
+                    this.player1.hideDebugText();
                     this.player2.hideDebugText();
                     this.player3.hideDebugText();
                     this.player4.hideDebugText();
@@ -1100,30 +1100,30 @@ export default class GameScene extends Phaser.Scene
             this.cpuSelectedWeaponOverride = PickupType.Freeze;
         }
 
-        this.sceneController.hudScene.updateCpuBehaviorOverrideText(this.player.playerId, CpuPlayerPattern[this.cpuPlayerPatternOverride]);
-        this.sceneController.hudScene.updateCpuWeaponOverrideText(this.player.playerId, PickupType[this.cpuSelectedWeaponOverride]);
+        this.sceneController.hudScene.updateCpuBehaviorOverrideText(this.player1.playerId, CpuPlayerPattern[this.cpuPlayerPatternOverride]);
+        this.sceneController.hudScene.updateCpuWeaponOverrideText(this.player1.playerId, PickupType[this.cpuSelectedWeaponOverride]);
 
-        this.player.update();
+        this.player1.update();
 
-        this.events.emit('playerPositionUpdated', this.player.playerId, this.player.x, this.player.y);
+        this.events.emit('playerPositionUpdated', this.player1.playerId, this.player1.x, this.player1.y);
 
-        var temp = Utility.cartesianToIsometric(this.player.MapPosition);
+        var temp = Utility.cartesianToIsometric(this.player1.MapPosition);
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
 
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player2);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player3);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player, this.player4);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player3);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player4);
         
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player1);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player3);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player4);
 
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player1);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player2);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player4);
 
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player1);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player2);
         this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player3);
 
@@ -1131,7 +1131,7 @@ export default class GameScene extends Phaser.Scene
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
         this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player4);
 
-        var playerPosition = new Phaser.Math.Vector2(this.player.x, this.player.y);
+        var playerPosition = new Phaser.Math.Vector2(this.player1.x, this.player1.y);
 
         this.player2.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player2.update();
@@ -1159,7 +1159,7 @@ export default class GameScene extends Phaser.Scene
     intersectPlayer1FlamethrowerParticlesWithEnemies(player: Player) {
         var body = <Phaser.Physics.Arcade.Body>player.body;
 
-        const particles = this.player.particleEmitterFlamethrower.overlap(body);        
+        const particles = this.player1.particleEmitterFlamethrower.overlap(body);        
         if (particles.length > 0)
         {
             let totalDamage = 0;
@@ -1192,7 +1192,7 @@ export default class GameScene extends Phaser.Scene
     intersectPlayer1ShockwaveParticlesWithEnemies(player: Player) {
         var body = <Phaser.Physics.Arcade.Body>player.body;
 
-        const particles = this.player.particleEmitterShockwave.overlap(body);        
+        const particles = this.player1.particleEmitterShockwave.overlap(body);        
         if (particles.length > 0)
         {
             let totalDamage = 0;
