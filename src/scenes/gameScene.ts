@@ -1111,25 +1111,9 @@ export default class GameScene extends Phaser.Scene
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
 
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player2);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player3);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player4);
-        
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player1);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player3);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player4);
+        this.calculateFlamethrowerDamage();
 
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player1);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player2);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player4);
-
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player1);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player2);
-        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player3);
-
-        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player2);
-        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player3);
-        this.intersectPlayer1ShockwaveParticlesWithEnemies(this.player4);
+        this.calculateShockwaveDamage();
 
         var playerPosition = new Phaser.Math.Vector2(this.player1.x, this.player1.y);
 
@@ -1156,21 +1140,35 @@ export default class GameScene extends Phaser.Scene
             this.debugGraphics.clear().fillStyle(0).fillRectShape(this.physics.world.bounds);
     }
 
-    intersectPlayer1FlamethrowerParticlesWithEnemies(player: Player) {
-        var body = <Phaser.Physics.Arcade.Body>player.body;
+    calculateFlamethrowerDamage() {
 
-        const particles = this.player1.particleEmitterFlamethrower.overlap(body);        
-        if (particles.length > 0)
-        {
-            let totalDamage = 0;
-            particles.forEach(particle => {
+        this.allPlayers.getChildren().forEach(x => {
+            this.allPlayers.getChildren().forEach(y => {
 
-                totalDamage += 0.01;                
-                //this.explode.emitParticleAt(particle.x, particle.y);
-                //particle.kill();
-            });
-            player.tryDamageWithFlames(totalDamage);
-        }
+                let playerA = <Player>x;
+                let playerB = <Player>y;
+                if(playerA.playerId != playerB.playerId)
+                    this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(playerA, playerB);
+            });    
+        });
+
+        /*
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player3);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player1, this.player4);
+        
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player1);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player3);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player2, this.player4);
+
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player1);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player3, this.player4);
+
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player1);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player2);
+        this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(this.player4, this.player3);
+        */
     }
 
     intersectPlayerFlamethrowerParticlesWithOtherPlayer(player: Player, otherPlayer: Player) {
@@ -1189,10 +1187,30 @@ export default class GameScene extends Phaser.Scene
         }
     }
 
-    intersectPlayer1ShockwaveParticlesWithEnemies(player: Player) {
-        var body = <Phaser.Physics.Arcade.Body>player.body;
+    calculateShockwaveDamage() {
 
-        const particles = this.player1.particleEmitterShockwave.overlap(body);        
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player1, this.player2);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player1, this.player3);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player1, this.player4);
+        
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player2, this.player1);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player2, this.player3);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player2, this.player4);
+
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player3, this.player1);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player3, this.player2);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player3, this.player4);
+
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player4, this.player1);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player4, this.player2);
+        this.intersectPlayerShockwaveParticlesWithOtherPlayer(this.player4, this.player3);
+    }
+
+    intersectPlayerShockwaveParticlesWithOtherPlayer(player: Player, otherPlayer: Player) {
+        
+        var body = <Phaser.Physics.Arcade.Body>otherPlayer.body;
+
+        const particles = player.particleEmitterShockwave.overlap(body);        
         if (particles.length > 0)
         {
             let totalDamage = 0;
@@ -1200,7 +1218,7 @@ export default class GameScene extends Phaser.Scene
 
                 totalDamage += 0.1;                
             });
-            player.tryDamageWithFlames(totalDamage);
+            otherPlayer.tryDamageWithFlames(totalDamage);
         }
     }
 
