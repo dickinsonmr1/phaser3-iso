@@ -54,6 +54,7 @@ export class TitleScene extends Phaser.Scene {
         this.load.atlasXML('monstertruck256', './assets/vehicles/sprites-monstertruck256.png', './assets/vehicles/sprites-monstertruck256.xml');        
         this.load.atlasXML('police256', './assets/vehicles/spritesheet-police256.png', './assets/vehicles/sprites-police256.xml');        
         this.load.atlasXML('raceCar', './assets/vehicles/spritesheet-raceCar256.png', './assets/vehicles/sprites-raceCar256.xml');        
+        this.load.atlasXML('ambulance256', './assets/vehicles/spritesheet-ambulance256.png', './assets/vehicles/sprites-ambulance256.xml');      
     }
     
     create () {
@@ -276,14 +277,31 @@ export class TitleScene extends Phaser.Scene {
             repeat: -1,            
         });
 
-
-
-        //this.selectedVehicleSprite = this.add.sprite(500, 500, 'deathIcon');
-        //this.selectedVehicleSprite.setDisplaySize(256, 256);
-        //this.selectedVehicleSprite.play('select-pickupTruckOrange');
+        this.anims.create({
+            key: 'select-ambulance',//this.animPrefix + '-SSW',
+            frames: [
+                {key: 'ambulance256', frame: 'ambulance-SW'},
+                {key: 'ambulance256', frame: 'ambulance-W-SW'},
+                {key: 'ambulance256', frame: 'ambulance-W'},
+                {key: 'ambulance256', frame: 'ambulance-W-NW'},
+                {key: 'ambulance256', frame: 'ambulance-NW'},
+                {key: 'ambulance256', frame: 'ambulance-N-NW'},
+                {key: 'ambulance256', frame: 'ambulance-N'},
+                {key: 'ambulance256', frame: 'ambulance-N-NE'},
+                {key: 'ambulance256', frame: 'ambulance-NE'},
+                {key: 'ambulance256', frame: 'ambulance-E-NE'},
+                {key: 'ambulance256', frame: 'ambulance-E'},
+                {key: 'ambulance256', frame: 'ambulance-E-SE'},
+                {key: 'ambulance256', frame: 'ambulance-SE'},
+                {key: 'ambulance256', frame: 'ambulance-S-SE'},
+                {key: 'ambulance256', frame: 'ambulance-S'},
+                {key: 'ambulance256', frame: 'ambulance-S-SW'}
+            ],
+            frameRate: framerate,
+            repeat: -1,            
+        });
 
         this.menuController = new MenuController()
-        
         
         var titleMenuPage = new MenuPage(this, false);        
         var mapSelectionMenuPage = new MenuPage(this, false);
@@ -325,17 +343,16 @@ export class TitleScene extends Phaser.Scene {
         var vehicleSprites = new Array<IconValueMapping>();
         
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Ambulance', key: 'select-vanWhite', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
+        vehicleSprites.push(new IconValueMappingWithStats({description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
         vehicleSprites.push(new IconValueMappingWithStats({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
-        var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);
         
+        var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);        
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
-
         vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Team",
             [
                 new IconValueMapping({description:'Red', key: 'deathIcon', scale: 0.5, color: 0xFF0000, selectedIndex: 0}),
@@ -346,7 +363,6 @@ export class TitleScene extends Phaser.Scene {
         vehicleSelectionMenuPage.addStartGameMenuItem(this, "Confirm Selection");   
         vehicleSelectionMenuPage.setBackMenu(this, mapSelectionMenuPage); 
         
-
         // adding menus to menu controller in order        
         this.menuController.addMenu(titleMenuPage);
         this.menuController.addMenu(mapSelectionMenuPage);
@@ -405,45 +421,6 @@ export class TitleScene extends Phaser.Scene {
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
         }
-
-        /*
-        if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {  
-            this.selectedVehicleIndex--;    
-            selectionChanged = true;
-        }
-        else if(Phaser.Input.Keyboard.JustDown(this.cursorRight)) {
-            this.selectedVehicleIndex++;
-            selectionChanged = true;
-        }
-        */
-
-        /*
-        if(selectionChanged) {            
-            if(this.selectedVehicleIndex < 0) this.selectedVehicleIndex = VehicleType.Hearse;
-            if(this.selectedVehicleIndex > VehicleType.Hearse) this.selectedVehicleIndex = 0;
-
-            this.infoText.setText(this.selectedVehicleIndex.toString());
-    
-            switch(this.selectedVehicleIndex) 
-            {
-                case VehicleType.Taxi:
-                    this.selectedVehicleSprite.play('select-taxiYellow');
-                    break;
-                case VehicleType.Ambulance:
-                    this.selectedVehicleSprite.play('select-vanWhite');
-                    break;
-                case VehicleType.raceCar:
-                    this.selectedVehicleSprite.play('select-raceCarBlue');
-                    break;
-                case VehicleType.PickupTruck:
-                    this.selectedVehicleSprite.play('select-pickupTruckOrange');
-                    break;
-                case VehicleType.Hearse:
-                    this.selectedVehicleSprite.play('select-hearseBlack');
-                    break;
-            }
-        } 
-        */      
     }
 
     launchGame(): void {                             

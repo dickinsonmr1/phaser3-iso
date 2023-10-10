@@ -67,6 +67,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 return 72;  
             case VehicleType.Police:
             case VehicleType.RaceCar:
+            case VehicleType.Ambulance:
                 return 64;               
             default:
                 return 48;
@@ -81,6 +82,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 return new Phaser.Math.Vector2(64, 64);           
             case VehicleType.Police:
             case VehicleType.RaceCar:
+            case VehicleType.Ambulance:
                 return new Phaser.Math.Vector2(72, 72);               
             default:
                 return new Phaser.Math.Vector2(10, 10);

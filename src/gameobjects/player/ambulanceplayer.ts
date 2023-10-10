@@ -15,6 +15,94 @@ export class AmbulancePlayer extends Player
     createAnims(scene: Phaser.Scene) {                
         // https://en.wikipedia.org/wiki/Points_of_the_compass
 
+        var sourceFrameKey = "ambulance256";
+        this.animPrefix = "ambulance";                   
+                        
+        scene.anims.create({
+            key: this.animPrefix + '-SW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SW'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-WSW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-SW'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-W',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W'}],
+            frameRate: 10,
+        });
+
+        scene.anims.create({
+            key: this.animPrefix + '-WNW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-NW'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-NW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NW'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-NNW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NW'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-N',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N'}],
+            frameRate: 10,
+        });
+
+        scene.anims.create({
+            key: this.animPrefix + '-NNE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-NE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-ENE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-NE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-E',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E'}],
+            frameRate: 10,
+        });
+
+        scene.anims.create({
+            key: this.animPrefix + '-ESE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-SE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-SE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-SSE',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SE'}],
+            frameRate: 10,
+        });
+        scene.anims.create({
+            key: this.animPrefix + '-S',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S'}],
+            frameRate: 10,
+        });            
+        scene.anims.create({
+            key: this.animPrefix + '-SSW',
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SW'}],
+            frameRate: 10,
+        });    
+
+        /*
         var sourceFrameKey = "whiteCars";
         this.animPrefix = "vanWhite";
         var startIndex = 129;
@@ -102,5 +190,6 @@ export class AmbulancePlayer extends Player
             frames: [{key: sourceFrameKey, frame: 'c09_s128_iso_0' + startIndex++}],
             frameRate: 10,
         });    
+        */
     }
 }

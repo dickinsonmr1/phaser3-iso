@@ -1,0 +1,18 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-ambulance256.png">
+<SubTexture name="ambulance-N-NE" x="0" y="0" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-N-NW" x="0" y="256" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-NW" x="256" y="0" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-S" x="256" y="256" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-SE" x="0" y="512" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-S-SE" x="256" y="512" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-S-SW" x="512" y="0" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-SW" x="512" y="256" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-W" x="512" y="512" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-W-NW" x="0" y="768" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-W-SW" x="256" y="768" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-E" x="512" y="768" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-E-NE" x="768" y="0" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-E-SE" x="768" y="256" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-N" x="768" y="512" width="256" height="256"></SubTexture>
+<SubTexture name="ambulance-NE" x="768" y="768" width="256" height="256"></SubTexture>
+</TextureAtlas>

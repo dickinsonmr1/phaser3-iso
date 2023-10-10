@@ -67,12 +67,12 @@ export class VehicleFactory {
             case VehicleType.Ambulance:
                 return new AmbulancePlayer({                    
                     scene: scene,
-                    drawScale: 0.4,
+                    drawScale: 0.3,
                     isCpuPlayer: isCpuPlayer,
                     mapX: 100,
                     mapY: 400,
-                    key: "whiteCars",
-                    frame: 'vanWhite-NW',
+                    key: "ambulance256",
+                    frame: 'ambulance256-NW',
                     playerId: "Ambulance",
                     vehicleType: vehicleType,
                     playerTeam: playerTeam
