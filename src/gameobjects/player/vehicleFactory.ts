@@ -1,13 +1,13 @@
 import { Scene } from "phaser";
-import { AmbulancePlayer } from "./ambulanceplayer";
+import { AmbulancePlayer } from "./vehicles/ambulanceplayer";
 import { Player, PlayerTeam, VehicleType } from "./player";
-import { RaceCarPlayer } from "./racecarplayer";
-import { TaxiPlayer } from "./taxiplayer";
-import { PickupTruckPlayer } from "./pickuptruckplayer";
-import { HearsePlayer } from "./hearseplayer";
-import { KilldozerPlayer } from "./killdozerPlayer";
-import { MonsterTruckPlayer } from "./monstertruckPlayer";
-import { PolicePlayer } from "./policePlayer";
+import { RaceCarPlayer } from "./vehicles/racecarplayer";
+import { TaxiPlayer } from "./vehicles/taxiplayer";
+import { PickupTruckPlayer } from "./vehicles/pickuptruckplayer";
+import { HearsePlayer } from "./vehicles/hearseplayer";
+import { KilldozerPlayer } from "./vehicles/killdozerPlayer";
+import { MonsterTruckPlayer } from "./vehicles/monstertruckPlayer";
+import { PolicePlayer } from "./vehicles/policePlayer";
 
 export class VehicleFactory {
     constructor() {

@@ -1,6 +1,6 @@
-import { Player } from "./player";
+import { Player } from "../player";
 
-export class KilldozerPlayer extends Player
+export class PolicePlayer extends Player
 {
     constructor(params){
         super(params);
@@ -11,100 +11,100 @@ export class KilldozerPlayer extends Player
     }
 
     createAnims(scene: Phaser.Scene) {
-        // https://en.wikipedia.org/wiki/Points_of_the_compass
-        var sourceFrameKey = "killdozer256";
-        this.animPrefix = "killdozer";                   
+        // https://en.wikipedia.org/wiki/Points-of-the-compass
+        var sourceFrameKey = "police256";
+        this.animPrefix = "police256";                   
                         
         scene.anims.create({
             key: this.animPrefix + '-SW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_SW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SW'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-WSW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_W_SW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-SW'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-W',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_W'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W'}],
             frameRate: 10,
         });
 
         scene.anims.create({
             key: this.animPrefix + '-WNW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_W_NW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-W-NW'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-NW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_NW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NW'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-NNW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_N_NW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NW'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-N',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_N'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N'}],
             frameRate: 10,
         });
 
         scene.anims.create({
             key: this.animPrefix + '-NNE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_N_NE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-N-NE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-NE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_NE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-NE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-ENE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_E_NE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-NE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-E',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_E'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E'}],
             frameRate: 10,
         });
 
         scene.anims.create({
             key: this.animPrefix + '-ESE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_E_SE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-E-SE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-SE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_SE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-SE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-SSE',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_S_SE'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SE'}],
             frameRate: 10,
         });
         scene.anims.create({
             key: this.animPrefix + '-S',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_S'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S'}],
             frameRate: 10,
         });            
-        this.anims.create({
+        scene.anims.create({
             key: this.animPrefix + '-SSW',
-            frames: [{key: sourceFrameKey, frame: this.animPrefix + '_S_SW'}],
+            frames: [{key: sourceFrameKey, frame: this.animPrefix + '-S-SW'}],
             frameRate: 10,
         });    
     }
 
     maxHealth(): number {
-        return 80;
+        return 30;
     }
     
     maxSpeed(): number {
-        return 175;
+        return 220;
     }
 }
