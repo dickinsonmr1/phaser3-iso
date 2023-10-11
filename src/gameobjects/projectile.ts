@@ -23,10 +23,10 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     public spotlight;//: Phaser.GameObjects.Light;
 
-    private crosshairSprite: Phaser.GameObjects.Sprite;
+    protected crosshairSprite: Phaser.GameObjects.Sprite;
 
-    private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
-    private particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
+    protected particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
+    protected particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private creationGameTime: number;
 

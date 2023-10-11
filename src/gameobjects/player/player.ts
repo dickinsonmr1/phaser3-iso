@@ -11,6 +11,7 @@ import { AutoDecrementingGameTimer } from '../autoDecrementingGameTimer';
 import { GameTimeDelayTimer } from '../gameTimeDelayTimer';
 import { PlayerWeaponInventoryItem } from './playerWeaponInventoryItem';
 import { PickupType } from '../pickup';
+import { ProjectileFactory } from '../projectileFactory';
 
 
 export enum PlayerCartesianOrientation {
@@ -110,7 +111,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     protected abstract getDistanceBeforeStopping();
-    
+
     private get GetTextOffsetY(): number { return -100; }
 
     turboBar: HealthBar;
@@ -233,6 +234,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    private projectileFactory: ProjectileFactory = new ProjectileFactory();
     public bullets: Phaser.GameObjects.Group;
     public lastUsedBulletIndex: number;
     
@@ -1975,23 +1977,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * bulletLaunchDistanceFromPlayerCenter, launchPoint.y * bulletLaunchDistanceFromPlayerCenter);               
 
             //this.particleEmitterMuzzleFlash.emitParticleAt(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);               
-       }
+        }
 
-        var projectile = new Projectile({
-            scene: this.scene,
-            projectileType: projectileType,
-            isometricX: this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            isometricY: this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
-            mapPositionX: this.MapPosition.x,
-            mapPositionY: this.MapPosition.y,
-            key: weaponImageKey,
-            damage: 1,//this.currentWeaponDamage,
-            velocityX: velocityX,
-            velocityY: velocityY,
-            scaleX: scaleX,
-            scaleY: scaleY,
-            angle: -drawAngle
-        });
+        var projectile = this.projectileFactory.generateProjectile(
+            this.scene,
+            projectileType,
+            this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
+            this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
+            this.MapPosition.x,
+            this.MapPosition.y,
+            weaponImageKey,
+            1,//this.currentWeaponDamage,
+            velocityX,
+            velocityY,
+            scaleX,
+            scaleY,
+            -drawAngle
+        );
+        
         projectile.init();
 
         this.bullets.add(projectile);
