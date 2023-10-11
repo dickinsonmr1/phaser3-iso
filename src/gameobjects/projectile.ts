@@ -12,7 +12,7 @@ export enum ProjectileType {
     // EMP
 }
 
-export class Projectile extends Phaser.Physics.Arcade.Sprite {
+export abstract class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     public damage: number;
     public velocityX: number;
@@ -41,8 +41,8 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     public detonationGameTime: number;
     public detonated: boolean = false;
-    private detonationCount: integer = 0;
-    private readonly maxDetonationCount: integer = 7;
+    protected detonationCount: integer = 0;
+    protected readonly maxDetonationCount: integer = 7;
 
 
     constructor(params)
@@ -222,26 +222,6 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
                 body.setVelocityX(this.velocityX);
                 body.setVelocityY(this.velocityY);
             }
-            
-            if(this.projectileType == ProjectileType.HomingRocket
-                || this.projectileType == ProjectileType.FireRocket
-                || this.projectileType == ProjectileType.Freeze) {
-                this.spotlight.setPosition(this.x, this.y);
-                this.particleEmitter.setDepth(4)
-                
-                this.particleEmitter.emitParticleAt(this.x, this.y);
-            }
-
-            if(this.projectileType == ProjectileType.Airstrike) {
-
-                this.crosshairSprite.setPosition(this.x, this.y);
-
-                if(this.scene != null && this.scene.sys != null) {
-                    if(this.scene.sys.game.loop.time > this.detonationGameTime) {
-                        this.detonate();
-                    }
-                }               
-            }
         }
     }
 
@@ -249,47 +229,9 @@ export class Projectile extends Phaser.Physics.Arcade.Sprite {
         this.setDepth(this.y);
     }
 
-    detonate() {
-        if(this.projectileType == ProjectileType.Airstrike) {
-            
-            this.detonated = true;
-
-            this.particleEmitterExplosion.setDepth(this.y + 64);
-            this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
-
-            this.detonationCount++;
-
-            if(this.scene != null && this.scene.sys != null) 
-            {
-                this.detonationGameTime = this.scene.sys.game.loop.time + 50;
-            }
-            else
-                this.remove();
-
-            if(this.detonationCount > this.maxDetonationCount)
-                this.remove();
-        } 
-        else if(this.projectileType == ProjectileType.Freeze) {
-
-            this.particleEmitterExplosion.setDepth(this.y + 64);
-            this.particleEmitterExplosion.emitParticleAt(this.x, this.y, 10);
-            this.remove();
-        }
-    }
+    abstract detonate();
 
     remove() {
-        if(this.projectileType == ProjectileType.HomingRocket
-            || this.projectileType == ProjectileType.FireRocket
-            || this.projectileType == ProjectileType.Freeze) {
-            if(this.scene != null && this.spotlight != null)
-                this.scene.lights.removeLight(this.spotlight);
-
-            this.particleEmitter.stop();
-        }
-        if(this.projectileType == ProjectileType.Airstrike) {
-            this.crosshairSprite.destroy();
-
-        }
         this.destroy();
     }
 }

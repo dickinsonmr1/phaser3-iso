@@ -1879,8 +1879,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         velocityX = this.aimX * bulletVelocity;
         velocityY = this.aimY * bulletVelocity;
-
-        var screenPosition = Utility.cartesianToIsometric(this.MapPosition);        
         
         var bulletLaunchDistanceFromPlayerCenter = 22;
 
@@ -1970,20 +1968,16 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             else
                 launchPoint = this.bulletLaunchPointOffsetRight;
 
-            //this.particleEmitterMuzzleFlash.setPosition(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);
-
             this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
             this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter);            
             this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * bulletLaunchDistanceFromPlayerCenter, launchPoint.y * bulletLaunchDistanceFromPlayerCenter);               
-
-            //this.particleEmitterMuzzleFlash.emitParticleAt(this.x + launchPoint.x * launchDistanceFromPlayerCenter, this.y + launchPoint.y * launchDistanceFromPlayerCenter);               
         }
 
         var projectile = this.projectileFactory.generateProjectile(
             this.scene,
             projectileType,
-            this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter, //screenPosition.x, //body.x + this.playerBulletOffsetX(),
-            this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter, //screenPosition.y, //body.y + this.getBulletOffsetY(),
+            this.x + launchPoint.x * bulletLaunchDistanceFromPlayerCenter,
+            this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter,
             this.MapPosition.x,
             this.MapPosition.y,
             weaponImageKey,
@@ -1994,7 +1988,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             scaleY,
             -drawAngle
         );
-        
+
         projectile.init();
 
         this.bullets.add(projectile);

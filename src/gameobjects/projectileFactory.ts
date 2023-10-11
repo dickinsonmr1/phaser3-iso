@@ -1,5 +1,9 @@
 import { Scene } from "phaser";
 import { Projectile, ProjectileType } from "./projectile";
+import { Rocket } from "./weapons/rocket";
+import { FreezeRocket } from "./weapons/freezeRocket";
+import { Airstrike } from "./weapons/airstrike";
+import { Bullet } from "./weapons/bullet";
 
 export class ProjectileFactory {
     constructor() {
@@ -19,7 +23,7 @@ export class ProjectileFactory {
 
             switch(projectileType){
                 case ProjectileType.Airstrike:
-                    return new Projectile({
+                    return new Airstrike({
                         scene: scene,
                         projectileType: projectileType,
                         isometricX: isometricX,
@@ -35,7 +39,7 @@ export class ProjectileFactory {
                         angle: angle
                     }); 
                 case ProjectileType.Bullet:
-                    return new Projectile({
+                    return new Bullet({
                         scene: scene,
                         projectileType: projectileType,
                         isometricX: isometricX,
@@ -51,23 +55,8 @@ export class ProjectileFactory {
                         angle: angle
                     }); 
                 case ProjectileType.FireRocket:
-                    return new Projectile({
-                        scene: scene,
-                        projectileType: projectileType,
-                        isometricX: isometricX,
-                        isometricY: isometricY,
-                        mapPositionX: mapPositionX,
-                        mapPositionY: mapPositionY,
-                        key: weaponImageKey,
-                        damage: damage,
-                        velocityX: velocityX,
-                        velocityY: velocityY,
-                        scaleX: scaleX,
-                        scaleY: scaleY,
-                        angle: angle
-                    }); 
                 case ProjectileType.HomingRocket:
-                    return new Projectile({
+                    return new Rocket({
                         scene: scene,
                         projectileType: projectileType,
                         isometricX: isometricX,
@@ -83,7 +72,7 @@ export class ProjectileFactory {
                         angle: angle
                     }); 
                 case ProjectileType.Freeze:
-                    return new Projectile({
+                    return new FreezeRocket({
                         scene: scene,
                         projectileType: projectileType,
                         isometricX: isometricX,
