@@ -196,4 +196,8 @@ export class AmbulancePlayer extends Player
     maxHealth(): number {
         return 50;
     }
+    
+    maxSpeed(): number {
+        return 210;
+    }
 }

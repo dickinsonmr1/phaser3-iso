@@ -108,4 +108,8 @@ export class TaxiPlayer extends Player
     maxHealth(): number {
         return 30;
     }
+    
+    maxSpeed(): number {
+        return 210;
+    }
 }

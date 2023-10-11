@@ -102,4 +102,8 @@ export class PickupTruckPlayer extends Player
     maxHealth(): number {
         return 40;
     }
+
+    maxSpeed(): number {
+        return 230;
+    }
 }

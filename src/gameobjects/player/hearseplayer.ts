@@ -105,8 +105,12 @@ export class HearsePlayer extends Player
         });    
 
     }
-    
+
     maxHealth(): number {
         return 40;
+    }
+    
+    maxSpeed(): number {
+        return 220;
     }
 }

@@ -103,4 +103,8 @@ export class PolicePlayer extends Player
     maxHealth(): number {
         return 30;
     }
+    
+    maxSpeed(): number {
+        return 220;
+    }
 }

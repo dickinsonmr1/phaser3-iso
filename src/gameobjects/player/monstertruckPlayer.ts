@@ -103,4 +103,8 @@ export class MonsterTruckPlayer extends Player
     maxHealth(): number {
         return 80;
     }
+    
+    maxSpeed(): number {
+        return 200;
+    }
 }

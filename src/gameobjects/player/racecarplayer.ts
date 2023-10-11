@@ -689,4 +689,8 @@ export class RaceCarPlayer extends Player
     maxHealth(): number {
         return 20;
     }
+    
+    maxSpeed(): number {
+        return 250;
+    }
 }
