@@ -192,4 +192,8 @@ export class AmbulancePlayer extends Player
         });    
         */
     }
+
+    maxHealth(): number {
+        return 50;
+    }
 }

@@ -105,4 +105,8 @@ export class HearsePlayer extends Player
         });    
 
     }
+    
+    maxHealth(): number {
+        return 40;
+    }
 }

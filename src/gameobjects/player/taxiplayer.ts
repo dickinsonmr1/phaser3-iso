@@ -104,4 +104,8 @@ export class TaxiPlayer extends Player
             frameRate: 10,
         });    
     }
+
+    maxHealth(): number {
+        return 30;
+    }
 }

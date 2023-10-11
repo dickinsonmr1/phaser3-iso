@@ -99,4 +99,8 @@ export class PolicePlayer extends Player
             frameRate: 10,
         });    
     }
+
+    maxHealth(): number {
+        return 30;
+    }
 }

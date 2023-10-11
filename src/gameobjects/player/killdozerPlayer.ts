@@ -99,4 +99,8 @@ export class KilldozerPlayer extends Player
             frameRate: 10,
         });    
     }
+
+    maxHealth(): number {
+        return 80;
+    }
 }

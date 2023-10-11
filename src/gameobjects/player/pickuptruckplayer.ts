@@ -98,4 +98,8 @@ export class PickupTruckPlayer extends Player
             frameRate: 10,
         });            
     }
+
+    maxHealth(): number {
+        return 40;
+    }
 }
