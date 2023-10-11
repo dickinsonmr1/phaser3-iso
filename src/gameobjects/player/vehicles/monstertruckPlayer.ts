@@ -116,4 +116,7 @@ export class MonsterTruckPlayer extends Player
     bodyDrawOffset(): Phaser.Math.Vector2 {
         return new Phaser.Math.Vector2(64, 64);   
     }
+    getDistanceBeforeStopping(): number { 
+        return 200;
+    }
 }

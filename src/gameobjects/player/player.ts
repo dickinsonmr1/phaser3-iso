@@ -94,20 +94,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     protected abstract maxSpeed(): number;
     
     private maxTurboSpeed(): number { 
-        switch(this.vehicleType) {
-            case VehicleType.Ambulance:
-                return this.maxSpeed() * 1.5;
-            //case VehicleType.TrashMan:
-                //return this.maxSpeed() * 1.5;
-            case VehicleType.Taxi:
-                return this.maxSpeed() * 1.5;
-            case VehicleType.RaceCar:
-                return this.maxSpeed() * 1.5;
-            case VehicleType.Police:
-                return this.maxSpeed() * 1.5;
-            default:
-                return this.maxSpeed() * 1.5;                
-        }
+        return this.maxSpeed() * 1.5;        
     }
 
     private maxFrozenTime(): number { 
@@ -122,29 +109,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         return 0.7;
     }
 
-    private getDistanceBeforeStopping(): number { 
-        switch(this.vehicleType) {
-            case VehicleType.Ambulance:
-                return 300;
-            case VehicleType.Taxi:
-                return 300;
-            case VehicleType.RaceCar:
-                return 300;
-            case VehicleType.PickupTruck:
-                return 300;
-            case VehicleType.Police:
-                return 300;
-            case VehicleType.Hearse:
-                return 300;
-            case VehicleType.Killdozer:
-                return 200;
-            case VehicleType.MonsterTruck:
-                return 200;
-            default:
-                return 200;
-        }
-    }
-
+    protected abstract getDistanceBeforeStopping();
+    
     private get GetTextOffsetY(): number { return -100; }
 
     turboBar: HealthBar;

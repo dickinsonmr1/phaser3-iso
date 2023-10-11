@@ -702,4 +702,7 @@ export class RaceCarPlayer extends Player
     bodyDrawOffset(): Phaser.Math.Vector2 {
         return new Phaser.Math.Vector2(72, 72);   
     }
+    getDistanceBeforeStopping(): number { 
+        return 300;
+    }
 }

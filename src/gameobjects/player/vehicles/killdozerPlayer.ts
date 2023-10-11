@@ -116,4 +116,7 @@ export class KilldozerPlayer extends Player
     bodyDrawOffset(): Phaser.Math.Vector2 {
         return new Phaser.Math.Vector2(64, 80);   
     }
+    getDistanceBeforeStopping(): number { 
+        return 200;
+    }
 }

@@ -121,4 +121,7 @@ export class TaxiPlayer extends Player
     bodyDrawOffset(): Phaser.Math.Vector2 {
         return new Phaser.Math.Vector2(10, 10);   
     }
+    getDistanceBeforeStopping(): number { 
+        return 300;
+    }
 }
