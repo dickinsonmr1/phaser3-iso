@@ -60,34 +60,8 @@ export enum PlayerTeam {
 
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
-    private bodyDrawSize() {
-        switch(this.vehicleType) {
-            case VehicleType.Killdozer:
-            case VehicleType.MonsterTruck:
-                return 72;  
-            case VehicleType.Police:
-            case VehicleType.RaceCar:
-            case VehicleType.Ambulance:
-                return 72;               
-            default:
-                return 48;
-        }
-    }
-
-    private bodyDrawOffset(): Phaser.Math.Vector2 {
-        switch(this.vehicleType) {
-            case VehicleType.Killdozer:
-                return new Phaser.Math.Vector2(64, 80); 
-            case VehicleType.MonsterTruck:
-                return new Phaser.Math.Vector2(64, 64);           
-            case VehicleType.Police:
-            case VehicleType.RaceCar:
-            case VehicleType.Ambulance:
-                return new Phaser.Math.Vector2(72, 72);               
-            default:
-                return new Phaser.Math.Vector2(10, 10);
-        }
-    }
+    protected abstract bodyDrawSize(): number;
+    protected abstract bodyDrawOffset(): Phaser.Math.Vector2;
 
     getPlayerSpeed(): number {
         if(this.turboOn) {

@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { Player } from "../player";
 
 export class MonsterTruckPlayer extends Player
@@ -106,5 +107,13 @@ export class MonsterTruckPlayer extends Player
     
     maxSpeed(): number {
         return 200;
+    }
+        
+    bodyDrawSize(): number {
+        return 72;
+    }
+
+    bodyDrawOffset(): Phaser.Math.Vector2 {
+        return new Phaser.Math.Vector2(64, 64);   
     }
 }

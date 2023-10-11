@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { Player } from "../player";
 
 export class TaxiPlayer extends Player
@@ -111,5 +112,13 @@ export class TaxiPlayer extends Player
     
     maxSpeed(): number {
         return 210;
+    }
+        
+    bodyDrawSize(): number {
+        return 48;
+    }
+
+    bodyDrawOffset(): Phaser.Math.Vector2 {
+        return new Phaser.Math.Vector2(10, 10);   
     }
 }

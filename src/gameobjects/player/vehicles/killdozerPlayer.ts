@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { Player } from "../player";
 
 export class KilldozerPlayer extends Player
@@ -106,5 +107,13 @@ export class KilldozerPlayer extends Player
     
     maxSpeed(): number {
         return 175;
+    }
+        
+    bodyDrawSize(): number {
+        return 72;
+    }
+
+    bodyDrawOffset(): Phaser.Math.Vector2 {
+        return new Phaser.Math.Vector2(64, 80);   
     }
 }

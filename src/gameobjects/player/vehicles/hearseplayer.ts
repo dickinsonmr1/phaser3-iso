@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { Player } from "../player";
 
 export class HearsePlayer extends Player
@@ -112,5 +113,13 @@ export class HearsePlayer extends Player
     
     maxSpeed(): number {
         return 220;
+    }
+
+    bodyDrawSize(): number {
+        return 48;
+    }
+
+    bodyDrawOffset(): Phaser.Math.Vector2 {
+        return new Phaser.Math.Vector2(10, 10);   
     }
 }
