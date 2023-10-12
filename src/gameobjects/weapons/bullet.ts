@@ -1,4 +1,4 @@
-import { Projectile } from "../projectile";
+import { Projectile } from "./projectile";
 
 export class Bullet extends Projectile {
     constructor(params) {
@@ -9,7 +9,7 @@ export class Bullet extends Projectile {
     //preUpdate(time: any, delta: any): void {        
     //}
     detonate(){
-        
+
     }
 
     override remove() {

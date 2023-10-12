@@ -2,11 +2,12 @@ import * as Phaser from 'phaser';
 import { Constants } from "../constants";
 import { Pickup, PickupType } from "../gameobjects/pickup";
 import { Player, PlayerDrawOrientation, PlayerTeam, VehicleType } from "../gameobjects/player/player";
-import { Projectile, ProjectileType } from "../gameobjects/projectile";
+import { Projectile } from "../gameobjects/weapons/projectile";
 import { Point, Utility } from "../utility";
 import { SceneController } from "./sceneController";
 import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
 import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPatternEnums';
+import { ProjectileType } from '../gameobjects/weapons/projectileType';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,

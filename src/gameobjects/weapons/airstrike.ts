@@ -1,9 +1,22 @@
-import { Projectile } from "../projectile";
+import { Projectile } from "./projectile";
 
 export class Airstrike extends Projectile {
     constructor(params) {
         super(params);
         
+        this.crosshairSprite = this.scene.add.sprite(this.x, this.y, 'crosshair');
+            this.crosshairSprite.setOrigin(0.5, 0.5);
+            this.crosshairSprite.setAlpha(0.5);
+            this.crosshairSprite.setScale(1, 0.6);   
+
+            this.particleEmitterExplosion = this.scene.add.particles(0,0, 'explosion', {
+                lifespan: 1000,
+                speed: { min: -50, max: 50 },
+                scale: {start: 0.5, end: 1.25},
+                blendMode: 'ADD',
+                frequency: -1,
+                alpha: {start: 0.9, end: 0.0}
+            });
     }
     
     override preUpdate(time: any, delta: any): void {        

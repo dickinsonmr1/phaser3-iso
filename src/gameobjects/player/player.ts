@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { Constants } from '../../constants';
 import { HealthBar, HUDBarType } from './../healthBar';
-import { Projectile, ProjectileType } from './../projectile';
+import { Projectile } from '../weapons/projectile';
 import { Point, Utility } from '../../utility';
 import GameScene from '../../scenes/gameScene';
 import { CpuPlayerPattern } from './cpuPlayerPatternEnums';
@@ -11,7 +11,8 @@ import { AutoDecrementingGameTimer } from '../autoDecrementingGameTimer';
 import { GameTimeDelayTimer } from '../gameTimeDelayTimer';
 import { PlayerWeaponInventoryItem } from './playerWeaponInventoryItem';
 import { PickupType } from '../pickup';
-import { ProjectileFactory } from '../projectileFactory';
+import { ProjectileFactory } from '../weapons/projectileFactory';
+import { ProjectileType } from '../weapons/projectileType';
 
 
 export enum PlayerCartesianOrientation {

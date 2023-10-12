@@ -2,7 +2,6 @@ import 'phaser';
 import { HUDBarType, HealthBar } from "../gameobjects/healthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
-import { ProjectileType } from '../gameobjects/projectile';
 import { PickupType } from '../gameobjects/pickup';
 
 export class WeaponHudItem {
