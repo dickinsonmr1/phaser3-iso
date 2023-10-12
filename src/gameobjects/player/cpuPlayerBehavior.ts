@@ -1,5 +1,6 @@
 import { CpuPlayerPattern } from "./cpuPlayerPatternEnums";
 import { PlayerDrawOrientation } from "./playerDrawOrientation";
+import { v4 as uuidv4 } from 'uuid';
 
 export class CpuPlayerBehavior {
     
@@ -11,13 +12,15 @@ export class CpuPlayerBehavior {
     private cpuDestinationTargetIcon: Phaser.GameObjects.Image;
     private cpuDestinationTargetText: Phaser.GameObjects.Text;
 
-    private playerId: string;
+    private playerId: uuidv4;
+    private playerName: string;
 
-    constructor(playerId: string, cpuDestination: Phaser.Math.Vector2,
+    constructor(playerId: uuidv4, playerName: string, cpuDestination: Phaser.Math.Vector2,
         cpuDestinationTargetIcon: Phaser.GameObjects.Image,
         cpuDestinationTargetText: Phaser.GameObjects.Text)
     {
         this.playerId = playerId;
+        this.playerName = playerName;
         this.cpuDestination = cpuDestination;
         this.cpuDestinationTargetIcon = cpuDestinationTargetIcon;
         this.cpuDestinationTargetText = cpuDestinationTargetText;
@@ -47,6 +50,6 @@ export class CpuPlayerBehavior {
         //this.cpuDestination = cpuDestination;
         this.cpuDestinationTargetIcon.setPosition(this.cpuDestination.x, this.cpuDestination.y);
         this.cpuDestinationTargetText.setPosition(this.cpuDestination.x, this.cpuDestination.y);
-        this.cpuDestinationTargetText.setText(`${(this.playerId)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
+        this.cpuDestinationTargetText.setText(`${(this.playerName)} target: (${(this.cpuDestination.x).toFixed(2)}, ${(this.cpuDestination.y).toFixed(2)})`);
     }
 }

@@ -3,8 +3,8 @@ import * as Phaser from 'phaser';
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { PickupType } from '../gameobjects/pickup';
+import { v4 as uuidv4 } from 'uuid';
 
- 
  export class HudScene extends Phaser.Scene {
     
     fpsText: Phaser.GameObjects.Text;
@@ -81,41 +81,41 @@ import { PickupType } from '../gameobjects/pickup';
             
         }, this);
 
-        ourGame.events.on('updatePlayerHealth', function (playerName, health) {
+        ourGame.events.on('updatePlayerHealth', function (playerId: uuidv4, health) {
             //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
-            this.updatePlayerHealth(playerName, health);
+            this.updatePlayerHealth(playerId, health);
         }, this);
 
-        ourGame.events.on('playerRespawn', function (playerName) {       
-            this.playerRespawn(playerName);
+        ourGame.events.on('playerRespawn', function (playerId: uuidv4) {       
+            this.playerRespawn(playerId);
         }, this);
 
-        ourGame.events.on('updatePlayerTurbo', function (playerName, turbo) {
+        ourGame.events.on('updatePlayerTurbo', function (playerId: uuidv4, turbo) {
             //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
-            this.updatePlayerTurbo(playerName, turbo);
+            this.updatePlayerTurbo(playerId, turbo);
         }, this);
 
         ourGame.events.on('infoTextEmitted', function(text) {
             this.setInfoText(text);
         }, this);
 
-        ourGame.events.on('playerPositionUpdated', function(playerName, x, y) {            
-            this.updatePlayerPosition(playerName, x, y);
+        ourGame.events.on('playerPositionUpdated', function(playerId: uuidv4, x, y) {            
+            this.updatePlayerPosition(playerId, x, y);
         }, this);
 
-        ourGame.events.on('previousWeaponSelected', function(playerName, selectedWeaponType) {
+        ourGame.events.on('previousWeaponSelected', function(playerId: uuidv4, selectedWeaponType) {
             // todo: use selectedWeaponType from event
-            this.selectPreviousWeapon(playerName);
+            this.selectPreviousWeapon(playerId);
         }, this);
 
-        ourGame.events.on('nextWeaponSelected', function(playerName, selectedWeaponType) {
+        ourGame.events.on('nextWeaponSelected', function(playerId: uuidv4, selectedWeaponType) {
             // todo: use selectedWeaponType from event
-            this.selectNextWeapon(playerName);
+            this.selectNextWeapon(playerId);
         }, this);
 
-        ourGame.events.on('ammoUpdated', function(playerName, selectedWeaponType, ammoCount) {
+        ourGame.events.on('ammoUpdated', function(playerId: uuidv4, selectedWeaponType, ammoCount) {
             // todo: use selectedWeaponType from event
-            this.selectNextWeapon(playerName);
+            this.selectNextWeapon(playerId);
         }, this);
 
         this.playerHUDOverlayComponents = new Array<PlayerHUDOverlayComponent>();       
@@ -153,9 +153,9 @@ import { PickupType } from '../gameobjects/pickup';
         this.scene.bringToTop();
     }
 
-    setOverlay(playerId: string, playerMaxHealth: number) {
+    setOverlay(playerId: uuidv4, playerName: string, playerMaxHealth: number) {
         //this.playerId = playerId;
-        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, playerId, 100, 100, playerMaxHealth));
+        this.playerHUDOverlayComponents.push(new PlayerHUDOverlayComponent(this, playerId, playerName, 100, 100, playerMaxHealth));
     }
 
     setInfoText(text: string, infoTextDurationInMs: number): void {
@@ -175,59 +175,59 @@ import { PickupType } from '../gameobjects/pickup';
         */
     }
 
-    updatePlayerHealth(name: string, currentHealth: number): void {
+    updatePlayerHealth(playerId: uuidv4, currentHealth: number): void {
 
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateHealth(currentHealth);
         }
     }
     
-    updatePlayerTurbo(name: string, currentTurbo: number): void {
+    updatePlayerTurbo(playerId: uuidv4, currentTurbo: number): void {
 
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateTurbo(currentTurbo);
         }
     }
 
-    playerRespawn(name: string) {
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);
+    playerRespawn(playerId: uuidv4) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].respawn();
         }
     }
 
-    selectPreviousWeapon(name: string) {
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+    selectPreviousWeapon(playerId: uuidv4) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].selectPreviousWeapon();
         }
     }
 
-    selectNextWeapon(name: string){
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+    selectNextWeapon(playerId: uuidv4){
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].selectNextWeapon();
         }
     }
 
-    updateAmmoCount(name: string, weaponType: PickupType, ammoCount: integer){
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+    updateAmmoCount(playerId: uuidv4, weaponType: PickupType, ammoCount: integer){
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateAmmo(weaponType, ammoCount);
         }
     }
 
-    updateCpuBehaviorOverrideText(name: string, behaviorString: string) {
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+    updateCpuBehaviorOverrideText(playerId: uuidv4, behaviorString: string) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateCpuBehaviorOverrideText(behaviorString);
         }
     }
 
-    updateCpuWeaponOverrideText(name: string, behaviorString: string) {
-        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerName == name);//.find(x => x.playerName == name);
+    updateCpuWeaponOverrideText(playerId: uuidv4, behaviorString: string) {
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateCpuWeaponOverrideText(behaviorString);
         }

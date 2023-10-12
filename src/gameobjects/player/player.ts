@@ -13,7 +13,7 @@ import { PlayerWeaponInventoryItem } from './playerWeaponInventoryItem';
 import { PickupType } from '../pickup';
 import { ProjectileFactory } from '../weapons/projectileFactory';
 import { ProjectileType } from '../weapons/projectileType';
-
+import { v4 as uuidv4 } from 'uuid';
 
 export enum PlayerCartesianOrientation {
     N,
@@ -172,7 +172,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private drawScale: number = 1;
 
-    public playerId: string;
+    public playerId: uuidv4;
+    public playerName: string;
 
     public team: PlayerTeam;
 
@@ -288,7 +289,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.MapPosition = new Phaser.Geom.Point(params.mapX, params.mapY); 
         this.playerPositionOnTileset = new Phaser.Geom.Point(0,0);
 
-        this.playerId = params.playerId;
+        this.playerId = uuidv4();
+        this.playerName = params.playerId;
 
         this.vehicleType = params.vehicleType;
         this.drawScale = params.drawScale ?? 1;
@@ -324,7 +326,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.show();
 
         // multiplayer player name text
-        var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerId,
+        var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerName,
             {
                 font: '16px Verdana'
                 //font: '16px Courier',
@@ -357,9 +359,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             cpuDestinationTargetIcon.setTint(this.getPlayerTeamColor());
 
             let cpuDestinationTargetText = this.scene.add.text(cpuDestination.x, cpuDestination.y,
-                `${(this.playerId)} target: (${(cpuDestination.x).toFixed(2)}, ${(cpuDestination.y).toFixed(2)})`);
+                `${(this.playerName)} target: (${(cpuDestination.x).toFixed(2)}, ${(cpuDestination.y).toFixed(2)})`);
 
-            this.cpuPlayerBehavior = new CpuPlayerBehavior(this.playerId, cpuDestination, cpuDestinationTargetIcon, cpuDestinationTargetText);
+            this.cpuPlayerBehavior = new CpuPlayerBehavior(this.playerId, this.playerName, cpuDestination, cpuDestinationTargetIcon, cpuDestinationTargetText);
             this.playerMarkerIcon = this.scene.add.image(
                 this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5,
                 'playerMarkerIcon');       

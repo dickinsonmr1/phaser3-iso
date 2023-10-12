@@ -3,6 +3,7 @@ import GameScene from "./gameScene";
 import { HudScene } from "./hudscene";
 import { TitleScene } from './titleScene';
 import { VehicleType } from '../gameobjects/player/player';
+import { v4 as uuidv4 } from 'uuid';
 
 export class SceneController extends Phaser.Scene {
     hudScene: HudScene;
@@ -44,8 +45,8 @@ export class SceneController extends Phaser.Scene {
         this.scene.bringToTop("HudScene");
     }
 
-    addHudForPlayerId(playerId: string, playerMaxHealth: number) {
-        this.hudScene.setOverlay(playerId, playerMaxHealth);
+    addHudForPlayerId(playerId: uuidv4, playerName: string, playerMaxHealth: number) {
+        this.hudScene.setOverlay(playerId, playerName, playerMaxHealth);
     }
 
     update(): void {

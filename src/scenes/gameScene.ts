@@ -273,7 +273,7 @@ export default class GameScene extends Phaser.Scene
         this.player1 = vehicleFactory.generatePlayer(this.player1VehicleType, false, PlayerTeam.Red, this);
         this.player1.init();   
 
-        this.sceneController.addHudForPlayerId(this.player1.playerId, this.player1.maxHealth());
+        this.sceneController.addHudForPlayerId(this.player1.playerId, this.player1.playerName, this.player1.maxHealth());
         
         //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
         //this.crosshairSprite.setOrigin(0.5, 0.5);

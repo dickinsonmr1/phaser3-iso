@@ -3,6 +3,7 @@ import { HUDBarType, HealthBar } from "../gameobjects/healthBar";
 import { HudScene } from "./hudscene";
 import { Player } from "../gameobjects/player/player";
 import { PickupType } from '../gameobjects/pickup';
+import { v4 as uuidv4 } from 'uuid';
 
 export class WeaponHudItem {
 
@@ -62,6 +63,7 @@ export class WeaponHudItem {
 export class PlayerHUDOverlayComponent {
 
     scene: HudScene;
+    playerId: uuidv4;
     playerName: string;
     hudGroup: Phaser.GameObjects.Group;
 
@@ -100,10 +102,12 @@ export class PlayerHUDOverlayComponent {
     selectedWeaponIcon: Phaser.GameObjects.Image;
     selectedWeaponItemIndex: integer = 0;
 
-    constructor(scene: HudScene, playerName: string, x: number, y: number, playerMaxHealth: number) {
+    constructor(scene: HudScene, playerId: uuidv4, playerName: string, x: number, y: number, playerMaxHealth: number) {
         this.scene = scene;
         this.displayX = x;
         this.displayY = y;
+
+        this.playerId = playerId;
         this.playerName = playerName;    
 
         this.playerNameText = this.scene.add.text(x, y, playerName,
