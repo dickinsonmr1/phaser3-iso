@@ -868,7 +868,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     alignPlayerNameText(x: number, y: number) {
         var text = this.multiplayerNameText;
-        text.setText(`${this.playerId}`)
+        text.setText(`${this.playerName}`)
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0.5, 0.5);
@@ -885,7 +885,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     alignDebugText(x: number, y: number) {
         var text = this.debugCoordinatesText;
 
-        text.setText(`Map(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)}) 
+        text.setText(`${this.playerId}
+                    \nMap(${(this.MapPosition.x).toFixed(2)}, ${(this.MapPosition.y).toFixed(2)}) 
                     Iso(${(this.x).toFixed(2)}, ${(this.y).toFixed(2)})
                     \nVelocity(${(this.body.velocity.x).toFixed(2)}, ${(this.body.velocity.y).toFixed(2)})
                     \n@ Tile(${(this.playerPositionOnTileset.x).toFixed(2)}, ${(this.playerPositionOnTileset.y).toFixed(2)})    
@@ -899,6 +900,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         text.setX(x);
         text.setY(y);// + this.GetTextOffsetY);
         text.setOrigin(0, 0);
+    }
+
+    toggleShowDebugText(visible: boolean) {
+        this.debugCoordinatesText.setVisible(visible);
     }
 
     showDebugText() {

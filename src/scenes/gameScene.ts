@@ -35,6 +35,7 @@ export default class GameScene extends Phaser.Scene
     zoomInKey: Phaser.Input.Keyboard.Key;
     zoomOutKey: Phaser.Input.Keyboard.Key;
     toggleDebugKey: Phaser.Input.Keyboard.Key;
+    mostRecentToggleDebugKey: boolean = false;
 
     moveUpKey: Phaser.Input.Keyboard.Key;
     moveDownKey: Phaser.Input.Keyboard.Key;
@@ -62,6 +63,7 @@ export default class GameScene extends Phaser.Scene
     mostRecentL1: boolean = false;
     mostRecentR1: boolean = false;
     mostRecentY: boolean = false;
+    mostRecentGamepadDebugKey: boolean = false;
 
     light: any;
 
@@ -750,45 +752,45 @@ export default class GameScene extends Phaser.Scene
         switch(pickupType){
             case PickupType.Turbo:
                 console.log('refill turbo');
-                this.sceneController.hudScene.setInfoText("Turbo refilled - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Turbo refilled - " + selectedPlayer.playerName, 2000);
                 selectedPlayer.refillTurbo();
                 break;
             case PickupType.Rocket:
                 console.log('refill rockets');
-                this.sceneController.hudScene.setInfoText("Rockets acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Rockets acquired - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Bullet:
                 console.log('refill bullets');
-                this.sceneController.hudScene.setInfoText("Bullets acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Bullets acquired - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Health:
                 console.log('refill health');
-                this.sceneController.hudScene.setInfoText("Health restored - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Health restored - " + selectedPlayer.playerName, 2000);
                 selectedPlayer.refillHealth();
                 break;
             case PickupType.Special:
                 console.log('refill special');
-                this.sceneController.hudScene.setInfoText("Special restored - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Special restored - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Flamethrower:
                 console.log('refill flamethrower');
-                this.sceneController.hudScene.setInfoText("Flamethrower restored - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Flamethrower restored - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Shield:
                 console.log('refill shield');
-                this.sceneController.hudScene.setInfoText("Shield restored - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Shield restored - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Airstrike:
                 console.log('refill airstrike');
-                this.sceneController.hudScene.setInfoText("Airstrike acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Airstrike acquired - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Shockwave:
                 console.log('refill airstrike');
-                this.sceneController.hudScene.setInfoText("Shockwave acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Shockwave acquired - " + selectedPlayer.playerName, 2000);
                 break;
             case PickupType.Freeze:
                 console.log('refill freeze');
-                this.sceneController.hudScene.setInfoText("Freeze acquired - " + selectedPlayer.playerId, 2000);
+                this.sceneController.hudScene.setInfoText("Freeze acquired - " + selectedPlayer.playerName, 2000);
                 break;
         }
         
@@ -956,21 +958,22 @@ export default class GameScene extends Phaser.Scene
 
             if(rightAxisY > 0.2)
                 this.cameras.main.zoom -= 0.01;
-
+           
             if(pad.isButtonDown(8)) {
-                this.showDebug = !this.showDebug;
-                if(this.showDebug) {
-                    this.player1.showDebugText();
-                    this.player2.showDebugText();
-                    this.player3.showDebugText();
-                    this.player4.showDebugText();
+                if(!this.mostRecentGamepadDebugKey) {
+
+                    this.showDebug = !this.showDebug;
+
+                    this.player1.toggleShowDebugText(this.showDebug);
+                    this.player2.toggleShowDebugText(this.showDebug);
+                    this.player3.toggleShowDebugText(this.showDebug);
+                    this.player4.toggleShowDebugText(this.showDebug);                    
+
+                    this.mostRecentGamepadDebugKey = true;
                 }
-                if(!this.showDebug) {
-                    this.player1.hideDebugText();
-                    this.player2.hideDebugText();
-                    this.player3.hideDebugText();
-                    this.player4.hideDebugText();
-                }
+            }
+            else {
+                this.mostRecentGamepadDebugKey = false;              
             }
 
             if(pad.L1) {
@@ -1041,19 +1044,21 @@ export default class GameScene extends Phaser.Scene
             }
 
             if(this.toggleDebugKey.isDown) {
-                this.showDebug = !this.showDebug;
-                if(this.showDebug) {
-                    this.player1.showDebugText();
-                    this.player2.showDebugText();
-                    this.player3.showDebugText();
-                    this.player4.showDebugText();
+                
+                if(!this.mostRecentToggleDebugKey) {
+
+                    this.showDebug = !this.showDebug;
+
+                    this.player1.toggleShowDebugText(this.showDebug);
+                    this.player2.toggleShowDebugText(this.showDebug);
+                    this.player3.toggleShowDebugText(this.showDebug);
+                    this.player4.toggleShowDebugText(this.showDebug);
+
+                    this.mostRecentToggleDebugKey = true;
                 }
-                if(!this.showDebug) {
-                    this.player1.hideDebugText();
-                    this.player2.hideDebugText();
-                    this.player3.hideDebugText();
-                    this.player4.hideDebugText();
-                }
+            }
+            else {
+                this.mostRecentToggleDebugKey = false;              
             }
         }
 
