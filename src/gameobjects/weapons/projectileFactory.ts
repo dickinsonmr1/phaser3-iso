@@ -5,6 +5,7 @@ import { FreezeRocket } from "./freezeRocket";
 import { Airstrike } from "./airstrike";
 import { Bullet } from "./bullet";
 import { ProjectileType } from "./projectileType";
+import { Rocks } from "./rocks";
 
 export class ProjectileFactory {
     constructor() {
@@ -74,6 +75,22 @@ export class ProjectileFactory {
                     }); 
                 case ProjectileType.Freeze:
                     return new FreezeRocket({
+                        scene: scene,
+                        projectileType: projectileType,
+                        isometricX: isometricX,
+                        isometricY: isometricY,
+                        mapPositionX: mapPositionX,
+                        mapPositionY: mapPositionY,
+                        key: weaponImageKey,
+                        damage: damage,
+                        velocityX: velocityX,
+                        velocityY: velocityY,
+                        scaleX: scaleX,
+                        scaleY: scaleY,
+                        angle: angle
+                    }); 
+                case ProjectileType.Rocks:
+                    return new Rocks({
                         scene: scene,
                         projectileType: projectileType,
                         isometricX: isometricX,

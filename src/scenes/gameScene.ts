@@ -148,7 +148,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('rocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust.png');
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
         this.load.image('freezeRocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust - blue.png');
-
+        this.load.image('rock', './assets/sprites/weapons/meteorBrown_med1.png');
         // tiles
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
         this.load.image('tiles2', './assets/iso-64x64-building.png');
@@ -719,7 +719,7 @@ export default class GameScene extends Phaser.Scene
             if(projectile.projectileType != ProjectileType.Airstrike
                 || (projectile.projectileType == ProjectileType.Airstrike && projectile.detonated)) {
                     otherPlayer.tryDamage(projectile.projectileType, projectileLocation);            
-                }
+            }
 
             if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
                 bullet.remove();

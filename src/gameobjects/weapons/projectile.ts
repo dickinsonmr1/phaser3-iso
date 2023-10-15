@@ -1,7 +1,6 @@
 // https://labs.phaser.io/edit.html?src=src\games\topdownShooter\topdown_combatMechanics.js
 import * as Phaser from 'phaser';
 import { Scene } from "phaser";
-import { Constants } from '../../constants';
 import { ProjectileType } from './projectileType';
 
 export abstract class Projectile extends Phaser.Physics.Arcade.Sprite {
@@ -20,7 +19,7 @@ export abstract class Projectile extends Phaser.Physics.Arcade.Sprite {
     protected particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
     protected particleEmitterExplosion: Phaser.GameObjects.Particles.ParticleEmitter;
 
-    private creationGameTime: number;
+    protected creationGameTime: number;
 
     public projectileType: ProjectileType;
 
@@ -83,12 +82,6 @@ export abstract class Projectile extends Phaser.Physics.Arcade.Sprite {
 
             if(this.scene.sys.game.loop.time > this.creationGameTime + 3000) {
                 this.remove();
-            }
-            
-            var body = <Phaser.Physics.Arcade.Body>this.body;
-            if(body != null && this.velocityX != null && this.velocityY != null) { // && this.markedForRemovalGameTime == 0) {
-                body.setVelocityX(this.velocityX);
-                body.setVelocityY(this.velocityY);
             }
         }
     }

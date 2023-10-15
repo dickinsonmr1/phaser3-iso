@@ -60,6 +60,12 @@ export enum PlayerTeam {
     Yellow
 }
 
+export enum RockLaunchOffset {
+    Left,
+    Center,
+    Right
+}
+
 export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     protected abstract bodyDrawSize(): number;
@@ -162,6 +168,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private bulletLaunchPointOffsetLeft: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
     private bulletLaunchPointOffsetRight: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
 
+    private lastRockLaunchPointOffset: RockLaunchOffset = RockLaunchOffset.Center;    
+    private rockLaunchPointOffsetLeft: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+    private rockLaunchPointOffsetCenter: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+    private rockLaunchPointOffsetRight: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0,0);
+
     //private bulletLaunchX1: number = 0;
     //private bulletLaunchY1: number = 0;
 
@@ -242,6 +253,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     
     public nextBulletTimer: GameTimeDelayTimer = new GameTimeDelayTimer(100);
     public nextRocketTimer: GameTimeDelayTimer = new GameTimeDelayTimer(500);
+    public nextSpecialTimer: GameTimeDelayTimer = new GameTimeDelayTimer(500);
 
     //public airstrikeTime: number = 0;
     //public airstrikeTimeInterval: number = 200;
@@ -1065,6 +1077,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboLaunchPointOffsetLeft = new Phaser.Math.Vector2(Math.cos(angle2 - Math.PI / 12), Math.sin(angle2 - Math.PI / 12));
         this.turboLaunchPointOffsetRight = new Phaser.Math.Vector2(Math.cos(angle2 + Math.PI / 12), Math.sin(angle2 + Math.PI / 12));
 
+        this.rockLaunchPointOffsetLeft = new Phaser.Math.Vector2(Math.cos(angle2 - Math.PI / 3), Math.sin(angle2 - Math.PI / 3));
+        this.rockLaunchPointOffsetCenter = new Phaser.Math.Vector2(Math.cos(angle2), Math.sin(angle2));
+        this.rockLaunchPointOffsetRight = new Phaser.Math.Vector2(Math.cos(angle2 + Math.PI / 3), Math.sin(angle2 + Math.PI / 3));
+
         return;
 
         /*        
@@ -1564,6 +1580,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case ProjectileType.Airstrike:
                 this.health -= 2;
                 break;
+            case ProjectileType.Rocks:
+                this.health -= 4;
+                this.particleEmitterExplosion.setPosition(explosionLocation.x, explosionLocation.y);
+                this.particleEmitterExplosion.setDepth(explosionLocation.y + 64);
+                this.particleEmitterExplosion.explode(5);//, this.x, this.y);
+                break;
         }
 
         /*
@@ -1658,6 +1680,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(selectedWeapon != null && this.selectedWeaponInventoryItem.ammoCount > 0) {
             switch(selectedWeapon.pickupType) {
                 case PickupType.Special:
+                    this.tryFireRocks();
                     break;
                 case PickupType.Rocket:
                     this.tryFireRocket();
@@ -1748,6 +1771,22 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }       
     }
+    
+    tryFireRocks() {
+
+        if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
+
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextSpecialTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.Rocks);
+            this.createProjectile(ProjectileType.Rocks);
+            this.createProjectile(ProjectileType.Rocks);
+            //this.createProjectile(ProjectileType.Rocks);
+
+            this.nextSpecialTimer.startTimer(gameTimeNow);
+        }        
+    }  
 
     tryTurboBoostOn(): void {
         
@@ -1883,6 +1922,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
+            case ProjectileType.Rocks:
+                bulletVelocity = 500;
+                weaponImageKey = "rock";
+                scaleX = 0.5;
+                scaleY = 0.5;
+                break;
         }            
 
         velocityX = this.aimX * bulletVelocity;
@@ -1979,6 +2024,22 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitterMuzzleFlash.setPosition(this.x, this.y);
             this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter);            
             this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * bulletLaunchDistanceFromPlayerCenter, launchPoint.y * bulletLaunchDistanceFromPlayerCenter);               
+        }
+        if(projectileType == ProjectileType.Rocks) {
+            switch(this.lastRockLaunchPointOffset) {
+                case RockLaunchOffset.Left:
+                    launchPoint = this.rockLaunchPointOffsetRight;
+                    this.lastRockLaunchPointOffset = RockLaunchOffset.Center;
+                    break;
+                case RockLaunchOffset.Center:
+                    launchPoint = this.rockLaunchPointOffsetCenter;  
+                    this.lastRockLaunchPointOffset = RockLaunchOffset.Right;                                      
+                    break;                
+                case RockLaunchOffset.Right:
+                    launchPoint = this.rockLaunchPointOffsetLeft;
+                    this.lastRockLaunchPointOffset = RockLaunchOffset.Left;
+                    break;
+            }            
         }
 
         var projectile = this.projectileFactory.generateProjectile(
