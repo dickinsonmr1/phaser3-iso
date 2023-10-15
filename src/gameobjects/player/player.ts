@@ -1779,11 +1779,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         var gameTimeNow = this.scene.game.loop.time;
         if(this.nextSpecialTimer.isExpired(gameTimeNow)) {
             
-            this.createProjectile(ProjectileType.Rocks);
-            this.createProjectile(ProjectileType.Rocks);
-            this.createProjectile(ProjectileType.Rocks);
+            for(var i = 0; i < 10; i++) {
+                this.createProjectile(ProjectileType.Rocks);
+            }
             //this.createProjectile(ProjectileType.Rocks);
-
+            //this.createProjectile(ProjectileType.Rocks);
+            //this.createProjectile(ProjectileType.Rocks);
             this.nextSpecialTimer.startTimer(gameTimeNow);
         }        
     }  

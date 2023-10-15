@@ -1,9 +1,23 @@
+import { Utility } from "../../utility";
 import { Projectile } from "./projectile";
 
 export class Rocks extends Projectile {
     constructor(params) {
         super(params);
         
+        var randSpeedX = Utility.getRandomInt(100) - 50;
+        var randSpeedY = Utility.getRandomInt(100) - 50;
+        
+        this.velocityX = this.velocityX + randSpeedX;
+        this.velocityY = this.velocityY + randSpeedY;
+
+        var randScale = Utility.getRandomInt(3) * 0.1;
+
+        this.scale = this.scale - randScale;
+
+        var randRotation = Utility.getRandomInt(Math.PI * 2 * 100) / 100;
+
+        this.setRotation(randRotation);
     }
     
     override preUpdate(time: any, delta: any): void {        
@@ -15,7 +29,7 @@ export class Rocks extends Projectile {
                 this.velocityX *= 0.98;
                 this.velocityY *= 0.98;
                 body.setVelocityX(this.velocityX);
-                body.setVelocityY(this.velocityY);
+                body.setVelocityY(this.velocityY);            
             }
         }
     }
