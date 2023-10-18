@@ -171,6 +171,8 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
 
+        this.load.atlasXML('waveform', './assets/sprites/weapons/spritesheet-waveform.png', './assets/sprites/weapons/sprites-waveform.xml');        
+
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
 

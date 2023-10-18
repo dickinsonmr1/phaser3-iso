@@ -152,6 +152,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private frozenCarSprite: Phaser.GameObjects.Sprite;
 
+    private electricBeamSprite: Phaser.GameObjects.Sprite;
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -310,6 +312,30 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.createAnims(params.scene);
 
+        params.scene.anims.create({
+            key: 'waveform',
+            frames: [
+                {key: 'waveform', frame: 'waveform1'},
+                {key: 'waveform', frame: 'waveform2'},
+                {key: 'waveform', frame: 'waveform3'},
+                {key: 'waveform', frame: 'waveform4'}                
+            ],
+            frameRate: 10,
+            repeat: -1
+        });
+        /*
+        params.scene.anims.create({
+            key: this.animPrefix + '-WSW',
+            frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+            frameRate: 10,
+        });
+        params.scene.anims.create({
+            key: this.animPrefix + '-W',
+            frames: [{key: sourceFrameKey, frame: colorString + '_s128_iso_00' + startIndex++}],
+            frameRate: 10,
+        });
+        */
+
         this.setDisplayOrigin(0, 0);
 
         this.scene.add.existing(this);
@@ -454,6 +480,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.frozenCarSprite.setDepth(this.depth + this.bodyDrawOffset().y + 1);
 
         this.frozenTimer = new AutoDecrementingGameTimer(this.maxFrozenTime(), this.freezeTransitionTime(), this.freezeTransitionTime());
+
+        this.electricBeamSprite = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
+        this.electricBeamSprite.anims.play('waveform', true);
+        this.electricBeamSprite.setPosition(this.x, this.y);
+        this.electricBeamSprite.setOrigin(0, 0.5);
+        this.electricBeamSprite.setDepth(this.depth);
 
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Special, 3));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Rocket, 3));
@@ -832,6 +864,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
             }            
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
+
+            let angle2 = -this.arctangent + (Math.PI / 2)
+            this.electricBeamSprite.setPosition(this.x, this.y);
+            this.electricBeamSprite.rotation = angle2;
         } 
 
         var currentlyDeadAndWaitingUntilRespawn = this.deadUntilRespawnTimer.isActive();

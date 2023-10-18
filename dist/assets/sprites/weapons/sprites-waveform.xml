@@ -1,0 +1,6 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-waveform.png">
+    <SubTexture name="waveform1" x="0" y="0" width="95" height="32"></SubTexture>
+    <SubTexture name="waveform2" x="0" y="33" width="95" height="32"></SubTexture>
+    <SubTexture name="waveform3" x="0" y="66" width="95" height="32"></SubTexture>
+    <SubTexture name="waveform4" x="0" y="99" width="95" height="32"></SubTexture>
+</TextureAtlas>
