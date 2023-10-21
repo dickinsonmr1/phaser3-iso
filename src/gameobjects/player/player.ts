@@ -152,7 +152,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private frozenCarSprite: Phaser.GameObjects.Sprite;
 
-    private electricBeamSprite: Phaser.GameObjects.Sprite;
+    private electricBeamSprite1: Phaser.GameObjects.Sprite;
+    private electricBeamSprite2: Phaser.GameObjects.Sprite;
+    private electricBeamSprite3: Phaser.GameObjects.Sprite;
+
+    private lightningAngle: number = 0;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -323,6 +327,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 10,
             repeat: -1
         });
+
+        params.scene.anims.create({
+            key: 'lightning',
+            frames: [
+                {key: 'lightning', frame: 'thunder-rays1'},
+                {key: 'lightning', frame: 'thunder-rays2'},
+                {key: 'lightning', frame: 'thunder-rays3'},
+                {key: 'lightning', frame: 'thunder-rays4'},
+                {key: 'lightning', frame: 'thunder-rays5'},
+                {key: 'lightning', frame: 'thunder-rays6'}
+            ],
+            frameRate: 60,
+            repeat: -1
+        });
         /*
         params.scene.anims.create({
             key: this.animPrefix + '-WSW',
@@ -481,11 +499,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.frozenTimer = new AutoDecrementingGameTimer(this.maxFrozenTime(), this.freezeTransitionTime(), this.freezeTransitionTime());
 
-        this.electricBeamSprite = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
-        this.electricBeamSprite.anims.play('waveform', true);
-        this.electricBeamSprite.setPosition(this.x, this.y);
-        this.electricBeamSprite.setOrigin(0, 0.5);
-        this.electricBeamSprite.setDepth(this.depth);
+        this.electricBeamSprite1 = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
+        this.electricBeamSprite1.anims.play('lightning', true);
+        this.electricBeamSprite1.setPosition(this.x, this.y);
+        this.electricBeamSprite1.setOrigin(0.5, 0);
+        this.electricBeamSprite1.setScale(1.0, 1.0);
+        this.electricBeamSprite1.setDepth(this.depth);
 
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Special, 3));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Rocket, 3));
@@ -865,9 +884,34 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             }            
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
 
-            let angle2 = -this.arctangent + (Math.PI / 2)
-            this.electricBeamSprite.setPosition(this.x, this.y);
-            this.electricBeamSprite.rotation = angle2;
+            //let angle2 = -this.arctangent;// + (Math.PI / 2)
+            //this.electricBeamSprite.setPosition(this.x, this.y);
+            //this.electricBeamSprite.rotation = angle2;
+
+            
+            var distance = Math.abs(Phaser.Math.Distance.Between(gameScene.player2.x, gameScene.player2.y, this.x, this.y));
+
+            if(distance < 200) {
+                //let gameScene = <GameScene>this.scene;  
+                var destinationX = gameScene.player2.x;
+                var destinationY = gameScene.player2.y;
+                var deltaX = destinationX - this.x;
+                var deltaY = destinationY - this.y;
+        
+                //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+                var arctangent = Math.atan2(deltaX, deltaY);
+                this.lightningAngle = -Utility.SnapTo16DirectionAngle(arctangent);
+            }
+            else {                
+                //this.lightningAngle = -this.arctangent;
+                
+                this.lightningAngle += Math.PI / 60;
+                if(this.lightningAngle > Math.PI * 2)
+                    this.lightningAngle -= Math.PI * 2;
+            }
+
+            this.electricBeamSprite1.setPosition(this.x, this.y);
+            this.electricBeamSprite1.rotation = this.lightningAngle;            
         } 
 
         var currentlyDeadAndWaitingUntilRespawn = this.deadUntilRespawnTimer.isActive();

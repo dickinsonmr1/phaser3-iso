@@ -8,6 +8,7 @@ import { SceneController } from "./sceneController";
 import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
 import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPatternEnums';
 import { ProjectileType } from '../gameobjects/weapons/projectileType';
+import { v4 as uuidv4 } from 'uuid';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -172,6 +173,7 @@ export default class GameScene extends Phaser.Scene
         this.load.atlasXML('blackCars', './assets/vehicles/spritesheet-blackcars-all.png', './assets/vehicles/sprites-blackcars-all.xml');        
 
         this.load.atlasXML('waveform', './assets/sprites/weapons/spritesheet-waveform.png', './assets/sprites/weapons/sprites-waveform.xml');        
+        this.load.atlasXML('lightning', './assets/sprites/weapons/spritesheet-lightning.png', './assets/sprites/weapons/sprites-lightning.xml');     
 
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
@@ -1159,6 +1161,12 @@ export default class GameScene extends Phaser.Scene
                     this.intersectPlayerFlamethrowerParticlesWithOtherPlayer(playerA, playerB);
             });    
         });
+    }
+
+    getOtherPlayers(playerId: uuidv4): Phaser.GameObjects.GameObject[] {
+
+        let allPlayers = this.allPlayers.getChildren().filter(g => g instanceof Player) as Player[];
+        return allPlayers.filter(x => x.playerId != playerId);
     }
 
     intersectPlayerFlamethrowerParticlesWithOtherPlayer(player: Player, otherPlayer: Player) {
