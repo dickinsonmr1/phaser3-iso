@@ -179,6 +179,7 @@ export class PlayerHUDOverlayComponent {
         this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Airstrike, 'crosshair', this.HealthBarStartX + 800, this.HealthBarStartY, 1));
         this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Shockwave, 'shockwaveIcon', this.HealthBarStartX + 900, this.HealthBarStartY, 3));
         this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Freeze, 'freezeIcon', this.HealthBarStartX + 1000, this.HealthBarStartY, 1));
+        this.weaponHudItems.push(new WeaponHudItem(this.scene, PickupType.Lightning, 'lightningIcon', this.HealthBarStartX + 1100, this.HealthBarStartY, 1));
         
         this.weaponHudItems[0].selectItem();
         this.weaponHudItems[1].deselectItem();
@@ -186,6 +187,7 @@ export class PlayerHUDOverlayComponent {
         this.weaponHudItems[3].deselectItem();
         this.weaponHudItems[4].deselectItem();
         this.weaponHudItems[5].deselectItem();
+        this.weaponHudItems[6].deselectItem();
     }
 
     selectPreviousWeapon() {

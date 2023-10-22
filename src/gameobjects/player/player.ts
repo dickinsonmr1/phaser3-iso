@@ -152,10 +152,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private frozenCarSprite: Phaser.GameObjects.Sprite;
 
-    private electricBeamSprite1: Phaser.GameObjects.Sprite;
-    private electricBeamSprite2: Phaser.GameObjects.Sprite;
-    private electricBeamSprite3: Phaser.GameObjects.Sprite;
-
+    private lightningSprites: Phaser.GameObjects.Sprite[] = [];
     private lightningAngle: number = 0;
 
     private get emitterOffsetY(): number {return 30;}
@@ -207,6 +204,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 return 0xFFFF00;
         }
     }
+
+    private otherPlayers: Phaser.GameObjects.GameObject[] = [];//Player[] = [];
 
 
     private getMaxFlamethrowerDistance(): number {return 100;}
@@ -268,6 +267,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     //private bulletVelocity: number = 7;
 
     public nextshockwaveTimer: GameTimeDelayTimer = new GameTimeDelayTimer(1000);
+    public activeLightningTimer: AutoDecrementingGameTimer = new AutoDecrementingGameTimer(300);
 
     public frozenTimer: AutoDecrementingGameTimer;
 
@@ -499,19 +499,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.frozenTimer = new AutoDecrementingGameTimer(this.maxFrozenTime(), this.freezeTransitionTime(), this.freezeTransitionTime());
 
-        this.electricBeamSprite1 = params.scene.add.sprite(params.scene, params.mapX, params.mapY, params.key, params.frame);
-        this.electricBeamSprite1.anims.play('lightning', true);
-        this.electricBeamSprite1.setPosition(this.x, this.y);
-        this.electricBeamSprite1.setOrigin(0.5, 0);
-        this.electricBeamSprite1.setScale(1.0, 1.0);
-        this.electricBeamSprite1.setDepth(this.depth);
-
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Special, 3));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Rocket, 3));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Flamethrower, 100));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Airstrike, 1));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Shockwave, 2));
         this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Freeze, 1));
+        this.weaponInventoryItems.push(new PlayerWeaponInventoryItem(PickupType.Lightning, 22));
 
         this.selectedWeaponInventoryItemIndex = 0;
         this.selectedWeaponInventoryItem = this.weaponInventoryItems[this.selectedWeaponInventoryItemIndex];
@@ -677,6 +671,19 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             alpha: {start: 0.9, end: 0.0},
             emitting: true
         });
+
+        /*
+        let gameScene = <GameScene>(this.scene);
+        this.otherPlayers = gameScene.getOtherPlayers(this.playerId);
+
+            if(this.otherPlayers.length > 0) {
+            this.otherPlayers.forEach(x => {
+                let otherPlayer = <Player>x;
+
+                this.createLightning(otherPlayer.playerId);
+            });
+        }
+        */
 
         this.setPlayerDrawOrientation();
         this.calculateAimDirection(this.playerDrawOrientation);
@@ -888,30 +895,66 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             //this.electricBeamSprite.setPosition(this.x, this.y);
             //this.electricBeamSprite.rotation = angle2;
 
-            
-            var distance = Math.abs(Phaser.Math.Distance.Between(gameScene.player2.x, gameScene.player2.y, this.x, this.y));
-
-            if(distance < 200) {
-                //let gameScene = <GameScene>this.scene;  
-                var destinationX = gameScene.player2.x;
-                var destinationY = gameScene.player2.y;
-                var deltaX = destinationX - this.x;
-                var deltaY = destinationY - this.y;
         
-                //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
-                var arctangent = Math.atan2(deltaX, deltaY);
-                this.lightningAngle = -Utility.SnapTo16DirectionAngle(arctangent);
-            }
-            else {                
-                //this.lightningAngle = -this.arctangent;
-                
-                this.lightningAngle += Math.PI / 60;
-                if(this.lightningAngle > Math.PI * 2)
-                    this.lightningAngle -= Math.PI * 2;
-            }
+            //let electricBeamSpriteIndex = 0;
 
-            this.electricBeamSprite1.setPosition(this.x, this.y);
-            this.electricBeamSprite1.rotation = this.lightningAngle;            
+            this.activeLightningTimer.update();
+            if(!this.activeLightningTimer.isActive()) {
+                this.lightningSprites.forEach(x => {
+                    let sprite = <Phaser.GameObjects.Sprite>x;
+                    sprite.destroy();
+                });
+            }
+            else {
+                var otherPlayers = gameScene.getOtherPlayers(this.playerId);
+                otherPlayers.forEach(x => {
+
+                    var otherPlayer = <Player>x;
+                    var distance = Math.abs(Phaser.Math.Distance.Between(otherPlayer.x, otherPlayer.y, this.x, this.y));
+                        
+                    if(distance < 200) {
+                        //let gameScene = <GameScene>this.scene;  
+                        var destinationX = otherPlayer.x;
+                        var destinationY = otherPlayer.y;
+                        var deltaX = destinationX - this.x;
+                        var deltaY = destinationY - this.y;
+                
+                        //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
+                        var arctangent = Math.atan2(deltaX, deltaY);
+                        this.lightningAngle = -Utility.SnapTo16DirectionAngle(arctangent);
+                    }
+                    else {                
+                        //this.lightningAngle = -this.arctangent;
+                        
+                        this.lightningAngle += Math.PI / 60;
+                        if(this.lightningAngle > Math.PI * 2)
+                            this.lightningAngle -= Math.PI * 2;
+                    }
+        
+                    let matchingLightning = this.lightningSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
+                    if(matchingLightning.length > 0) {
+                        let lightning = matchingLightning[0];
+
+                        lightning.setPosition(this.x, this.y);
+                        lightning.rotation = this.lightningAngle;  
+                        lightning.setVisible(true);  
+                    }
+                    /*
+                    else {
+                        let lightning = this.createLightning(otherPlayer.playerId);
+
+                        lightning.setPosition(this.x, this.y);
+                        lightning.rotation = this.lightningAngle;  
+                        lightning.setVisible(true);
+                    } 
+                    */               
+                    //var pickupParent = pickup.getData('parentId');
+
+                    //this.electricBeamSprites[electricBeamSpriteIndex].setPosition(this.x, this.y);
+                    //this.electricBeamSprites[electricBeamSpriteIndex].rotation = this.lightningAngle;    
+                    //electricBeamSpriteIndex++;     
+                });            
+            }
         } 
 
         var currentlyDeadAndWaitingUntilRespawn = this.deadUntilRespawnTimer.isActive();
@@ -1423,12 +1466,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.deathIcon.setPosition(this.x + Player.deathIconOffsetX, this.y + Player.deathIconOffsetY);
         this.deathIcon.setVisible(true);
+
+        this.activeLightningTimer.stopTimer();
+        this.lightningSprites.forEach(x => {
+            let sprite = <Phaser.GameObjects.Sprite>x;
+            sprite.destroy();
+        });
         
         this.numberDeaths++;
 
         let gameScene = <GameScene>this.scene;  
 
-        gameScene.sceneController.hudScene.setInfoText(this.playerId + " destroyed (" + this.numberDeaths + " total)", 2000);
+        gameScene.sceneController.hudScene.setInfoText(this.playerName + " destroyed (" + this.numberDeaths + " total)", 2000);
     }
 
     tryRespawn() {
@@ -1777,6 +1826,9 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 case PickupType.Freeze:
                     this.tryFireFreeze();
                     break;
+                case PickupType.Lightning:
+                    this.tryFireLightning();
+                    break;
             }
         }        
     }  
@@ -1827,6 +1879,32 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.nextshockwaveTimer.startTimer(gameTimeNow);
         }        
     }  
+
+    tryFireLightning() {
+        if(!this.activeLightningTimer.isActive()) {
+
+            this.activeLightningTimer.startTimer();
+
+
+            this.lightningSprites.forEach(x => {
+                let sprite = <Phaser.GameObjects.Sprite>x;
+                sprite.destroy();
+            });
+
+            let gameScene = <GameScene>this.scene;   
+            var otherPlayers = gameScene.getOtherPlayers(this.playerId);
+            otherPlayers.forEach(x => {
+
+                var otherPlayer = <Player>x;
+                let lightning = this.createLightning(otherPlayer.playerId);
+
+                lightning.setPosition(this.x, this.y);
+                lightning.rotation = this.lightningAngle;  
+                lightning.setVisible(true);
+            });                    
+        }
+        // TODO: implement
+    }
 
     tryStopFireFlamethrower() {        
         if(this.flamethrowerDistance > 0)
@@ -1960,7 +2038,21 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         var selectedWeaponType = this.selectedWeaponInventoryItem.pickupType;
         this.scene.events.emit('nextWeaponSelected', this.playerId, selectedWeaponType);
-    }    
+    }   
+    
+    private createLightning(otherPlayerId: uuidv4): Phaser.GameObjects.Sprite {
+        let sprite = this.scene.add.sprite(this.x, this.y, 'lightning');// params.key, params.frame);
+        sprite.anims.play('lightning', true);
+        sprite.setPosition(this.x, this.y);
+        sprite.setOrigin(0.5, 0);
+        sprite.setScale(1.0, 1.0);
+        sprite.setDepth(this.depth);
+        sprite.setData('otherPlayerId', otherPlayerId);
+        //sprite.setVisible(false);
+        
+        this.lightningSprites.push(sprite);
+        return sprite;
+    }
 
     private createProjectile(projectileType) : Projectile {
         //var body = <Phaser.Physics.Arcade.Body>this.body;

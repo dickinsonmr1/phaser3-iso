@@ -54,7 +54,8 @@ import { v4 as uuidv4 } from 'uuid';
         this.load.image('healthIcon', './assets/sprites/HUD/DPAD.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('specialIcon', './assets/sprites/HUD/specialIcon.png');
-        this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon2.png');
+        this.load.image('shockwaveIcon', './assets/sprites/HUD/shockwaveIcon3.png');
+        this.load.image('lightningIcon', './assets/sprites/HUD/shockwaveIcon2.png');
     }
     
     create () {        

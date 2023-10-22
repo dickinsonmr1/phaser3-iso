@@ -277,23 +277,14 @@ export default class GameScene extends Phaser.Scene
         var vehicleFactory = new VehicleFactory();
 
         this.player1 = vehicleFactory.generatePlayer(this.player1VehicleType, false, PlayerTeam.Red, this);
-        this.player1.init();   
-
-        this.sceneController.addHudForPlayerId(this.player1.playerId, this.player1.playerName, this.player1.maxHealth());
-        
-        //this.crosshairSprite = this.add.sprite(this.player.x, this.player.y, 'crosshair');
-        //this.crosshairSprite.setOrigin(0.5, 0.5);
-        //this.crosshairSprite.setAngle(45);
-        //this.crosshairSprite.setScale(0.5, 0.3);        
-        //this.crosshairSprite.play(key);
-        
         this.player2 = vehicleFactory.generatePlayer(VehicleType.Police, true, PlayerTeam.Blue, this);
-        this.player2.init();
-
         this.player3 = vehicleFactory.generatePlayer(VehicleType.RaceCar, true, PlayerTeam.Green, this);
-        this.player3.init();
-
         this.player4 = vehicleFactory.generatePlayer(VehicleType.PickupTruck, true, PlayerTeam.Yellow, this);
+
+        this.player1.init();
+        this.sceneController.addHudForPlayerId(this.player1.playerId, this.player1.playerName, this.player1.maxHealth());
+        this.player2.init()
+        this.player3.init();
         this.player4.init();
 
         this.allPlayers = this.physics.add.group();
@@ -482,7 +473,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(9);
+            var rand = Utility.getRandomInt(10);
             var pickUpIconKey = "shieldIcon";
             switch(rand) {
                 case 0: // pink
@@ -547,6 +538,13 @@ export default class GameScene extends Phaser.Scene
                     rightColor = 0x5BE2FF;
                     pickupType = PickupType.Freeze;
                     pickUpIconKey = "freezeIcon";
+                    break;
+                case 9: // blue
+                    topColor = 0x6F84FF;
+                    leftColor = 0x2D4DFF;
+                    rightColor = 0x5B74FF;
+                    pickupType = PickupType.Lightning;
+                    pickUpIconKey = "lightningIcon";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
@@ -1168,6 +1166,18 @@ export default class GameScene extends Phaser.Scene
         let allPlayers = this.allPlayers.getChildren().filter(g => g instanceof Player) as Player[];
         return allPlayers.filter(x => x.playerId != playerId);
     }
+
+    
+    /*
+    getOtherPlayerDistance(playerId: uuidv4): Phaser.Math.Vector2[] {
+
+        let allPlayers = this.allPlayers.getChildren().filter(g => g instanceof Player) as Player[];
+        
+        return allPlayers
+            .filter(x => x.playerId != playerId)
+            .filter(y => y.body.position instanceof Phaser.Math.Vector2) as Phaser.Math.Vector2[];
+    }
+    */
 
     intersectPlayerFlamethrowerParticlesWithOtherPlayer(player: Player, otherPlayer: Player) {
         
