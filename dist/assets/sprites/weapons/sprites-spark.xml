@@ -1,0 +1,7 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-spark.png">
+    <SubTexture name="spark-preview1" x="0" y="0" width="64" height="64"></SubTexture>
+    <SubTexture name="spark-preview2" x="0" y="65" width="64" height="64"></SubTexture>
+    <SubTexture name="spark-preview3" x="65" y="0" width="64" height="64"></SubTexture>
+    <SubTexture name="spark-preview4" x="65" y="65" width="64" height="64"></SubTexture>
+    <SubTexture name="spark-preview5" x="0" y="130" width="64" height="64"></SubTexture>
+</TextureAtlas>

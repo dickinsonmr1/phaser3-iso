@@ -155,6 +155,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private lightningSprites: Phaser.GameObjects.Sprite[] = [];
     private lightningAngle: number = 0;
 
+    private lightningDamageSprites: Phaser.GameObjects.Sprite[] = [];
+
     private get emitterOffsetY(): number {return 30;}
 
     private arctangent: number = 0;
@@ -343,6 +345,19 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 {key: 'lightning', frame: 'thunder-rays6'}
             ],
             frameRate: 60,
+            repeat: -1
+        });
+
+        params.scene.anims.create({
+            key: 'spark',
+            frames: [
+                {key: 'spark', frame: 'spark-preview1'},
+                {key: 'spark', frame: 'spark-preview2'},
+                {key: 'spark', frame: 'spark-preview3'},
+                {key: 'spark', frame: 'spark-preview4'},
+                {key: 'spark', frame: 'spark-preview5'}
+            ],
+            frameRate: 30,
             repeat: -1
         });
         /*
@@ -1421,6 +1436,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             let sprite = <Phaser.GameObjects.Sprite>x;
             sprite.destroy();
         });
+
+        this.lightningDamageSprites.forEach(x => {
+            let sprite = <Phaser.GameObjects.Sprite>x;
+            sprite.destroy();
+        });
         
         this.numberDeaths++;
 
@@ -1839,6 +1859,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 sprite.destroy();
             });
 
+            this.lightningDamageSprites.forEach(x => {
+                let sprite = <Phaser.GameObjects.Sprite>x;
+                sprite.destroy();
+            });
+
             let gameScene = <GameScene>this.scene;   
             var otherPlayers = gameScene.getOtherPlayers(this.playerId);
             otherPlayers.forEach(x => {
@@ -1857,6 +1882,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     updateLightning() {
         if(!this.activeLightningTimer.isActive()) {
             this.lightningSprites.forEach(x => {
+                let sprite = <Phaser.GameObjects.Sprite>x;
+                sprite.destroy();
+            });
+
+            this.lightningDamageSprites.forEach(x => {
                 let sprite = <Phaser.GameObjects.Sprite>x;
                 sprite.destroy();
             });
@@ -1881,13 +1911,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     var arctangent = Math.atan2(deltaX, deltaY);
                     this.lightningAngle = -arctangent;//Utility.SnapTo16DirectionAngle(arctangent);
 
-                    //let matchingLightning = this.lightningSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
-                    //if(matchingLightning.length > 0) {
-                        //let item = <Phaser.GameObjects.Sprite>matchingLightning[0];
-                        //item.setSize(item.width, distance);
-                    //}
-
                     numberPlayersReachableByLightning++;
+
+                    let matchingLightningDamage = this.lightningDamageSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
+                    if(matchingLightningDamage.length > 0) {
+                        let lightningDamage = matchingLightningDamage[0];
+                        lightningDamage.setPosition(otherPlayer.x, otherPlayer.y);
+                        lightningDamage.setDepth(otherPlayer.y + 32);
+                        lightningDamage.setVisible(true);
+                    }
                 }
                 else {                
                     //this.lightningAngle = -this.arctangent;
@@ -1895,6 +1927,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     this.lightningAngle += Math.PI / 60;
                     if(this.lightningAngle > Math.PI * 2)
                         this.lightningAngle -= Math.PI * 2;
+
+                    let matchingLightningDamage = this.lightningDamageSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
+                    if(matchingLightningDamage.length > 0) {
+                        let lightningDamage = matchingLightningDamage[0];
+                        lightningDamage.setVisible(false);
+                    }
                 }
     
                 let matchingLightning = this.lightningSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
@@ -2068,6 +2106,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //sprite.setVisible(false);
         
         this.lightningSprites.push(sprite);
+
+        let damageSprite = this.scene.add.sprite(this.x, this.y, 'spark');// params.key, params.frame);
+        damageSprite.anims.play('spark', true);
+        damageSprite.setPosition(this.x, this.y);
+        damageSprite.setOrigin(0.5, 0.5);
+        damageSprite.setScale(1.0, 1.0);
+        damageSprite.setDepth(this.depth);
+        damageSprite.setData('otherPlayerId', otherPlayerId);
+        damageSprite.setVisible(false);
+        this.lightningDamageSprites.push(damageSprite);
+
         return sprite;
     }
 

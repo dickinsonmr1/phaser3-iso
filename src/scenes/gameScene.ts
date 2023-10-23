@@ -174,6 +174,7 @@ export default class GameScene extends Phaser.Scene
 
         this.load.atlasXML('waveform', './assets/sprites/weapons/spritesheet-waveform.png', './assets/sprites/weapons/sprites-waveform.xml');        
         this.load.atlasXML('lightning', './assets/sprites/weapons/spritesheet-lightning.png', './assets/sprites/weapons/sprites-lightning.xml');     
+        this.load.atlasXML('spark', './assets/sprites/weapons/spritesheet-spark.png', './assets/sprites/weapons/sprites-spark.xml');     
 
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
         //this.load.atlasXML('killdozer256', './assets/vehicles/sprites-killdozer.png', './assets/vehicles/sprites-killdozer.xml');        
