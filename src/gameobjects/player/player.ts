@@ -1752,9 +1752,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         //this.frozenTime = this.maxFrozenTime();
         this.frozenTimer.startTimer();
 
+        this.activeLightningTimer.stopTimer();
+
         this.frozenCarSprite.setVisible(true);
         this.frozenCarSprite.setAlpha(0);
         this.tryStopMove();
+    }
+
+    tryDamageWithLightning(totalDamage: number): void {
+
+        if(this.health > 0) {
+            this.health -= totalDamage;
+       
+            this.healthBar.updateHealth(this.health);
+            this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
+        }
+        if(this.health <= 0 && !this.deadUntilRespawnTimer.isActive()){
+            this.tryKill();
+        }
     }
 
     tryFireSecondaryWeapon() {
@@ -1900,7 +1915,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 var otherPlayer = <Player>x;
                 var distance = Math.abs(Phaser.Math.Distance.Between(otherPlayer.x, otherPlayer.y, this.x, this.y));
                     
-                if(distance < 200) {
+                if(distance < 200 && !otherPlayer.deadUntilRespawnTimer.isActive()) {
                     //let gameScene = <GameScene>this.scene;  
                     var destinationX = otherPlayer.x;
                     var destinationY = otherPlayer.y;
@@ -1919,6 +1934,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                         lightningDamage.setPosition(otherPlayer.x, otherPlayer.y);
                         lightningDamage.setDepth(otherPlayer.y + 32);
                         lightningDamage.setVisible(true);
+                        otherPlayer.tryDamageWithLightning(0.25);
                     }
                 }
                 else {                

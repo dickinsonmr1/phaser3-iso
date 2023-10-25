@@ -463,10 +463,12 @@ export class TitleScene extends Phaser.Scene {
                         this.menuController.selectNextItem();
                         break;
                     case Constants.gamepadIndexLeft:
+                    case Constants.gamepadIndexLB:
                         this.menuController.selectPreviousSubItem();
                         console.log('Left');
                         break;
                     case Constants.gamepadIndexRight:
+                    case Constants.gamepadIndexRB:
                         console.log('Right');
                         this.menuController.selectNextSubItem();
                         break;
