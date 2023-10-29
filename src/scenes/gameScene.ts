@@ -162,7 +162,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('treeTile', './assets/baum-tree.png');   
         this.load.image('houseTile', './assets/house-sample.png');   
         this.load.image('buildingTile', './assets/building-sample-256x256.png');         
-
+        
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
 
@@ -187,6 +187,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');
 
         this.load.image('crosshair', './assets/sprites/crosshair061.png');
+
+        this.load.atlasXML('buildingSpritesheet', './assets/spritesheet-buildings.png', './assets/sprites-buildings.xml');   
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }
 
@@ -213,7 +215,10 @@ export default class GameScene extends Phaser.Scene
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
         var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');       
         var tilesetHouses = map.addTilesetImage('house-sample', 'houseTile');
-        var tilesetBuildings = map.addTilesetImage('building-sample-256x256', 'buildingTile');
+        //var tilesetBuildings = map.addTilesetImage('building-sample-256x256', 'buildingTile');
+        //var tilesetBuildings2 = map.addTilesetImage('building-small-a-128x128', 'buildingTile2SW');
+        var spritesheetBuildingsTiles = map.addTilesetImage('spritesheet-buildings', 'spritesheetBuildingsTiles');
+        //var tilesetBuildings2 = map.addTilesetImage('building-small-a-128x128', 'buildingTile2');
         //var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile', 'houseTile', 'tiles2');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
@@ -234,7 +239,7 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
-        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses, tilesetBuildings ])
+        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses, spritesheetBuildingsTiles ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
@@ -337,9 +342,27 @@ export default class GameScene extends Phaser.Scene
                 this.generateDestructibleObject(tile, 'houseTile'); 
             if(tile.index == Constants.treeObjectTile)
                 this.generateDestructibleObject(tile, 'treeTile');
-            if(tile.index == Constants.buildingObjectTile)
-                this.generateBuilding(tile);
+            
+            //this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-sw-128x128', new Phaser.Math.Vector2(180, 25), new Phaser.Math.Vector2(10, 170), 1);
+
+            if(tile.index == Constants.building1ObjectTileSW)            
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
+            if(tile.index == Constants.building1ObjectTileSE)
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
+            
+            if(tile.index == Constants.building2ObjectTileSW)
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-garage-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
+            if(tile.index == Constants.building2ObjectTileSE)
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-garage-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
+
+            if(tile.index == Constants.building3ObjectTileSW)
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-d-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
+            if(tile.index == Constants.building3ObjectTileSE)
+                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-d-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(12, 64), 0.75);
         });        
+
+              //sprite.setBodySize(180, 25, false);
+        //sprite.setOffset(10, 170);
 
         this.physics.add.overlap(this.allPlayers, this.layer4);
         
@@ -609,20 +632,28 @@ export default class GameScene extends Phaser.Scene
         this.layer4.removeTileAt(tile.x, tile.y);
     }
 
-    generateBuilding(tile) {
+    generateBuilding(tile, key: string, frame: string, bodySize: Phaser.Math.Vector2, offset: Phaser.Math.Vector2, drawScale: number) {
         const x = ((tile.x * 128)) / 2 + 128 / 2; //tile.x;// tile.getCenterX();
         const y = ((tile.y * 64));// tile.height / 2; //tile.y;//tile.getCenterY();                
         
         var temp = Utility.cartesianToIsometric(new Point(x, y));
 
-        var sprite =  this.physics.add.image(temp.x, temp.y, 'buildingTile');
+        var sprite =  this.physics.add.image(temp.x, temp.y, key, frame);
         //sprite.setOrigin(0, 1);
         
-        //sprite.setScale(0.75, 0.75);            
+        sprite.setScale(drawScale);           
         sprite.setDepth(temp.y + 256);            
-        sprite.setBodySize(180, 25, false);
+        
+        //'buildingTile2'
+        //sprite.setBodySize(180, 25, false);
+        //sprite.setOffset(10, 170);
+        
+        sprite.setBodySize(bodySize.x, bodySize.y, false);
+        sprite.setOffset(offset.x, offset.y);
+
+
         //sprite.setOrigin(0, 1);
-        sprite.setOffset(10, 170);
+        
         //sprite.body.position.y += 1000;
         //sprite.setImmovable(true);
         

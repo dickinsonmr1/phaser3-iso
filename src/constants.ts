@@ -40,6 +40,14 @@ export class Constants {
     public static get treeObjectTile(): number { return 50; }
     public static get houseObjectTile(): number { return 131; }
     public static get buildingObjectTile(): number { return 132; }
+    public static get buildingObjectTile2(): number { return 133; }
+
+    public static get building1ObjectTileSW(): number { return 134; }
+    public static get building1ObjectTileSE(): number { return 142; }
+    public static get building2ObjectTileSW(): number { return 139; }
+    public static get building2ObjectTileSE(): number { return 143; }
+    public static get building3ObjectTileSW(): number { return 135; }
+    public static get building3ObjectTileSE(): number { return 138; }
 
     public static get respawnTime(): number { return 180; }
 

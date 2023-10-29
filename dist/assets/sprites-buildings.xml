@@ -1,0 +1,12 @@
+<TextureAtlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet-buildings.png">
+    <SubTexture name="building-small-a-sw-128x128" x="129" y="258" width="128" height="128"></SubTexture>
+    <SubTexture name="building-small-b-SE-128x171" x="387" y="0" width="128" height="171"></SubTexture>
+    <SubTexture name="building-small-b-sw-128x197" x="0" y="0" width="128" height="187"></SubTexture>
+    <SubTexture name="building-small-c-se-128x202" x="387" y="172" width="128" height="202"></SubTexture>
+    <SubTexture name="building-small-c-sw-128x202" x="0" y="188" width="128" height="202"></SubTexture>
+    <SubTexture name="building-small-d-se-128x128" x="258" y="129" width="128" height="128"></SubTexture>
+    <SubTexture name="building-small-d-sw-128x128" x="258" y="258" width="128" height="128"></SubTexture>
+    <SubTexture name="building-garage-se-128x128" x="258" y="0" width="128" height="128"></SubTexture>
+    <SubTexture name="building-garage-sw-128x128" x="129" y="129" width="128" height="128"></SubTexture>
+    <SubTexture name="building-small-a-se-128x128" x="129" y="0" width="128" height="128"></SubTexture>
+</TextureAtlas>
