@@ -159,6 +159,7 @@ export default class GameScene extends Phaser.Scene
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
         this.load.image('tiles2', './assets/iso-64x64-building.png');
         this.load.image('groundTiles', './assets/Overworld - Terrain 1 - Flat 128x64.png');
+        this.load.image('groundTiles2', './assets/Overworld - Terrain 1 - Flat 128x64 - with halves.png');
         this.load.image('waterTiles', './assets/Overworld - Water - Flat 128x64.png');
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
@@ -215,6 +216,7 @@ export default class GameScene extends Phaser.Scene
 
         // tileset name matches what is in Tiled
         var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles');      
+        var tilesetGround2 = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64 - with halves', 'groundTiles2');      
         var tilesetWater = map.addTilesetImage('Overworld - Water - Flat 128x64', 'waterTiles');
         var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles');
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
@@ -228,7 +230,7 @@ export default class GameScene extends Phaser.Scene
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
 
-        this.layerUnderground = map.createLayer('UndergroundLayer', [ tilesetGround ])
+        this.layerUnderground = map.createLayer('UndergroundLayer', [ tilesetGround, tilesetGround2 ])
             .setDisplayOrigin(0.5, 0.5)    
             //.setPipeline('Light2D')
             .setAlpha(1);
@@ -241,9 +243,9 @@ export default class GameScene extends Phaser.Scene
         this.layer2a = map.createLayer('WaterLayer2', [ tilesetWater ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D')
-            .setAlpha(0.2);
+            .setAlpha(0.3);
 
-        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
+        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetGround2 ])
             .setDisplayOrigin(0.5, 0.5)              
             .setPipeline('Light2D');
                         
@@ -1131,18 +1133,14 @@ export default class GameScene extends Phaser.Scene
         this.player4.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player4.update();
 
-        this.waterLayer1Offset.x += 0.1;
         this.waterLayer1Offset.y += 0.1;
         if(this.waterLayer1Offset.y >= 64) {
-            this.waterLayer1Offset.x = 0;
             this.waterLayer1Offset.y = 0;
         }
 
         this.waterLayer2Offset.x -= 0.2;
-        this.waterLayer2Offset.y -= 0.2;
-        if(this.waterLayer2Offset.y <= -64) {
+        if(this.waterLayer2Offset.x <= -128) {
             this.waterLayer2Offset.x = 0;
-            this.waterLayer2Offset.y = 0;
         }
 
         this.layer2.setPosition(this.waterLayer1Offset.x, this.waterLayer1Offset.y);
