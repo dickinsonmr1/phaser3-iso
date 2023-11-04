@@ -9,6 +9,7 @@ import { VehicleFactory } from '../gameobjects/player/vehicleFactory';
 import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPatternEnums';
 import { ProjectileType } from '../gameobjects/weapons/projectileType';
 import { v4 as uuidv4 } from 'uuid';
+import { IndestructibleObjectFactory } from '../gameobjects/indestructibleObjectFactory';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -336,40 +337,33 @@ export default class GameScene extends Phaser.Scene
             immovable: true
         });
 
+        let factory = new IndestructibleObjectFactory()
+
         this.layer4.forEachTile(tile => {
 
-            if(tile.index == Constants.houseObjectTile)
-                this.generateDestructibleObject(tile, 'houseTile'); 
-            if(tile.index == Constants.treeObjectTile)
-                this.generateDestructibleObject(tile, 'treeTile');
+            if(tile.index != 0) {
+
+                if(tile.index == Constants.houseObjectTile)
+                    this.generateDestructibleObject(tile, 'houseTile'); 
+                if(tile.index == Constants.treeObjectTile)
+                    this.generateDestructibleObject(tile, 'treeTile');
+                else {
+
+                    
+                    var sprite = factory.generateObject(this.physics, tile.index, new Phaser.Math.Vector2(tile.x, tile.y));
+                    if(sprite != null)
+                        this.environmentIndestructiblePhysicsObjects.add(sprite);
+                }
+
+                
+                this.layer4.removeTileAt(tile.x, tile.y);
+            }
+
+            
             
             //this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-sw-128x128', new Phaser.Math.Vector2(180, 25), new Phaser.Math.Vector2(10, 170), 1);
 
-            if(tile.index == Constants.building1ObjectTileSW)            
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 64, 0.75);
-            else if(tile.index == Constants.building1ObjectTileSE)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 64, 0.75);
-            
-            else if(tile.index == Constants.building2ObjectTileSW)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-garage-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 0, 0.75);
-            else if(tile.index == Constants.building2ObjectTileSE)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-garage-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 0, 0.75);
-
-            else if(tile.index == Constants.building3ObjectTileSW)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-d-sw-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 0, 0.75);
-            else if(tile.index == Constants.building3ObjectTileSE)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-d-se-128x128', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, 64), 0, 0.75);
-
-            else if(tile.index == Constants.building4ObjectTileSW)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-c-se-128x202', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, -128), 0, 0.75);
-            else if(tile.index == Constants.building4ObjectTileSE)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-c-sw-128x202', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, -128), 0, 0.75);
-                
-            else if(tile.index == Constants.building5ObjectTileSE)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-b-SE-128x197', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, -128), 0, 0.75);
-            else if(tile.index == Constants.building5ObjectTileSW)
-                this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-b-sw-128x171', new Phaser.Math.Vector2(100, 32), new Phaser.Math.Vector2(0,0), new Phaser.Math.Vector2(12, -128), 0, 0.75);
-        });        
+                });        
 
               //sprite.setBodySize(180, 25, false);
         //sprite.setOffset(10, 170);
@@ -639,44 +633,10 @@ export default class GameScene extends Phaser.Scene
 
         this.environmentDestructiblePhysicsObjects.add(sprite);
 
-        this.layer4.removeTileAt(tile.x, tile.y);
+        //this.layer4.removeTileAt(tile.x, tile.y);
     }
 
-    generateBuilding(tile, key: string, frame: string,
-        bodySize: Phaser.Math.Vector2,
-        physicsBodyOffset: Phaser.Math.Vector2,
-        drawOffset: Phaser.Math.Vector2,
-        depthOffset: number,
-        drawScale: number) {
-
-        const x = ((tile.x * 128)) / 2 + 128 / 2; //tile.x;// tile.getCenterX();
-        const y = ((tile.y * 64));// tile.height / 2; //tile.y;//tile.getCenterY();                
-        
-        var temp = Utility.cartesianToIsometric(new Point(x, y));
-
-        var sprite =  this.physics.add.image(temp.x + drawOffset.x, temp.y + drawOffset.y, key, frame);
-        //sprite.setOrigin(0, 1);
-        
-        sprite.setScale(drawScale);           
-        sprite.setDepth(temp.y + depthOffset);            
-        
-        //'buildingTile2'
-        //sprite.setBodySize(180, 25, false);
-        //sprite.setOffset(10, 170);
-        
-        sprite.setBodySize(bodySize.x, bodySize.y, false);
-        sprite.setOffset(physicsBodyOffset.x, physicsBodyOffset.y);
-
-
-        //sprite.setOrigin(0, 1);
-        
-        //sprite.body.position.y += 1000;
-        //sprite.setImmovable(true);
-        
-        this.environmentIndestructiblePhysicsObjects.add(sprite);
-
-        this.layer4.removeTileAt(tile.x, tile.y);
-    }
+   
 
     addGamePadListeners() {
         if (this.input.gamepad.total === 0)
