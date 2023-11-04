@@ -71,6 +71,8 @@ export default class GameScene extends Phaser.Scene
 
     layer1 : Phaser.Tilemaps.TilemapLayer;
     layer2 : Phaser.Tilemaps.TilemapLayer;
+    layer2a : Phaser.Tilemaps.TilemapLayer;
+    layerUnderground : Phaser.Tilemaps.TilemapLayer;
     layer3 : Phaser.Tilemaps.TilemapLayer;
     layer4 : Phaser.Tilemaps.TilemapLayer;
     layer5 : Phaser.Tilemaps.TilemapLayer;
@@ -100,6 +102,8 @@ export default class GameScene extends Phaser.Scene
 
     crosshairSprite: Phaser.GameObjects.Sprite;
 
+    waterLayer1Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
+    waterLayer2Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
     constructor (sceneController: SceneController, player1VehicleType: VehicleType)
     {
@@ -223,14 +227,25 @@ export default class GameScene extends Phaser.Scene
         //var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile', 'houseTile', 'tiles2');
 
         // https://www.phaser.io/examples/v3/view/game-objects/lights/tilemap-layer
-        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
-            .setDisplayOrigin(0.5, 0.5)              
-            .setPipeline('Light2D');
+
+        this.layerUnderground = map.createLayer('UndergroundLayer', [ tilesetGround ])
+            .setDisplayOrigin(0.5, 0.5)    
+            //.setPipeline('Light2D')
+            .setAlpha(1);
 
         this.layer2 = map.createLayer('WaterLayer', [ tilesetWater ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D')
-            .setAlpha(0.8);
+            .setAlpha(0.4);
+
+        this.layer2a = map.createLayer('WaterLayer2', [ tilesetWater ])
+            .setDisplayOrigin(0.5, 0.5)    
+            .setPipeline('Light2D')
+            .setAlpha(0.2);
+
+        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetWater ])
+            .setDisplayOrigin(0.5, 0.5)              
+            .setPipeline('Light2D');
                         
         this.layer3 = map.createLayer('RoadsLayer', [ tilesetRoads ])
             .setDisplayOrigin(0.5, 0.5)    
@@ -258,7 +273,7 @@ export default class GameScene extends Phaser.Scene
 
         this.lights.enable();
         this.lights.setAmbientColor(0xffffff);
-        this.light = this.lights.addLight(0, 0, 100).setIntensity(3);
+        //this.light = this.lights.addLight(0, 0, 100).setIntensity(3);
     
 
         //this.light.setVisible(false);
@@ -1115,6 +1130,23 @@ export default class GameScene extends Phaser.Scene
 
         this.player4.updateCpuBehavior(playerPosition, this.cpuPlayerPatternOverride, this.cpuSelectedWeaponOverride);
         this.player4.update();
+
+        this.waterLayer1Offset.x += 0.1;
+        this.waterLayer1Offset.y += 0.1;
+        if(this.waterLayer1Offset.y >= 64) {
+            this.waterLayer1Offset.x = 0;
+            this.waterLayer1Offset.y = 0;
+        }
+
+        this.waterLayer2Offset.x -= 0.2;
+        this.waterLayer2Offset.y -= 0.2;
+        if(this.waterLayer2Offset.y <= -64) {
+            this.waterLayer2Offset.x = 0;
+            this.waterLayer2Offset.y = 0;
+        }
+
+        this.layer2.setPosition(this.waterLayer1Offset.x, this.waterLayer1Offset.y);
+        this.layer2a.setPosition(this.waterLayer2Offset.x, this.waterLayer2Offset.y);        
 
         this.updatePickupScaleTime()
         this.pickupObjects.forEach(item => {
