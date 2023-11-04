@@ -370,60 +370,30 @@ export default class GameScene extends Phaser.Scene
 
         this.physics.add.overlap(this.allPlayers, this.layer4);
         
-        /*this.physics.add.overlap(this.player, this.layer4);
-        this.physics.add.overlap(this.player2, this.layer4);
-        this.physics.add.overlap(this.player3, this.layer4);
-        this.physics.add.overlap(this.player4, this.layer4);
-        */
-
         //this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
         //this.layer4.setTileIndexCallback(Constants.houseObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
 
         this.allBullets = this.physics.add.group();
-        /*
-        this.allBullets.addMultiple(this.player.bullets.getChildren());
-        this.allBullets.addMultiple(this.player2.bullets.getChildren());
-        this.allBullets.addMultiple(this.player3.bullets.getChildren());
-        this.allBullets.addMultiple(this.player4.bullets.getChildren());
-        */
 
-        this.physics.add.overlap(this.allPlayers, this.environmentDestructiblePhysicsObjects, (player, object) => this.playerOrWeaponTouchingEnvironmentObject(player, object));
-        //this.physics.add.overlap(this.allBullets, this.environmentPhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        // player interaction with destructible physics objects (trees, small buildings)
+        this.physics.add.overlap(this.allPlayers, this.environmentDestructiblePhysicsObjects, (player, object) => this.playerOrWeaponTouchingDestructibleEnvironmentObject(player, object));
 
-        this.physics.add.overlap(this.player1.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player2.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player3.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
-        this.physics.add.overlap(this.player4.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingEnvironmentObject(bullets, object));
+        // projectile interaction with destructible physics objects (trees, small buildings)
+        this.physics.add.overlap(this.player1.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingDestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player2.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingDestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player3.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingDestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player4.bullets, this.environmentDestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingDestructibleEnvironmentObject(bullets, object));
 
-        this.physics.add.collider(this.player1, this.environmentIndestructiblePhysicsObjects, (player, object) => this.colliderMethod(player, object));
-        //this.physics.world.collide(this.player, this.environmentIndestructiblePhysicsObjects);
-        
-        //this.physics.add.overlap(this.player.bullets, this.layer4);
-        //this.physics.add.overlap(this.player2.bullets, this.layer4);
-        //this.physics.add.overlap(this.player3.bullets, this.layer4);
-        //this.physics.add.overlap(this.player4.bullets, this.layer4);
+        // player interaction with indestructible physics objects (large buildings)
+        this.physics.add.collider(this.allPlayers, this.environmentIndestructiblePhysicsObjects, (player, object) => this.playerOrWeaponTouchingIndestructibleEnvironmentObject(player, object));
 
-        //const particles = this.player.particleEmitterFlamethrower.overlap(this.player2);
-        /*
-        this.physics.add.overlap(this.player2, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player3, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player4, this.player.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-
-        this.physics.add.overlap(this.player, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player3, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player4, this.player2.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-
-        this.physics.add.overlap(this.player, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player2, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player4, this.player3.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-
-        this.physics.add.overlap(this.player, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player2, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        this.physics.add.overlap(this.player3, this.player4.particleEmitterFlamethrower, (player, flame) => this.flameTouchingPlayerHandler(player, flame));
-        */
-       
+        // projectile interaction with indestructible physics objects (large buildings)
+        this.physics.add.overlap(this.player1.bullets, this.environmentIndestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingIndestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player2.bullets, this.environmentIndestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingIndestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player3.bullets, this.environmentIndestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingIndestructibleEnvironmentObject(bullets, object));
+        this.physics.add.overlap(this.player4.bullets, this.environmentIndestructiblePhysicsObjects, (bullets, object) => this.playerOrWeaponTouchingIndestructibleEnvironmentObject(bullets, object));
+              
         this.layer4.setTileIndexCallback(Constants.treeObjectTile, this.playerOrWeaponTouchingObjectTileHandler, this);
-
         
         //this.layer2.setCollisionByExclusion([-1],true);//, Constants.tileLockBlue]);
         //this.layer2.setTileIndexCallback(35, this.playerTouchingTileHandler2, this);
@@ -438,12 +408,7 @@ export default class GameScene extends Phaser.Scene
         this.physics.add.overlap(this.player1, this.player3.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
         this.physics.add.overlap(this.player1, this.player4.bullets, (player, bullet) => this.bulletTouchingEnemyHandler(player, bullet));
 
-        
-
         this.physics.add.overlap(this.allPlayers, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        //this.physics.add.overlap(this.player2, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        //this.physics.add.overlap(this.player3, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
-        //this.physics.add.overlap(this.player4, this.pickupPhysicsObjects, (player, pickup) => this.playerTouchingPickup(player, pickup));
 
         this.cameras.main.startFollow(this.player1, true, 0.6, 0.6, 0, 0);
 
@@ -836,7 +801,7 @@ export default class GameScene extends Phaser.Scene
         */
     }
 
-    playerOrWeaponTouchingEnvironmentObject(playerOrWeapon: any, object: any) {
+    playerOrWeaponTouchingDestructibleEnvironmentObject(playerOrWeapon: any, object: any) {
        
         if(playerOrWeapon instanceof Projectile)
         {
@@ -851,8 +816,17 @@ export default class GameScene extends Phaser.Scene
         object.destroy();
     }
 
-    colliderMethod(playerOrWeapon: any, object: any) {
-       
+    playerOrWeaponTouchingIndestructibleEnvironmentObject(playerOrWeapon: any, object: any) {
+        if(playerOrWeapon instanceof Projectile)
+        {
+            var projectile = <Projectile>playerOrWeapon;
+            if(projectile.projectileType == ProjectileType.Airstrike)
+                return;
+
+            projectile.remove();
+
+            this.particleEmitter.explode(2, object.x, object.y);        
+        }        
     }
 
     update(time, delta) {
