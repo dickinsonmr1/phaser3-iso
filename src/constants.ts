@@ -44,10 +44,18 @@ export class Constants {
 
     public static get building1ObjectTileSW(): number { return 134; }
     public static get building1ObjectTileSE(): number { return 142; }
+    
     public static get building2ObjectTileSW(): number { return 139; }
     public static get building2ObjectTileSE(): number { return 143; }
+    
     public static get building3ObjectTileSW(): number { return 135; }
     public static get building3ObjectTileSE(): number { return 138; }
+    
+    public static get building4ObjectTileSW(): number { return 144; }
+    public static get building4ObjectTileSE(): number { return 141; }
+
+    public static get building5ObjectTileSW(): number { return 136; }
+    public static get building5ObjectTileSE(): number { return 133; }
 
     public static get respawnTime(): number { return 180; }
 
