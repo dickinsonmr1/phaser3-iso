@@ -4,6 +4,7 @@ import { HudScene } from "./hudscene";
 import { TitleScene } from './titleScene';
 import { VehicleType } from '../gameobjects/player/player';
 import { v4 as uuidv4 } from 'uuid';
+import { WeatherType } from '../gameobjects/weather';
 
 export class SceneController extends Phaser.Scene {
     hudScene: HudScene;
@@ -31,10 +32,10 @@ export class SceneController extends Phaser.Scene {
         this.scene.launch('TitleScene');
     }
 
-    launchGame(player1VehicleType: VehicleType) {
+    launchGame(player1VehicleType: VehicleType, weatherType: WeatherType) {
         this.titleScene.scene.stop();
 
-        this.gameScene = new GameScene(this, player1VehicleType);
+        this.gameScene = new GameScene(this, player1VehicleType, weatherType);
         this.game.scene.add("GameScene", this.gameScene);
         this.scene.launch('GameScene');
 

@@ -10,6 +10,7 @@ import { CpuPlayerPattern } from '../gameobjects/player/cpuPlayerPatternEnums';
 import { ProjectileType } from '../gameobjects/weapons/projectileType';
 import { v4 as uuidv4 } from 'uuid';
 import { IndestructibleObjectFactory } from '../gameobjects/indestructibleObjectFactory';
+import { WeatherType } from '../gameobjects/weather';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -96,8 +97,8 @@ export default class GameScene extends Phaser.Scene
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
-    private particleEmitterRain: Phaser.GameObjects.Particles.ParticleEmitter;
-    private particleEmitterRain2: Phaser.GameObjects.Particles.ParticleEmitter;
+    private weatherType: WeatherType;
+    private particleEmitterPrecipitation: Phaser.GameObjects.Particles.ParticleEmitter;
 
     debugGraphics: Phaser.GameObjects.Graphics;
 
@@ -108,13 +109,14 @@ export default class GameScene extends Phaser.Scene
     waterLayer1Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     waterLayer2Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
-    constructor (sceneController: SceneController, player1VehicleType: VehicleType)
+    constructor (sceneController: SceneController, player1VehicleType: VehicleType, weatherType: WeatherType)
     {
         super('GameScene');
 
         this.sceneController = sceneController;
 
         this.player1VehicleType = player1VehicleType;
+        this.weatherType = weatherType;
 
         this.gamepad = null;
     }
@@ -173,6 +175,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('buildingTile', './assets/building-sample-256x256.png');         
 
         this.load.image('rain', './assets/rain.png');    
+        this.load.image('snow', './assets/snow.png');    
 
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
@@ -338,21 +341,40 @@ export default class GameScene extends Phaser.Scene
             alpha: {start: 0.9, end: 0.0},
         });
 
-        this.particleEmitterRain =  this.add.particles(0, 0, 'rain', {
-            //x: { min: 0, max: 1920 },
-            //quantity: 2,
-            lifespan: 3000,
-            //gravityY: 300,
-            frequency: -1,
-            //advance: 1000,
-            alpha: {start: 0.6, end: 0.0},
-            speedX: {min: -10, max: 10},
-            speedY: {min: 300, max: 500},
-            scale: {min: 0.1, max: 1}
-            //this.emitter.setYSpeed(600, 1000);
-            //this.emitter.setXSpeed(-5, 5);
-    
-        });
+        if(this.weatherType == WeatherType.Rain) {
+        
+            this.particleEmitterPrecipitation =  this.add.particles(0, 0, 'rain', {
+                //x: { min: 0, max: 1920 },
+                //quantity: 2,
+                lifespan: 3000,
+                //gravityY: 300,
+                frequency: -1,
+                //advance: 1000,
+                alpha: {start: 0.6, end: 0.0},
+                speedX: {min: -10, max: 10},
+                speedY: {min: 300, max: 500},
+                scale: {min: 0.1, max: 1}
+                //this.emitter.setYSpeed(600, 1000);
+                //this.emitter.setXSpeed(-5, 5);    
+            });
+        }
+        else if(this.weatherType == WeatherType.Snow) {
+            this.particleEmitterPrecipitation =  this.add.particles(0, 0, 'snow', {
+                //x: { min: 0, max: 1920 },
+                //quantity: 2,
+                lifespan: 4000,
+                //gravityY: 300,
+                frequency: -1,
+                //advance: 2000,
+                alpha: {start: 0.6, end: 0.0},
+                speedX: {min: -20, max: 20},
+                speedY: {min: 100, max: 300},
+                scale: {min: 0.05, max: 0.5}
+                //this.emitter.setYSpeed(600, 1000);
+                //this.emitter.setXSpeed(-5, 5);
+
+            });
+        }
 
         /*
         this.particleEmitterRain2 =  this.add.particles(0, 0, 'rain', {
@@ -1147,10 +1169,11 @@ export default class GameScene extends Phaser.Scene
         this.player1.update();
 
 
-        for(var i = 0; i < 20; i++) {
-            let randomRainLocationX = this.player1.x - 1000 + Utility.getRandomInt(2000);
-            this.particleEmitterRain.emitParticleAt(randomRainLocationX, this.player1.y - 500);
-        }
+        if(this.weatherType != WeatherType.None)
+            for(var i = 0; i < 20; i++) {
+                let randomRainLocationX = this.player1.x - 1000 + Utility.getRandomInt(2000);
+                this.particleEmitterPrecipitation.emitParticleAt(randomRainLocationX, this.player1.y - 500);
+            }
 
         this.events.emit('playerPositionUpdated', this.player1.playerId, this.player1.x, this.player1.y);
 
