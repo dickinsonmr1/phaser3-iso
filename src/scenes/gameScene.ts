@@ -11,6 +11,7 @@ import { ProjectileType } from '../gameobjects/weapons/projectileType';
 import { v4 as uuidv4 } from 'uuid';
 import { IndestructibleObjectFactory } from '../gameobjects/indestructibleObjectFactory';
 import { WeatherType } from '../gameobjects/weather';
+import { TimeOfDayType } from '../gameobjects/timeOfDayType';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -100,6 +101,8 @@ export default class GameScene extends Phaser.Scene
     private weatherType: WeatherType;
     private particleEmitterPrecipitation: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    private timeOfDayType: TimeOfDayType;
+
     debugGraphics: Phaser.GameObjects.Graphics;
 
     player1VehicleType: VehicleType;
@@ -109,7 +112,7 @@ export default class GameScene extends Phaser.Scene
     waterLayer1Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     waterLayer2Offset: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
-    constructor (sceneController: SceneController, player1VehicleType: VehicleType, weatherType: WeatherType)
+    constructor (sceneController: SceneController, player1VehicleType: VehicleType, weatherType: WeatherType, timeOfDayType: TimeOfDayType)
     {
         super('GameScene');
 
@@ -117,6 +120,7 @@ export default class GameScene extends Phaser.Scene
 
         this.player1VehicleType = player1VehicleType;
         this.weatherType = weatherType;
+        this.timeOfDayType = timeOfDayType;
 
         this.gamepad = null;
     }
@@ -282,7 +286,18 @@ export default class GameScene extends Phaser.Scene
         //const spectrum = Phaser.Display.Color.ColorSpectrum(128);
 
         this.lights.enable();
-        this.lights.setAmbientColor(0xffffff);
+        switch(this.timeOfDayType){
+            case TimeOfDayType.Daytime:
+                this.lights.setAmbientColor(0xFFFFFF);
+                break;
+            case TimeOfDayType.DuskDawn:
+                this.lights.setAmbientColor(0xFFCCCC);
+                break;
+            case TimeOfDayType.Night:
+                this.lights.setAmbientColor(0x444444);
+                break;
+        }
+        
         //this.light = this.lights.addLight(0, 0, 100).setIntensity(3);
     
 
@@ -318,6 +333,11 @@ export default class GameScene extends Phaser.Scene
         this.player2.init()
         this.player3.init();
         this.player4.init();
+
+        this.player1.setPipeline('Light2D');
+        this.player2.setPipeline('Light2D');
+        this.player3.setPipeline('Light2D');
+        this.player4.setPipeline('Light2D');
 
         this.allPlayers = this.physics.add.group();
 
@@ -670,6 +690,8 @@ export default class GameScene extends Phaser.Scene
         sprite.setBodySize(50, 15, true);
 
         this.environmentDestructiblePhysicsObjects.add(sprite);
+
+        sprite.setPipeline('Light2D');
 
         //this.layer4.removeTileAt(tile.x, tile.y);
     }

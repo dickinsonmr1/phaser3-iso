@@ -65,6 +65,8 @@ export class IndestructibleObjectFactory {
         
         //sprite.body.position.y += 1000;
         //sprite.setImmovable(true);
+        
+        sprite.setPipeline('Light2D');
         return sprite;
        
     }

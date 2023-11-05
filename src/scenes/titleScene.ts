@@ -7,6 +7,7 @@ import { ComplexMenuItem, IconValueMapping, IconValueMappingWithStats, LocationO
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
 import { WeatherType } from '../gameobjects/weather';
+import { TimeOfDayType } from '../gameobjects/timeOfDayType';
  
 export class TitleScene extends Phaser.Scene {
     
@@ -339,6 +340,13 @@ export class TitleScene extends Phaser.Scene {
             new IconValueMapping({description:'Snow', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: WeatherType.Snow})
         ],
         LocationOnMenuPage.NextToMenuItem);
+        mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Time of Day",
+        [
+            new IconValueMapping({description:'Day', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.Daytime}),
+            new IconValueMapping({description:'Dawn / Dusk', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.DuskDawn}),
+            new IconValueMapping({description:'Night', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.Night})
+        ],
+        LocationOnMenuPage.NextToMenuItem);
         mapSelectionMenuPage.addMenuLinkItem(this, "Next", vehicleSelectionMenuPage);    
         mapSelectionMenuPage.setBackMenu(this, titleMenuPage);
              
@@ -437,12 +445,17 @@ export class TitleScene extends Phaser.Scene {
         var selectedWeatherMenuItem = <ComplexMenuItem>this.menuController.menuPages[1].items[1];
         if(selectedWeatherMenuItem.subItems[selectedWeatherMenuItem.selectedSubItemIndex] != null)
             weatherType = selectedWeatherMenuItem.selectedSubItemIndex;
-        
+
+        let timeOfDayType = TimeOfDayType.Daytime;
+        var selectedTimeOfDayTypeMenuItem = <ComplexMenuItem>this.menuController.menuPages[1].items[2];
+        if(selectedTimeOfDayTypeMenuItem.subItems[selectedTimeOfDayTypeMenuItem.selectedSubItemIndex] != null)
+            timeOfDayType = selectedTimeOfDayTypeMenuItem.selectedSubItemIndex;
+    
         var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menuController.selectedMenuPage.items[0];
         if(selectedVehicleTypeMenuItem.selectedSubItemIndex != null)
-            this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex, weatherType);
+            this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex, weatherType, timeOfDayType);
         else
-            this.sceneController.launchGame(VehicleType.Killdozer, weatherType);
+            this.sceneController.launchGame(VehicleType.Killdozer, weatherType, timeOfDayType);
     }
 
     addGamepadListeners(): void {
