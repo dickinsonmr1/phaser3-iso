@@ -14,6 +14,7 @@ import { PickupType } from '../pickup';
 import { ProjectileFactory } from '../weapons/projectileFactory';
 import { ProjectileType } from '../weapons/projectileType';
 import { v4 as uuidv4 } from 'uuid';
+import { TimeOfDayType } from '../timeOfDayType';
 
 export enum PlayerCartesianOrientation {
     N,
@@ -471,10 +472,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.headlight = this.scene.lights
             .addLight(this.x, this.y)
-            .setRadius(70)
+            .setRadius(120)
             .setColor(0xFFFFFF)
-            .setIntensity(1.0)
-            .setVisible(true);
+            .setIntensity(0.9)
+            .setVisible(this.getGameScene().getTimeOfDay() != TimeOfDayType.Daytime);
     
         var text = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
@@ -894,7 +895,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
 
-            this.headlight.setPosition(this.x + this.aimX * 40, this.y + this.aimY * 40);
+            this.headlight.setPosition(this.x + this.aimX * 70, this.y + this.aimY * 70);
 
             if(this.particleEmitterShockwave != null)
                 this.particleEmitterShockwave.setPosition(this.x, this.y);
@@ -1511,7 +1512,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.deathBurnSpotlight != null)
             this.deathBurnSpotlight.setVisible(false);
 
-        this.headlight.setVisible(true);
+        this.headlight.setVisible(this.getGameScene().getTimeOfDay() != TimeOfDayType.Daytime);
 
         this.scene.events.emit('playerRespawn', this.playerId);
     }

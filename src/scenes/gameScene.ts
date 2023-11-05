@@ -102,6 +102,9 @@ export default class GameScene extends Phaser.Scene
     private particleEmitterPrecipitation: Phaser.GameObjects.Particles.ParticleEmitter;
 
     private timeOfDayType: TimeOfDayType;
+    public getTimeOfDay(): TimeOfDayType {
+        return this.timeOfDayType;
+    }
 
     debugGraphics: Phaser.GameObjects.Graphics;
 
@@ -294,7 +297,7 @@ export default class GameScene extends Phaser.Scene
                 this.lights.setAmbientColor(0xFFCCCC);
                 break;
             case TimeOfDayType.Night:
-                this.lights.setAmbientColor(0x444444);
+                this.lights.setAmbientColor(0x555577);
                 break;
         }
         
@@ -377,6 +380,7 @@ export default class GameScene extends Phaser.Scene
                 //this.emitter.setYSpeed(600, 1000);
                 //this.emitter.setXSpeed(-5, 5);    
             });
+            //this.particleEmitterPrecipitation.setPipeline('Light2D');
         }
         else if(this.weatherType == WeatherType.Snow) {
             this.particleEmitterPrecipitation =  this.add.particles(0, 0, 'snow', {
@@ -394,6 +398,7 @@ export default class GameScene extends Phaser.Scene
                 //this.emitter.setXSpeed(-5, 5);
 
             });
+            //this.particleEmitterPrecipitation.setPipeline('Light2D');
         }
 
         /*
