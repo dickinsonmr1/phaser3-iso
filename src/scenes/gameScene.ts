@@ -96,6 +96,9 @@ export default class GameScene extends Phaser.Scene
 
     private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
+    private particleEmitterRain: Phaser.GameObjects.Particles.ParticleEmitter;
+    private particleEmitterRain2: Phaser.GameObjects.Particles.ParticleEmitter;
+
     debugGraphics: Phaser.GameObjects.Graphics;
 
     player1VehicleType: VehicleType;
@@ -168,6 +171,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image('treeTile', './assets/baum-tree.png');   
         this.load.image('houseTile', './assets/house-sample.png');   
         this.load.image('buildingTile', './assets/building-sample-256x256.png');         
+
+        this.load.image('rain', './assets/rain.png');    
 
         this.load.tilemapTiledJSON('map', './assets/isoRoads.json');
         this.load.atlasXML('utilityCars', './assets/vehicles/sheet_utility.png', './assets/vehicles/sheet_utility.xml');        
@@ -332,6 +337,35 @@ export default class GameScene extends Phaser.Scene
             frequency: -1,
             alpha: {start: 0.9, end: 0.0},
         });
+
+        this.particleEmitterRain =  this.add.particles(0, 0, 'rain', {
+            //x: { min: 0, max: 1920 },
+            //quantity: 2,
+            lifespan: 3000,
+            //gravityY: 300,
+            frequency: -1,
+            //advance: 1000,
+            alpha: {start: 0.6, end: 0.0},
+            speedX: {min: -10, max: 10},
+            speedY: {min: 300, max: 500},
+            scale: {min: 0.1, max: 1}
+            //this.emitter.setYSpeed(600, 1000);
+            //this.emitter.setXSpeed(-5, 5);
+    
+        });
+
+        /*
+        this.particleEmitterRain2 =  this.add.particles(0, 0, 'rain', {
+            //x: { min: 0, max: 1920 },
+            quantity: 2,
+            lifespan: 6000,
+            gravityY: 200,
+            frequency: -1,
+            advance: 1000,
+            scale: {start: 0.8, end: 0.5},
+            alpha: {start: 0.6, end: 0.0}
+        });
+        */
 
         this.physics.add.overlap(this.player1, this.layerPickups);
         this.layerPickups.setTileIndexCallback(Constants.pickupSpawnTile, this.playerTouchingTileHandler, this);
@@ -1112,12 +1146,18 @@ export default class GameScene extends Phaser.Scene
 
         this.player1.update();
 
+
+        for(var i = 0; i < 20; i++) {
+            let randomRainLocationX = this.player1.x - 1000 + Utility.getRandomInt(2000);
+            this.particleEmitterRain.emitParticleAt(randomRainLocationX, this.player1.y - 500);
+        }
+
         this.events.emit('playerPositionUpdated', this.player1.playerId, this.player1.x, this.player1.y);
 
         var temp = Utility.cartesianToIsometric(this.player1.MapPosition);
 
         //this.physics.accelerateTo(this.player2, temp.x, temp.y, 0.25);
-
+        
         this.calculateFlamethrowerDamage();
 
         this.calculateShockwaveDamage();
