@@ -173,6 +173,9 @@ export default class GameScene extends Phaser.Scene
         this.load.image('groundTiles', './assets/Overworld - Terrain 1 - Flat 128x64.png');
         this.load.image('groundTiles2', './assets/Overworld - Terrain 1 - Flat 128x64 - with halves.png');
         this.load.image('waterTiles', './assets/Overworld - Water - Flat 128x64.png');
+        this.load.image('seasons_tiles', './assets/seasons_tiles.png');
+        this.load.image('lavaTiles', './assets/lava.png');
+
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
         this.load.image('roadTiles', './assets/Road_Toon_01-128x64.png');        
@@ -231,7 +234,9 @@ export default class GameScene extends Phaser.Scene
 
         // tileset name matches what is in Tiled
         var tilesetGround = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64', 'groundTiles');      
-        var tilesetGround2 = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64 - with halves', 'groundTiles2');      
+        var tilesetGround2 = map.addTilesetImage('Overworld - Terrain 1 - Flat 128x64 - with halves', 'groundTiles2');  
+        var tilesetGround3 = map.addTilesetImage('seasons_tiles', 'seasons_tiles');  
+        var tilesetLava = map.addTilesetImage('lava', 'lavaTiles');  
         var tilesetWater = map.addTilesetImage('Overworld - Water - Flat 128x64', 'waterTiles');
         var tilesetRoads = map.addTilesetImage('Road_Toon_01-128x64', 'roadTiles');
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
@@ -250,19 +255,19 @@ export default class GameScene extends Phaser.Scene
             //.setPipeline('Light2D')
             .setAlpha(1);
 
-        this.layer2 = map.createLayer('WaterLayer', [ tilesetWater ])
+        this.layer2 = map.createLayer('WaterLayer', [ tilesetWater, tilesetLava ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D')
             .setAlpha(0.4);
 
-        this.layer2a = map.createLayer('WaterLayer2', [ tilesetWater ])
+        this.layer2a = map.createLayer('WaterLayer2', [ tilesetWater, tilesetLava ])
             .setDisplayOrigin(0.5, 0.5)    
             .setPipeline('Light2D')
             .setAlpha(0.3);
 
-        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetGround2 ])
+        this.layer1 = map.createLayer('GroundLayer', [ tilesetGround, tilesetGround2, tilesetGround3, tilesetLava ])
             .setDisplayOrigin(0.5, 0.5)              
-            .setPipeline('Light2D');
+            .setPipeline('Light2D');            
                         
         this.layer3 = map.createLayer('RoadsLayer', [ tilesetRoads ])
             .setDisplayOrigin(0.5, 0.5)    
@@ -372,7 +377,7 @@ export default class GameScene extends Phaser.Scene
                 lifespan: 3000,
                 //gravityY: 300,
                 frequency: -1,
-                //advance: 1000,
+                //advance: 2000,
                 alpha: {start: 0.6, end: 0.0},
                 speedX: {min: -10, max: 10},
                 speedY: {min: 300, max: 500},
