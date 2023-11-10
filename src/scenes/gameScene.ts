@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IndestructibleObjectFactory } from '../gameobjects/indestructibleObjectFactory';
 import { WeatherType } from '../gameobjects/weather';
 import { TimeOfDayType } from '../gameobjects/timeOfDayType';
+import { DestructibleObjectFactory } from '../gameobjects/destructibleObjectFactory';
 
 export enum ControlStyle {
    LeftStickAimsAndMoves,
@@ -175,6 +176,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('waterTiles', './assets/Overworld - Water - Flat 128x64.png');
         this.load.image('seasons_tiles', './assets/seasons_tiles.png');
         this.load.image('lavaTiles', './assets/lava.png');
+        this.load.image('teleportTiles', './assets/teleport_128.png');
 
         //this.load.image('crateTilesWood', './assets/crates - wood 64x64.png');
         this.load.image('crateTilesMetal', './assets/Crates - Metal 64x64.png');
@@ -242,6 +244,7 @@ export default class GameScene extends Phaser.Scene
         var tilesetPickups = map.addTilesetImage('Grid Type A - 128x64', 'outlineTile');
         var tilesetObjects = map.addTilesetImage('baum-tree', 'treeTile');       
         var tilesetHouses = map.addTilesetImage('house-sample', 'houseTile');
+        var tilesetTeleport = map.addTilesetImage('teleport_128', 'teleportTiles');
         //var tilesetBuildings = map.addTilesetImage('building-sample-256x256', 'buildingTile');
         //var tilesetBuildings2 = map.addTilesetImage('building-small-a-128x128', 'buildingTile2SW');
         var spritesheetBuildingsTiles = map.addTilesetImage('spritesheet-buildings', 'spritesheetBuildingsTiles');
@@ -277,7 +280,7 @@ export default class GameScene extends Phaser.Scene
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
-        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses, spritesheetBuildingsTiles ])
+        this.layer4 = map.createLayer('ObjectsLayer', [ tilesetObjects, tilesetHouses, spritesheetBuildingsTiles, tilesetTeleport ])
             .setDisplayOrigin(0.5, 0.5)
             .setPipeline('Light2D');
 
@@ -440,36 +443,28 @@ export default class GameScene extends Phaser.Scene
             immovable: true
         });
 
-        let factory = new IndestructibleObjectFactory()
+        let destructibleObjectFactory = new DestructibleObjectFactory();
+        let indestructibleObjectFactory = new IndestructibleObjectFactory();
 
         this.layer4.forEachTile(tile => {
 
             if(tile.index != 0) {
 
-                if(tile.index == Constants.houseObjectTile)
-                    this.generateDestructibleObject(tile, 'houseTile'); 
-                if(tile.index == Constants.treeObjectTile)
-                    this.generateDestructibleObject(tile, 'treeTile');
+                if(tile.index == Constants.houseObjectTile || tile.index == Constants.treeObjectTile) {
+                    var sprite = destructibleObjectFactory.generateObject(this.physics, tile.index, new Phaser.Math.Vector2(tile.x, tile.y));
+                    if(sprite != null)
+                        this.environmentDestructiblePhysicsObjects.add(sprite);
+                }
                 else {
-
                     
-                    var sprite = factory.generateObject(this.physics, tile.index, new Phaser.Math.Vector2(tile.x, tile.y));
+                    var sprite = indestructibleObjectFactory.generateObject(this.physics, tile.index, new Phaser.Math.Vector2(tile.x, tile.y));
                     if(sprite != null)
                         this.environmentIndestructiblePhysicsObjects.add(sprite);
                 }
-
                 
                 this.layer4.removeTileAt(tile.x, tile.y);
             }
-
-            
-            
-            //this.generateBuilding(tile, 'buildingSpritesheet', 'building-small-a-sw-128x128', new Phaser.Math.Vector2(180, 25), new Phaser.Math.Vector2(10, 170), 1);
-
-                });        
-
-              //sprite.setBodySize(180, 25, false);
-        //sprite.setOffset(10, 170);
+        });        
 
         this.physics.add.overlap(this.allPlayers, this.layer4);
         
@@ -686,27 +681,6 @@ export default class GameScene extends Phaser.Scene
         let randomIndex = Utility.getRandomInt(this.respawnPoints.length - 1);
         return this.respawnPoints[randomIndex];
     }
-
-    generateDestructibleObject(tile, tileName) {
-        const x = ((tile.x * tile.width)) / 2 + tile.width / 2; //tile.x;// tile.getCenterX();
-        const y = ((tile.y * tile.height));// tile.height / 2; //tile.y;//tile.getCenterY();                
-        
-        var temp = Utility.cartesianToIsometric(new Point(x, y));
-
-        var sprite =  this.physics.add.image(temp.x, temp.y, tileName);
-        sprite.setOrigin(0.5, 0.5);
-        //sprite.setScale(0.75, 0.75);            
-        sprite.setDepth(temp.y + 64);            
-        sprite.setBodySize(50, 15, true);
-
-        this.environmentDestructiblePhysicsObjects.add(sprite);
-
-        sprite.setPipeline('Light2D');
-
-        //this.layer4.removeTileAt(tile.x, tile.y);
-    }
-
-   
 
     addGamePadListeners() {
         if (this.input.gamepad.total === 0)
