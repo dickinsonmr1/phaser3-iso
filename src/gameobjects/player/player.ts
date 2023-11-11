@@ -157,6 +157,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     private lightningAngle: number = 0;
 
     private lightningDamageSprites: Phaser.GameObjects.Sprite[] = [];
+    public lightningLight: Phaser.GameObjects.Light;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -476,6 +477,13 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             .setColor(0xFFFFFF)
             .setIntensity(0.9)
             .setVisible(this.getGameScene().getTimeOfDay() != TimeOfDayType.Daytime);
+
+        this.lightningLight = this.scene.lights
+            .addLight(this.x, this.y)
+            .setRadius(150)
+            .setColor(0xCCCCCCFF)
+            .setIntensity(0.9)
+            .setVisible(false);
     
         var text = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, "",
             {
@@ -1435,12 +1443,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.activeLightningTimer.stopTimer();
         this.lightningSprites.forEach(x => {
             let sprite = <Phaser.GameObjects.Sprite>x;
-            sprite.destroy();
+            sprite.setVisible(false);
+            //sprite.destroy();            
         });
 
         this.lightningDamageSprites.forEach(x => {
             let sprite = <Phaser.GameObjects.Sprite>x;
-            sprite.destroy();
+            sprite.setVisible(false);
+            //sprite.destroy();
         });
         
         this.numberDeaths++;
@@ -1880,6 +1890,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 lightning.setPosition(this.x, this.y);
                 lightning.rotation = this.lightningAngle;  
                 lightning.setVisible(true);
+                lightning.setData('otherPlayerId', otherPlayer.playerId);
 
                 this.createLightningDamage(otherPlayer.playerId);
             });                    
@@ -1889,14 +1900,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     updateLightning() {
         if(!this.activeLightningTimer.isActive()) {
             this.lightningSprites.forEach(x => {
-                let sprite = <Phaser.GameObjects.Sprite>x;
-                sprite.destroy();
+                let sprite = <Phaser.GameObjects.Sprite>x;                
+                //sprite.destroy();
+                sprite.setVisible(false);
             });
 
             this.lightningDamageSprites.forEach(x => {
                 let sprite = <Phaser.GameObjects.Sprite>x;
-                sprite.destroy();
+                //sprite.destroy();
+                sprite.setVisible(false);
             });
+
+            this.lightningLight.setVisible(false);
         }
         else {
             
@@ -1955,17 +1970,26 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
                     lightning.rotation = this.lightningAngle;  
                     lightning.setVisible(true);  
+
+                    this.lightningLight.setPosition(lightning.getCenter().x, lightning.getCenter().y);
                 }
             });  
             
             if(numberPlayersReachableByLightning == 0) {
                 for(var i = 0; i < this.lightningSprites.length - 1; i++) {
-                    if(i == 0)
+                    if(i == 0) {
                         this.lightningSprites[i].setVisible(true);
+                        this.lightningLight.setPosition(this.lightningSprites[i].getCenter().x, this.lightningSprites[i].getCenter().y);
+                    }
                     else
                         this.lightningSprites[i].setVisible(false); 
                 }
             }
+        
+            var randomIntensity = Math.random();
+            this.lightningLight.setIntensity(randomIntensity);
+            //this.lightningLight.setPosition(this.x, this.y);
+            this.lightningLight.setVisible(true);
         }
     }
 
