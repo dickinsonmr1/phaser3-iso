@@ -8,6 +8,7 @@ import { MenuController } from './menuController';
 import { Constants } from '../constants';
 import { WeatherType } from '../gameobjects/weather';
 import { TimeOfDayType } from '../gameobjects/timeOfDayType';
+import { Utility } from '../utility';
  
 export class TitleScene extends Phaser.Scene {
     
@@ -454,8 +455,14 @@ export class TitleScene extends Phaser.Scene {
         var selectedVehicleTypeMenuItem = <ComplexMenuItem>this.menuController.selectedMenuPage.items[0];
         if(selectedVehicleTypeMenuItem.selectedSubItemIndex != null)
             this.sceneController.launchGame(selectedVehicleTypeMenuItem.selectedSubItemIndex, weatherType, timeOfDayType);
-        else
-            this.sceneController.launchGame(VehicleType.Killdozer, weatherType, timeOfDayType);
+        else {
+            // instant action selected: choose random vehicle, weather type, and time of day
+            let vehicleType = Utility.getRandomEnumValue(VehicleType);
+            let weatherType = Utility.getRandomEnumValue(WeatherType);
+            let timeOfDay = Utility.getRandomEnumValue(TimeOfDayType);
+
+            this.sceneController.launchGame(vehicleType, weatherType, timeOfDay);
+        }
     }
 
     addGamepadListeners(): void {

@@ -18,6 +18,10 @@ export class Utility {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
+    static getRandomEnumValue(values) {
+        return Utility.getRandomInt(Object.keys(values).length / 2);
+    }
+
     static MapToScreen(mapX: number, mapY: number) : Point {
         var TILE_WIDTH_HALF = 32;
         var TILE_HEIGHT_HALF = 16;
