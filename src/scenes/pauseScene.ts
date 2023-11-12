@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { SceneController } from './sceneController';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
-import { MenuPage } from './menuPage';
+import { MenuKeyValueMapping, MenuPage } from './menuPage';
 
 export class PauseScene extends Phaser.Scene {
 
@@ -65,10 +65,19 @@ export class PauseScene extends Phaser.Scene {
         // title menu
         ///////////////////////////////////
         pauseMenuPage.setTitle(this, "Game Paused");
-        pauseMenuPage.setMarker(this, "•")
-        //pauseMenuPage.setTitleIcon(this, 'carIcon', 'carIcon', 1);
-        //pauseMenuPage.setFooter(this, "Copyright 2023 by Mark Dickinson")
+        pauseMenuPage.setMarker(this, ">>")
         pauseMenuPage.addUnpauseGameMenuItem(this, "Return to Game");   
+
+        var controlMenuItemMappings = new Array<MenuKeyValueMapping>();
+        controlMenuItemMappings.push(new MenuKeyValueMapping({description: "Default", selectedIndex: 0}));
+        controlMenuItemMappings.push(new MenuKeyValueMapping({description: "Driving", selectedIndex: 1}));
+        pauseMenuPage.addMenuComplexItem(this, "Controls", controlMenuItemMappings);
+
+        var soundMenuItemMappings = new Array<MenuKeyValueMapping>();
+        soundMenuItemMappings.push(new MenuKeyValueMapping({description: "On", selectedIndex: 0}));
+        soundMenuItemMappings.push(new MenuKeyValueMapping({description: "Off", selectedIndex: 1}));
+        pauseMenuPage.addMenuComplexItem(this, "Sound", soundMenuItemMappings);
+
         pauseMenuPage.addMenuItem(this, "Exit to Main Menu");
         //pauseMenuPage.addMenuLinkItem(this, "Single Player", mapSelectionMenuPage);
         //pauseMenuPage.addMenuLinkItem(this, "Multiplayer", mapSelectionMenuPage);

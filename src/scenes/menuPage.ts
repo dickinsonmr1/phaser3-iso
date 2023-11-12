@@ -38,6 +38,10 @@ export class MenuPage {
     fontFamily(): string {return "Arial"};
     align(): string {return "center"};
 
+    fontStrokeColor(): string {return "rgb(0,0,0)" }
+    fontStrokeThickness(): number {return 12};
+    fontStrokeThicknessSmallText(): number {return 8};
+
     titleStartX: number;
     titleStartY: number;
     footerStartX: number;
@@ -82,7 +86,7 @@ export class MenuPage {
                 align: this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke('rgb(0,0,0)', 16);
+        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -104,7 +108,7 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke('rgb(0,0,0)', 16);
+        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -125,7 +129,7 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke('rgb(0,0,0)', 16);
+        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -146,7 +150,7 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke('rgb(0,0,0)', 16);
+        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -201,12 +205,15 @@ export class MenuPage {
         }
     */
 
-    // TODO: fix
-    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<string>): ComplexMenuItem {
+    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<MenuKeyValueMapping>): ComplexMenuItem {
+
+        let menuItemStartX = this.menuStartX;
+        let menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
+        
         var newComplexMenuPageItem = new ComplexMenuItem({
             scene: scene,
-            x: this.menuStartX,
-            y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
+            x: menuItemStartX,
+            y: menuItemStartY,
             text: text,
             style: {
                 fontFamily: this.fontFamily(),
@@ -214,8 +221,8 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             },
             subItems});
-        newComplexMenuPageItem.setStroke('rgb(0,0,0)', 16);
-        newComplexMenuPageItem.setOrigin(0, 0.5);
+        newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        newComplexMenuPageItem.setOrigin(0.5, 0.5);
         newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
 
         scene.add.existing(newComplexMenuPageItem);
@@ -303,7 +310,7 @@ export class MenuPage {
             color: "rgb(255,255,255)",
         });
         this.subtitle.setOrigin(0.5, 0.5);
-        this.subtitle.setStroke('rgb(0,0,0)', 16);
+        this.subtitle.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subtitle.setFontSize(this.subtitleFontSize());
     }
 
@@ -323,7 +330,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.footer.setOrigin(0.5, 0.5);
-        this.footer.setStroke('rgb(0,0,0)', 16);
+        this.footer.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.footer.setFontSize(this.footerFontSize());
     }
 
@@ -336,7 +343,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.footer2.setOrigin(0.5, 0.5);
-        this.footer2.setStroke('rgb(0,0,0)', 16);
+        this.footer2.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.footer2.setFontSize(this.footerFontSize());
     }
 
@@ -349,7 +356,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat1Text.setOrigin(0, 0.5);
-        this.stat1Text.setStroke('rgb(0,0,0)', 8);
+        this.stat1Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat1Text.setFontSize(this.footerFontSize());
 
         this.stat2Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 50, "stat2",
@@ -360,7 +367,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat2Text.setOrigin(0, 0.5);
-        this.stat2Text.setStroke('rgb(0,0,0)', 8);
+        this.stat2Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat2Text.setFontSize(this.footerFontSize());
 
         this.stat3Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 100, "stat3",
@@ -371,7 +378,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat3Text.setOrigin(0, 0.5);
-        this.stat3Text.setStroke('rgb(0,0,0)', 8);
+        this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat3Text.setFontSize(this.footerFontSize());
 
         this.refreshStats(complexMenuItem.subItems[complexMenuItem.selectedSubItemIndex]);
@@ -397,7 +404,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.marker.setOrigin(0.5, 0.5);
-        this.marker.setStroke('rgb(0,0,0)', 16);  
+        this.marker.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.marker.setFontSize(this.menuItemFontSize());
         
         this.subItemMarkerLeft = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, "<<",
@@ -408,7 +415,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerLeft.setOrigin(0.5, 0.5);
-        this.subItemMarkerLeft.setStroke('rgb(0,0,0)', 16);  
+        this.subItemMarkerLeft.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subItemMarkerLeft.setFontSize(this.menuItemFontSize());
 
         this.subItemMarkerRight = scene.add.text(this.menuStartX + this.markerOffsetX(), this.menuStartY, ">>",
@@ -419,7 +426,7 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerRight.setOrigin(0.5, 0.5);
-        this.subItemMarkerRight.setStroke('rgb(0,0,0)', 16);  
+        this.subItemMarkerRight.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subItemMarkerRight.setFontSize(this.menuItemFontSize());        
     }
 
@@ -671,7 +678,7 @@ export class UnpauseGameMenuItem extends Phaser.GameObjects.Text {
 
 
 export class ComplexMenuItem extends Phaser.GameObjects.Text {
-    subItems: Array<IconValueMapping>;
+    subItems: Array<MenuKeyValueMapping>;
     itemTitle: string;
     selectedSubItemIndex: integer;
     sprite: Phaser.GameObjects.Sprite;
@@ -689,13 +696,15 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
 
     setIcon(scene: Phaser.Scene, key: string, x: number, y: number, scale: number, color: number) {
         //this.titleIcon = scene.add.image(this.x - this.width / 2 - 100, this.y, texture, frame);
-        this.sprite = scene.add.sprite(x, y, key)
-        this.sprite.setOrigin(0.5, 0.5);
-        this.sprite.setScale(scale, scale);
-        this.sprite.play(key);
-        this.sprite.setTint(color);
-        
-        this.sprite.setDepth(1);
+        if(key != null) {
+            this.sprite = scene.add.sprite(x, y, key)
+            this.sprite.setOrigin(0.5, 0.5);
+            this.sprite.setScale(scale, scale);
+            this.sprite.play(key);
+            this.sprite.setTint(color);
+            
+            this.sprite.setDepth(1);
+        }
         this.refreshText();
     }
 
@@ -732,8 +741,26 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     }
 }
 
+export class MenuKeyValueMapping {
+    description: string;
+    key: string;
+    scale: number;
+    selectedIndex: number;
+    armorRating: number;
+    speedRating: number;
+    specialDescription: string;
+    specialRating: number;
 
-export class IconValueMapping {
+    color: number;
+
+    constructor(params) {
+        this.description = params.description;
+        this.selectedIndex = params.selectedIndex;
+    }
+}
+
+
+export class IconValueMapping extends MenuKeyValueMapping {
     description: string;
     key: string;
     scale: number;
@@ -747,11 +774,12 @@ export class IconValueMapping {
     color: number;
 
     constructor(params) {
-        this.description = params.description;
+
+        super(params);
+
         this.key = params.key;
         this.scale = params.scale;
-        this.selectedIndex = params.selectedIndex;
-
+        
         this.color = params.color ?? '0xFFFFFF';
     }
 }

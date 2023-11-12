@@ -314,7 +314,7 @@ export class TitleScene extends Phaser.Scene {
         // title menu
         ///////////////////////////////////
         titleMenuPage.setTitle(this, "Vehicular Vengeance");
-        titleMenuPage.setMarker(this, "•")
+        titleMenuPage.setMarker(this, ">>")
         titleMenuPage.setTitleIcon(this, 'carIcon', 'carIcon', 1);
         titleMenuPage.setFooter(this, "Copyright 2023 by Mark Dickinson")
         titleMenuPage.addStartGameMenuItem(this, "Instant Action");    
