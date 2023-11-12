@@ -135,6 +135,27 @@ export class MenuPage {
         this.refreshColorsAndMarker();        
     }
 
+    addUnpauseGameMenuItem(scene: Phaser.Scene, text: string) {              
+        var temp = new UnpauseGameMenuItem({
+            scene: scene,
+            x: this.menuStartX,
+            y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
+            text: text,
+            style: {
+                fontFamily: this.fontFamily(),
+                align:  this.align(),            
+                color: this.nonHighlightedColor(),
+            }});
+        temp.setStroke('rgb(0,0,0)', 16);
+        temp.setOrigin(0.5, 0.5);
+        temp.setFontSize(this.menuItemFontSize());
+
+        scene.add.existing(temp);
+        this.items.push(temp);
+
+        this.refreshColorsAndMarker();        
+    }
+
     /*
         addStartMultiplayerGameMenuItem(scene: Phaser.Scene, text: string) {              
             var temp = new StartMultiplayerGameMenuItem({
@@ -638,6 +659,16 @@ export class ContinueGameMenuItem extends Phaser.GameObjects.Text {
         this.text = params.text;
     }    
 }
+
+export class UnpauseGameMenuItem extends Phaser.GameObjects.Text {
+
+    constructor(params) {
+        super(params.scene, params.x, params.y, params.text, params.style);
+
+        this.text = params.text;
+    }    
+}
+
 
 export class ComplexMenuItem extends Phaser.GameObjects.Text {
     subItems: Array<IconValueMapping>;

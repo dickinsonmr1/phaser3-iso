@@ -6,11 +6,13 @@ import { VehicleType } from '../gameobjects/player/player';
 import { v4 as uuidv4 } from 'uuid';
 import { WeatherType } from '../gameobjects/weather';
 import { TimeOfDayType } from '../gameobjects/timeOfDayType';
+import { PauseScene } from './pauseScene';
 
 export class SceneController extends Phaser.Scene {
     hudScene: HudScene;
     gameScene: GameScene;
     titleScene: TitleScene;
+    pauseScene: PauseScene;
 
     constructor() {
         super({
@@ -44,7 +46,34 @@ export class SceneController extends Phaser.Scene {
         this.game.scene.add("HudScene", this.hudScene);
         this.scene.launch('HudScene');
 
+        this.pauseScene = new PauseScene(this);
+        this.game.scene.add("PauseScene", this.pauseScene);
+
         this.scene.bringToTop("HudScene");
+    }
+
+    pauseGame() {
+
+        this.scene.pause('GameScene');            
+        this.scene.pause('HudScene');
+        this.scene.setVisible(false, "HudScene");
+        //this.sound.pauseAll();
+
+        this.scene.launch("PauseScene");
+        this.scene.bringToTop("PauseScene")
+
+        //this.pauseScene.sound.play("pauseSound");
+    }
+
+    returnToGame() {
+        this.scene.sleep('PauseScene');   
+
+        //this.gameScene.gameTimeStarted = this.sys.game.loop.time;
+        this.scene.wake('GameScene');               
+        this.scene.wake('HudScene');
+        this.scene.setVisible(true, 'HudScene');  
+        
+        //this.gameScene.sound.play("resumeSound");
     }
 
     addHudForPlayerId(playerId: uuidv4, playerName: string, playerMaxHealth: number) {

@@ -683,56 +683,42 @@ export default class GameScene extends Phaser.Scene
     }
 
     addGamePadListeners() {
-        if (this.input.gamepad.total === 0)
-        {
-            this.input.gamepad.once('connected', pad => {
-        
-            //if(this.input.gamepad.pad1 != null) {
-                //this.gamepad = this.input.gamepad.pad1;
-
-                this.gamepad = pad;
-                pad.on('down', (index, value, button) => {
-
-                    switch(index) {
-                        case Constants.gamepadIndexJump:
-                            console.log('A');
-                            //this.tryJump(scene.sound);
-                            break;
-                        case Constants.gamepadIndexInteract:
-                            console.log('X');
-                            //this.tryInteract();
-                            break;
-                        case Constants.gamepadIndexPause:
-                            //scene.sceneController.pauseGame();
-                            break;
-                        case Constants.gamepadIndexUp:
-                            console.log('Up');
-                            //this.tryJump(scene.sound);
-                            break;
-                        case Constants.gamepadIndexDown:
-                            console.log('Down');
-                            //this.duck();
-                            break;
-                        case Constants.gamepadIndexLeft:
-                            console.log('Left');
-                            //this.moveX(-1);
-                            break;
-                        case Constants.gamepadIndexRight:
-                            console.log('Right');
-                            //this.moveX(1);
-                            break;                    
-                        case Constants.gamepadIndexShoot:
-                            console.log('B');
-                            //this.player.tryFireBullet(this.sys.game.loop.time, this.sound);
-                    }
-                });
+        this.gamepad = this.input.gamepad.pad1;
+        this.gamepad.on('down', (index, value, button) => {
+                switch(index) {
+                    case Constants.gamepadIndexJump:
+                        console.log('A');
+                        //this.tryJump(scene.sound);
+                        break;
+                    case Constants.gamepadIndexInteract:
+                        console.log('X');
+                        //this.tryInteract();
+                        break;
+                    case Constants.gamepadIndexPause:
+                        this.sceneController.pauseGame();
+                        break;
+                    case Constants.gamepadIndexUp:
+                        console.log('Up');
+                        //this.tryJump(scene.sound);
+                        break;
+                    case Constants.gamepadIndexDown:
+                        console.log('Down');
+                        //this.duck();
+                        break;
+                    case Constants.gamepadIndexLeft:
+                        console.log('Left');
+                        //this.moveX(-1);
+                        break;
+                    case Constants.gamepadIndexRight:
+                        console.log('Right');
+                        //this.moveX(1);
+                        break;                    
+                    case Constants.gamepadIndexShoot:
+                        console.log('B');
+                        //this.player.tryFireBullet(this.sys.game.loop.time, this.sound);
+                }
             });
-        }           
-        else
-        {
-            this.gamepad = this.input.gamepad.pad1;
-        }
-    }
+        };
 
     playerTouchingTileHandler(sprite, tile): boolean {
         let scene = <GameScene>this;//.scene;
@@ -937,6 +923,7 @@ export default class GameScene extends Phaser.Scene
 
             //console.log(`(${(leftAxisX).toFixed(2)}, ${(leftAxisY).toFixed(2)}`);
 
+            
             if(pad.L2) {
                 this.player1.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
             }
@@ -1038,6 +1025,10 @@ export default class GameScene extends Phaser.Scene
             else {
                 this.mostRecentGamepadDebugKey = false;              
             }
+
+            //if(pad.isButtonDown(Constants.gamepadIndexPause)) {
+                //this.sceneController.pauseGame();
+            //}
 
             if(pad.L1) {
                 if(!this.mostRecentL1) {

@@ -1,4 +1,4 @@
-import { MenuLinkItem, MenuPage, StartGameMenuItem } from './menuPage'
+import { MenuLinkItem, MenuPage, StartGameMenuItem, UnpauseGameMenuItem } from './menuPage'
 
 export class MenuController {
     menuPages: Array<MenuPage>;
@@ -46,7 +46,8 @@ export class MenuController {
 
             return false;
         }
-        else if(selectedMenuPageItem instanceof StartGameMenuItem) {
+        else if(selectedMenuPageItem instanceof StartGameMenuItem
+        || selectedMenuPageItem instanceof UnpauseGameMenuItem) {
             this.selectedMenuPage.hide();
             
             return true;
