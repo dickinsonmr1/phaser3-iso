@@ -30,13 +30,15 @@ export class SceneController extends Phaser.Scene {
     }
 
     create() {        
+        this.addGamepadListeners();
+        
         this.titleScene = new TitleScene(this);
         this.game.scene.add("TitleScene", this.titleScene);
         this.scene.launch('TitleScene');
     }
 
     launchGame(player1VehicleType: VehicleType, weatherType: WeatherType, timeOfDayType: TimeOfDayType) {
-        this.titleScene.scene.stop();
+        this.titleScene.scene.sleep();
 
         this.gameScene = new GameScene(this, player1VehicleType, weatherType, timeOfDayType);
         this.game.scene.add("GameScene", this.gameScene);
@@ -82,5 +84,31 @@ export class SceneController extends Phaser.Scene {
 
     update(): void {
 
+    }
+
+    returnToTitleScene() {
+
+        //var destinationName = this.mainScene.worldName;
+        //var gameProgress = new GameProgress();
+        //gameProgress.save(destinationName);
+
+        this.removeGameScenes();
+
+        this.scene.wake('TitleScene');
+        this.titleScene.menuController.reset();
+    }
+
+    removeGameScenes(): void {
+        //this.scene.remove('LoadingScene');
+        this.scene.remove('GameScene');
+        this.scene.remove('HudScene');
+        this.scene.remove('PauseScene');
+        //this.scene.remove('LevelCompleteScene');
+    }
+
+    addGamepadListeners(): void {
+        this.input.gamepad.once('connected', pad => {
+         
+        });
     }
 }

@@ -1,4 +1,4 @@
-import { MenuLinkItem, MenuPage, StartGameMenuItem, UnpauseGameMenuItem } from './menuPage'
+import { MenuLinkItem, MenuPage, ReturnToTitleMenuItem, StartGameMenuItem, UnpauseGameMenuItem } from './menuPage'
 
 export class MenuController {
     menuPages: Array<MenuPage>;
@@ -33,6 +33,10 @@ export class MenuController {
         this.selectedMenuPage.trySelectNextSubItem(null);
     }
 
+    getSelectedMenuPageItem(): any {
+        return this.selectedMenuPage.items[this.selectedMenuPage.selectedItemIndex];
+    }
+
     confirmSelection(): boolean {
 
         let selectedMenuPageItem = this.selectedMenuPage.items[this.selectedMenuPage.selectedItemIndex];
@@ -47,7 +51,8 @@ export class MenuController {
             return false;
         }
         else if(selectedMenuPageItem instanceof StartGameMenuItem
-        || selectedMenuPageItem instanceof UnpauseGameMenuItem) {
+        || selectedMenuPageItem instanceof UnpauseGameMenuItem
+        || selectedMenuPageItem instanceof ReturnToTitleMenuItem) {
             this.selectedMenuPage.hide();
             
             return true;
@@ -64,5 +69,11 @@ export class MenuController {
             this.selectedMenuPage.show()
         }
         return false;
+    }
+
+    reset(): void {
+        this.selectedMenuPage = this.menuPages[0];
+        this.selectedMenuPageIndex = 0;
+        this.selectedMenuPage.show();
     }
 }

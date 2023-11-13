@@ -6,6 +6,17 @@ export enum LocationOnMenuPage {
     NextToMenuItem
 }
 
+/*
+export enum MenuItemType {
+    MenuItem,
+    MenuLinkItem,
+    StartGameMenuItem,
+    UnpauseGameMenuItem,
+    ReturnToTitleMenuItem,    
+    ComplexMenuItem,
+}
+*/
+
 export class MenuPage {
     title: Phaser.GameObjects.Text;
     subtitle: Phaser.GameObjects.Text;
@@ -141,6 +152,27 @@ export class MenuPage {
 
     addUnpauseGameMenuItem(scene: Phaser.Scene, text: string) {              
         var temp = new UnpauseGameMenuItem({
+            scene: scene,
+            x: this.menuStartX,
+            y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
+            text: text,
+            style: {
+                fontFamily: this.fontFamily(),
+                align:  this.align(),            
+                color: this.nonHighlightedColor(),
+            }});
+        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        temp.setOrigin(0.5, 0.5);
+        temp.setFontSize(this.menuItemFontSize());
+
+        scene.add.existing(temp);
+        this.items.push(temp);
+
+        this.refreshColorsAndMarker();        
+    }
+
+    addReturnToTitleMenuItem(scene: Phaser.Scene, text: string) {              
+        var temp = new ReturnToTitleMenuItem({
             scene: scene,
             x: this.menuStartX,
             y: this.menuStartY + this.menuItemDistanceY() * this.items.length,
@@ -668,6 +700,15 @@ export class ContinueGameMenuItem extends Phaser.GameObjects.Text {
 }
 
 export class UnpauseGameMenuItem extends Phaser.GameObjects.Text {
+
+    constructor(params) {
+        super(params.scene, params.x, params.y, params.text, params.style);
+
+        this.text = params.text;
+    }    
+}
+
+export class ReturnToTitleMenuItem extends Phaser.GameObjects.Text {
 
     constructor(params) {
         super(params.scene, params.x, params.y, params.text, params.style);

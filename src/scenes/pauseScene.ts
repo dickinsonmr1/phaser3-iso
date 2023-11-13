@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { SceneController } from './sceneController';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
-import { MenuKeyValueMapping, MenuPage } from './menuPage';
+import { MenuKeyValueMapping, MenuPage, ReturnToTitleMenuItem, UnpauseGameMenuItem } from './menuPage';
 
 export class PauseScene extends Phaser.Scene {
 
@@ -78,11 +78,7 @@ export class PauseScene extends Phaser.Scene {
         soundMenuItemMappings.push(new MenuKeyValueMapping({description: "Off", selectedIndex: 1}));
         pauseMenuPage.addMenuComplexItem(this, "Sound", soundMenuItemMappings);
 
-        pauseMenuPage.addMenuItem(this, "Exit to Main Menu");
-        //pauseMenuPage.addMenuLinkItem(this, "Single Player", mapSelectionMenuPage);
-        //pauseMenuPage.addMenuLinkItem(this, "Multiplayer", mapSelectionMenuPage);
-        //pauseMenuPage.addMenuLinkItem(this, "Options", mapSelectionMenuPage);
-
+        pauseMenuPage.addReturnToTitleMenuItem(this, "Exit to Main Menu");
       
         // adding menus to menu controller in order        
         this.menuController.addMenu(pauseMenuPage);
@@ -94,7 +90,13 @@ export class PauseScene extends Phaser.Scene {
     }
 
     returnToGame(): void {
+        this.input.keyboard.resetKeys();
         this.sceneController.returnToGame();
+    }
+    
+    returnToTitle(): void {
+        this.input.keyboard.resetKeys();
+        this.sceneController.returnToTitleScene();
     }
 
     addGamepadListeners(): void {
@@ -104,10 +106,14 @@ export class PauseScene extends Phaser.Scene {
             switch(index) {
                 case Constants.gamepadIndexSelect:
                     console.log('A');
-                    var returnToGame = this.menuController.confirmSelection();
-                    if(returnToGame)
+                    var returnToGameOrTitle = this.menuController.confirmSelection();
+                    if(returnToGameOrTitle)
                     {
-                        this.returnToGame();
+                        var itemJustConfirmed = this.menuController.getSelectedMenuPageItem();
+                        if(itemJustConfirmed instanceof UnpauseGameMenuItem)
+                            this.returnToGame();
+                        else if(itemJustConfirmed instanceof ReturnToTitleMenuItem)
+                            this.returnToTitle();
                     }
                     break;
                 case Constants.gamepadIndexPause:
