@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
-import { ComplexMenuItem, IconValueMapping, IconValueMappingWithStats, LocationOnMenuPage, MenuPage } from './menuPage';
+import { ComplexMenuItem, IconValueMapping, AnimatedSpriteValueMappingWithStats, LocationOnMenuPage, MenuPage } from './menuPage';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
 import { WeatherType } from '../gameobjects/weather';
@@ -48,6 +48,13 @@ export class TitleScene extends Phaser.Scene {
         this.load.image('deathIcon', './assets/sprites/HUD/skull.png');
         this.load.image('shieldIcon', './assets/sprites/HUD/shield.png');
         this.load.image('carIcon', './assets/sprites/HUD/carIcon.png');
+
+        this.load.image('sunIcon', './assets/sprites/HUD/sun.png');
+        this.load.image('twilightIcon', './assets/sprites/HUD/twilight.png');
+        this.load.image('moonIcon', './assets/sprites/HUD/moon.png');
+
+        this.load.image('rainIcon', './assets/sprites/HUD/storm.png');
+        this.load.image('snowIcon', './assets/sprites/HUD/freezeIcon.png');
 
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
@@ -317,6 +324,7 @@ export class TitleScene extends Phaser.Scene {
         titleMenuPage.setMarker(this, ">>")
         titleMenuPage.setTitleIcon(this, 'carIcon', 'carIcon', 1);
         titleMenuPage.setFooter(this, "Copyright 2023 by Mark Dickinson")
+        titleMenuPage.setFooter2(this, "Powered by Phaser 3")
         titleMenuPage.addStartGameMenuItem(this, "Instant Action");    
         titleMenuPage.addMenuLinkItem(this, "Single Player", mapSelectionMenuPage);
         titleMenuPage.addMenuLinkItem(this, "Multiplayer", mapSelectionMenuPage);
@@ -327,7 +335,7 @@ export class TitleScene extends Phaser.Scene {
         ///////////////////////////////////
         mapSelectionMenuPage.setTitle(this, "Select Map");
         mapSelectionMenuPage.setTitleIcon(this, 'shieldIcon', '', 1);
-        mapSelectionMenuPage.setMarker(this, "•");
+        mapSelectionMenuPage.setMarker(this, ">>");
 
         var mapIcons = new Array<IconValueMapping>();
         mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: 0}));
@@ -336,16 +344,16 @@ export class TitleScene extends Phaser.Scene {
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Map", mapIcons, LocationOnMenuPage.CenterScreen);
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Weather",
         [
-            new IconValueMapping({description:'None', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: WeatherType.None}),
-            new IconValueMapping({description:'Rain', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: WeatherType.Rain}),
-            new IconValueMapping({description:'Snow', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: WeatherType.Snow})
+            new IconValueMapping({description:'None', key: 'sunIcon', scale: 1, color: 0xFFFFFF, selectedIndex: WeatherType.None}),
+            new IconValueMapping({description:'Rain', key: 'rainIcon', scale: 1, color: 0xFFFFFF, selectedIndex: WeatherType.Rain}),
+            new IconValueMapping({description:'Snow', key: 'snowIcon', scale: 0.75, color: 0xFFFFFF, selectedIndex: WeatherType.Snow})
         ],
         LocationOnMenuPage.NextToMenuItem);
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Time of Day",
         [
-            new IconValueMapping({description:'Day', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.Daytime}),
-            new IconValueMapping({description:'Dawn / Dusk', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.DuskDawn}),
-            new IconValueMapping({description:'Night', key: 'shieldIcon', scale: 0.5, color: 0xFF0000, selectedIndex: TimeOfDayType.Night})
+            new IconValueMapping({description:'Day', key: 'sunIcon', scale: 1, color: 0xFFFFFF, selectedIndex: TimeOfDayType.Daytime}),
+            new IconValueMapping({description:'Twilight', key: 'twilightIcon', scale: 1, color: 0xFFFFFF, selectedIndex: TimeOfDayType.DuskDawn}),
+            new IconValueMapping({description:'Night', key: 'moonIcon', scale: 1, color: 0xFFFFFF, selectedIndex: TimeOfDayType.Night})
         ],
         LocationOnMenuPage.NextToMenuItem);
         mapSelectionMenuPage.addMenuLinkItem(this, "Next", vehicleSelectionMenuPage);    
@@ -356,24 +364,26 @@ export class TitleScene extends Phaser.Scene {
         ///////////////////////////////////
         vehicleSelectionMenuPage.setTitle(this, "Player 1: Select Vehicle");
         vehicleSelectionMenuPage.setTitleIcon(this, 'deathIcon', '', 1);
-        vehicleSelectionMenuPage.setMarker(this, "•");        
+        vehicleSelectionMenuPage.setMarker(this, ">>");        
         var vehicleSprites = new Array<IconValueMapping>();
         
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new IconValueMappingWithStats({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
         
         var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);        
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
         vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Team",
             [
-                new IconValueMapping({description:'Red', key: 'deathIcon', scale: 0.5, color: 0xFF0000, selectedIndex: 0}),
-                new IconValueMapping({description:'Blue', key: 'shieldIcon', scale: 0.5, color: 0x0000FF, selectedIndex: 1})
+                new IconValueMapping({description:'Team Red', key: 'deathIcon', scale: 0.5, color: 0xFF0000, selectedIndex: 0}),
+                new IconValueMapping({description:'Team Blue', key: 'deathIcon', scale: 0.5, color: 0x0000FF, selectedIndex: 1}),
+                new IconValueMapping({description:'Team Green', key: 'deathIcon', scale: 0.5, color: 0x00FF00, selectedIndex: 2}),
+                new IconValueMapping({description:'Team Yellow', key: 'deathIcon', scale: 0.5, color: 0xFFFF00, selectedIndex: 3})
             ],
             LocationOnMenuPage.NextToMenuItem);
 

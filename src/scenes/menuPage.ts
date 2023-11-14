@@ -46,11 +46,11 @@ export class MenuPage {
     highlightedColor(): string {return "rgb(255,255,255)"};
     nonHighlightedColor(): string {return "rgb(150,150,150)"};
 
-    fontFamily(): string {return "Arial"};
+    fontFamily(): string {return "Franklin Gothic"};
     align(): string {return "center"};
 
     fontStrokeColor(): string {return "rgb(0,0,0)" }
-    fontStrokeThickness(): number {return 12};
+    fontStrokeThickness(): number {return 10};
     fontStrokeThicknessSmallText(): number {return 8};
 
     titleStartX: number;
@@ -61,11 +61,13 @@ export class MenuPage {
 
     titleFontSize(): number {return 72;}
     subtitleFontSize(): number {return 48;}
-    menuItemFontSize(): number {return 48;}
+    menuItemFontSize(): number {return 40;}
     footerFontSize(): number {return 32;}
 
     markerOffsetX(): number {return -300;}
     menuItemDistanceY(): number {return 60;}
+
+    iconOffsetX(): number {return -200;}
 
     useAudio: boolean = false;
 
@@ -74,14 +76,14 @@ export class MenuPage {
         this.selectedItemIndex = 0;
 
         this.titleStartX = scene.game.canvas.width / 2;
-        this.titleStartY = scene.game.canvas.height / 4;
+        this.titleStartY = scene.game.canvas.height * 0.2;
 
         this.menuStartX = scene.game.canvas.width / 2;
-        this.menuStartY = scene.game.canvas.height * 0.667;
+        this.menuStartY = scene.game.canvas.height * 0.6; //0.667;
         
         this.footerStartX = scene.game.canvas.width / 2;
-        this.footerStartY = scene.game.canvas.height - scene.game.canvas.height / 8;
-        this.footer2StartY = scene.game.canvas.height - scene.game.canvas.height / 16;
+        this.footerStartY = scene.game.canvas.height - scene.game.canvas.height / 16;
+        this.footer2StartY = scene.game.canvas.height - scene.game.canvas.height / 32;
 
         this.useAudio = useAudio;
     }
@@ -275,7 +277,7 @@ export class MenuPage {
         if(iconLocationOnMenu == LocationOnMenuPage.NextToMenuItem) {
             menuItemStartX = this.menuStartX;
             menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
-            iconStartX = menuItemStartX - 100;
+            iconStartX = menuItemStartX + this.iconOffsetX();
             iconStartY = menuItemStartY;
         }
 
@@ -286,11 +288,12 @@ export class MenuPage {
             text: text,
             style: {
                 //fontFamily: 'KenneyRocketSquare',
+                fontFamily: this.fontFamily(),
                 align: this.align(),            
                 color: this.nonHighlightedColor(),
             },
             subItems: iconMappings});
-        newComplexMenuPageItem.setStroke('rgb(0,0,0)', 16);
+        newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         newComplexMenuPageItem.setOrigin(0.5, 0.5);
         newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
         if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null) {
@@ -330,7 +333,7 @@ export class MenuPage {
             color: "rgb(255,255,255)",
         });
         this.title.setOrigin(0.5, 0.5);
-        this.title.setStroke('rgb(0,0,0)', 16);
+        this.title.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.title.setFontSize(this.titleFontSize());
     }
 
@@ -741,7 +744,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
             this.sprite = scene.add.sprite(x, y, key)
             this.sprite.setOrigin(0.5, 0.5);
             this.sprite.setScale(scale, scale);
-            this.sprite.play(key);
+            this.sprite.setTexture(key);
             this.sprite.setTint(color);
             
             this.sprite.setDepth(1);
@@ -770,11 +773,14 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
                 
         if(this.sprite != null) {
             this.text = subItem.description;
-            //this.titleIcon.setTexture(subItem.texture, subItem.frame);
-            this.sprite.play(subItem.key);// = this.itemTitle + ' - ' + subItem.description;
+
+            if(subItem instanceof AnimatedSpriteValueMappingWithStats)
+                this.sprite.play(subItem.key);
+            else
+                this.sprite.setTexture(subItem.key);
+
             this.sprite.setScale(subItem.scale);
-            this.sprite.setTint(subItem.color);
-            //this.titleIcon.setVisible(true);            
+            this.sprite.setTint(subItem.color);            
         }
         else {            
             this.text = this.itemTitle + ' - ' + subItem.description;
@@ -825,7 +831,7 @@ export class IconValueMapping extends MenuKeyValueMapping {
     }
 }
 
-export class IconValueMappingWithStats extends IconValueMapping {
+export class AnimatedSpriteValueMappingWithStats extends IconValueMapping {
     description: string;
     key: string;
     scale: number;
