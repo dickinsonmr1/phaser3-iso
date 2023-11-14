@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 
     //playerId: string;
 
-    playerHUDOverlayComponents: PlayerHUDOverlayComponent[]
+    playerHUDOverlayComponents: PlayerHUDOverlayComponent[] = new Array<PlayerHUDOverlayComponent>();       
 
     private get InfoTextStartX(): number {return this.game.canvas.width / 2; }
     private get InfoTextStartY(): number {return this.game.canvas.height - this.game.canvas.height / 4; }   
