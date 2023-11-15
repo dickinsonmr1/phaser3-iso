@@ -367,14 +367,45 @@ export class TitleScene extends Phaser.Scene {
         vehicleSelectionMenuPage.setMarker(this, ">>");        
         var vehicleSprites = new Array<IconValueMapping>();
         
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi, armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn"}));
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance, armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren"}));
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar, armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw"}));
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck, armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower"}));
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse, armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "EMP"}));                
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer, armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck, armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime"}));                
-        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police, armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper"}));                
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi,
+            armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn",
+            driverName: "Travis B.", quote: "The days go on and on... they don't end"}));
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance,
+            armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren",
+            driverName: "Chad G.", quote: "Get out of my way, stat!"}));  
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar,
+            armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw",
+            driverName: "Steve M.", quote: "Focus. Speed. I am speed."}));  
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck,
+            armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower",
+            driverName: "Kirk L.", quote: "Let's all get the job done."}));  
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse,
+            armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "Skulls",
+            driverName: "Eugene F.", quote: "Cremation time"}));                 
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer,
+            armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Demolition",
+            driverName: "Marvin H.", quote: "Sometimes reasonable men must do unreasonable things..."}));                
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck,
+            armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime",
+            driverName: "Rock E.", quote: "Get outta my way"}));                   
+
+        vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
+            description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police,
+            armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper",
+            driverName: "Odo", quote: "I am the law."}));                   
         
         var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);        
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);

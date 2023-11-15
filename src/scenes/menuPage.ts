@@ -35,6 +35,9 @@ export class MenuPage {
     stat2Text: Phaser.GameObjects.Text;
     stat3Text: Phaser.GameObjects.Text;
 
+    driverNameText: Phaser.GameObjects.Text;
+    quoteText: Phaser.GameObjects.Text;
+
     titleIcon: Phaser.GameObjects.Image;
 
     menuStartX: number;
@@ -416,6 +419,28 @@ export class MenuPage {
         this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat3Text.setFontSize(this.footerFontSize());
 
+        this.driverNameText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 150, "driver",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.driverNameText.setOrigin(0, 0.5);
+        this.driverNameText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        this.driverNameText.setFontSize(this.footerFontSize());
+
+        this.quoteText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 200, "quote",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.quoteText.setOrigin(0, 0.5);
+        this.quoteText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        this.quoteText.setFontSize(this.footerFontSize());
+
         this.refreshStats(complexMenuItem.subItems[complexMenuItem.selectedSubItemIndex]);
     }
 
@@ -429,6 +454,11 @@ export class MenuPage {
         
         if(subItem.specialRating != null && subItem.specialDescription != null)
             this.stat3Text.setText("Special: " + this.ratingToDots(subItem.specialRating) + "(" + subItem.specialDescription + ")" );        
+
+        if(subItem.quote != null && subItem.driverName != null) {
+            this.quoteText.setText(subItem.quote);
+            this.driverNameText.setText(subItem.driverName);
+        }
     }
 
     setMarker(scene: Phaser.Scene, text: string) {
@@ -593,6 +623,12 @@ export class MenuPage {
 
         if(this.stat3Text != null)
             this.stat3Text.setVisible(true);
+
+        if(this.quoteText != null)
+            this.quoteText.setVisible(true);
+        
+        if(this.driverNameText != null)
+            this.driverNameText.setVisible(true);
         
         this.marker.setVisible(true);
 
@@ -644,6 +680,11 @@ export class MenuPage {
         if(this.stat3Text != null)
             this.stat3Text.setVisible(false);
         
+        if(this.quoteText != null)
+            this.quoteText.setVisible(false);
+        
+        if(this.driverNameText != null)
+            this.driverNameText.setVisible(false);
 
         this.marker.setVisible(false);
 
@@ -814,6 +855,9 @@ export class MenuKeyValueMapping {
     speedRating: number;
     specialDescription: string;
     specialRating: number;
+    
+    quote: string;
+    driverName: string;
 
     color: number;
 
@@ -834,6 +878,9 @@ export class IconValueMapping extends MenuKeyValueMapping {
     speedRating: number;
     specialDescription: string;
     specialRating: number;
+
+    quote: string;
+    driverName: string;
 
     color: number;
 
@@ -858,6 +905,9 @@ export class AnimatedSpriteValueMappingWithStats extends IconValueMapping {
     specialDescription: string;
     specialRating: number;
 
+    driverName: string;
+    quote: string;
+
     color: number;
 
     constructor(params) {
@@ -868,5 +918,8 @@ export class AnimatedSpriteValueMappingWithStats extends IconValueMapping {
         this.speedRating = params.speedRating;
         this.specialDescription = params.specialDescription;
         this.specialRating = params.specialRating;
+
+        this.driverName = params.driverName;
+        this.quote = params.quote;
     }
 }
