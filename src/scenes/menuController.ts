@@ -1,4 +1,4 @@
-import { MenuLinkItem, MenuPage, ReturnToTitleMenuItem, StartGameMenuItem, UnpauseGameMenuItem } from './menuPage'
+import { ComplexMenuItem, MenuLinkItem, MenuPage, ReturnToTitleMenuItem, StartGameMenuItem, UnpauseGameMenuItem } from './menuPage'
 
 export class MenuController {
     menuPages: Array<MenuPage>;
@@ -63,10 +63,13 @@ export class MenuController {
 
     returnToLastScreen(): boolean {
         if(this.selectedMenuPage.backMenu != null) {
+            
+            // reset selections on current page before returning to previous menu page            
+            this.selectedMenuPage.resetAllSelections(); 
             this.selectedMenuPage.hide();
 
             this.selectedMenuPage = this.selectedMenuPage.backMenu;
-            this.selectedMenuPage.show()
+            this.selectedMenuPage.show();
         }
         return false;
     }
