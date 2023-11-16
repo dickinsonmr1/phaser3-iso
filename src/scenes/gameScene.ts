@@ -39,6 +39,7 @@ export default class GameScene extends Phaser.Scene
     controls: Phaser.Cameras.Controls.SmoothedKeyControl;
     zoomInKey: Phaser.Input.Keyboard.Key;
     zoomOutKey: Phaser.Input.Keyboard.Key;
+    pauseKey: Phaser.Input.Keyboard.Key;
     toggleDebugKey: Phaser.Input.Keyboard.Key;
     mostRecentToggleDebugKey: boolean = false;
 
@@ -513,6 +514,7 @@ export default class GameScene extends Phaser.Scene
         this.zoomInKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         this.zoomOutKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.toggleDebugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKTICK);
+        this.pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
 
         this.setCpuBehavior0Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO);
         this.setCpuBehavior1Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -905,6 +907,9 @@ export default class GameScene extends Phaser.Scene
 
         if(this.zoomOutKey.isDown)
             this.cameras.main.zoom += 0.01;  
+
+        if(this.pauseKey.isDown)
+            this.sceneController.pauseGame();
        
         var body = <Phaser.Physics.Arcade.Body>this.player1.body;
 

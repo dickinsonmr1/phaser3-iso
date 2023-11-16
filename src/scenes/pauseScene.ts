@@ -44,6 +44,8 @@ export class PauseScene extends Phaser.Scene {
         this.cursorLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.cursorRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         
+        var backgroundRectangle = this.add.rectangle(this.game.canvas.width/2, this.game.canvas.height/2, this.game.canvas.width, this.game.canvas.height, 0x333333, 0.4);
+
         this.fpsText = this.add.text(10, 10, 'FPS: -- \n-- Particles', {
             font: 'bold 26px Arial'
         });
@@ -59,7 +61,7 @@ export class PauseScene extends Phaser.Scene {
 
         this.menuController = new MenuController()
         
-        var pauseMenuPage = new MenuPage(this, false);        
+        var pauseMenuPage = new MenuPage(this, false, false);
 
         ///////////////////////////////////
         // title menu
@@ -87,6 +89,41 @@ export class PauseScene extends Phaser.Scene {
         this.scene.bringToTop();
 
         this.addGamepadListeners();   
+    }
+
+    update(): void {
+        if(Phaser.Input.Keyboard.JustDown(this.selectKey)) {
+    
+            var returnToGameOrTitle = this.menuController.confirmSelection();
+            if(returnToGameOrTitle)
+            {
+                var itemJustConfirmed = this.menuController.getSelectedMenuPageItem();
+                if(itemJustConfirmed instanceof UnpauseGameMenuItem)
+                    this.returnToGame();
+                else if(itemJustConfirmed instanceof ReturnToTitleMenuItem)
+                    this.returnToTitle();
+            }
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.backKey)) {
+            this.menuController.returnToLastScreen();            
+        }
+         
+        if(Phaser.Input.Keyboard.JustDown(this.cursorUp)) {
+            this.menuController.selectPreviousItem();
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.cursorDown)) {
+            this.menuController.selectNextItem();
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.cursorLeft)) {
+            this.menuController.selectPreviousSubItem();
+        }
+
+        if(Phaser.Input.Keyboard.JustDown(this.cursorRight)) {
+            this.menuController.selectNextSubItem();
+        }
     }
 
     returnToGame(): void {

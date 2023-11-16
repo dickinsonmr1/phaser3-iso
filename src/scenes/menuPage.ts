@@ -74,7 +74,9 @@ export class MenuPage {
 
     useAudio: boolean = false;
 
-    constructor(scene: Phaser.Scene, useAudio: boolean) {        
+    useTextBackgroundStroke: boolean = true;
+
+    constructor(scene: Phaser.Scene, useAudio: boolean, useTextBackgroundStroke?: boolean) {        
         this.items = new Array<MenuItem>();
         this.selectedItemIndex = 0;
 
@@ -89,6 +91,9 @@ export class MenuPage {
         this.footer2StartY = scene.game.canvas.height - scene.game.canvas.height / 32;
 
         this.useAudio = useAudio;
+
+        if(useTextBackgroundStroke != null)
+            this.useTextBackgroundStroke = useTextBackgroundStroke;
     }
 
     addMenuItem(scene: Phaser.Scene, text: string) {              
@@ -102,7 +107,8 @@ export class MenuPage {
                 align: this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -124,7 +130,8 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -145,7 +152,8 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -166,7 +174,8 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -187,7 +196,8 @@ export class MenuPage {
                 align:  this.align(),            
                 color: this.nonHighlightedColor(),
             }});
-        temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            temp.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         temp.setOrigin(0.5, 0.5);
         temp.setFontSize(this.menuItemFontSize());
 
@@ -258,7 +268,8 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             },
             subItems});
-        newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         newComplexMenuPageItem.setOrigin(0.5, 0.5);
         newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
 
@@ -296,7 +307,8 @@ export class MenuPage {
                 color: this.nonHighlightedColor(),
             },
             subItems: iconMappings});
-        newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         newComplexMenuPageItem.setOrigin(0.5, 0.5);
         newComplexMenuPageItem.setFontSize(this.menuItemFontSize());
         if(iconMappings.length > 0 && iconMappings[0].description != null && iconMappings[0].key != null) {
@@ -336,7 +348,8 @@ export class MenuPage {
             color: "rgb(255,255,255)",
         });
         this.title.setOrigin(0.5, 0.5);
-        this.title.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.title.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.title.setFontSize(this.titleFontSize());
     }
 
@@ -348,7 +361,8 @@ export class MenuPage {
             color: "rgb(255,255,255)",
         });
         this.subtitle.setOrigin(0.5, 0.5);
-        this.subtitle.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.subtitle.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subtitle.setFontSize(this.subtitleFontSize());
     }
 
@@ -368,7 +382,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.footer.setOrigin(0.5, 0.5);
-        this.footer.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.footer.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.footer.setFontSize(this.footerFontSize());
     }
 
@@ -381,7 +396,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.footer2.setOrigin(0.5, 0.5);
-        this.footer2.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.footer2.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.footer2.setFontSize(this.footerFontSize());
     }
 
@@ -394,7 +410,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat1Text.setOrigin(0, 0.5);
-        this.stat1Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        if(this.useTextBackgroundStroke)
+            this.stat1Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat1Text.setFontSize(this.footerFontSize());
 
         this.stat2Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 50, "stat2",
@@ -405,7 +422,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat2Text.setOrigin(0, 0.5);
-        this.stat2Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        if(this.useTextBackgroundStroke)
+            this.stat2Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat2Text.setFontSize(this.footerFontSize());
 
         this.stat3Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 100, "stat3",
@@ -416,7 +434,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.stat3Text.setOrigin(0, 0.5);
-        this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        if(this.useTextBackgroundStroke)
+            this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.stat3Text.setFontSize(this.footerFontSize());
 
         this.driverNameText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 150, "driver",
@@ -427,7 +446,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.driverNameText.setOrigin(0, 0.5);
-        this.driverNameText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        if(this.useTextBackgroundStroke)
+            this.driverNameText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.driverNameText.setFontSize(this.footerFontSize());
 
         this.quoteText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 200, "quote",
@@ -438,7 +458,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.quoteText.setOrigin(0, 0.5);
-        this.quoteText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        if(this.useTextBackgroundStroke)
+            this.quoteText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.quoteText.setFontSize(this.footerFontSize());
 
         this.refreshStats(complexMenuItem.subItems[complexMenuItem.selectedSubItemIndex]);
@@ -469,7 +490,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.marker.setOrigin(0.5, 0.5);
-        this.marker.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.marker.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.marker.setFontSize(this.menuItemFontSize());
         this.marker.setVisible(false);
         
@@ -481,7 +503,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerLeft.setOrigin(0.5, 0.5);
-        this.subItemMarkerLeft.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.subItemMarkerLeft.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subItemMarkerLeft.setFontSize(this.menuItemFontSize());
         this.subItemMarkerLeft.setVisible(false);
 
@@ -493,7 +516,8 @@ export class MenuPage {
             color:"rgb(255,255,255)",
         });
         this.subItemMarkerRight.setOrigin(0.5, 0.5);
-        this.subItemMarkerRight.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
+        if(this.useTextBackgroundStroke)
+            this.subItemMarkerRight.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         this.subItemMarkerRight.setFontSize(this.menuItemFontSize());     
         this.subItemMarkerRight.setVisible(false);
     }
