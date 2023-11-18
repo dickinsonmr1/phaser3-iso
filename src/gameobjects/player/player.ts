@@ -15,6 +15,7 @@ import { ProjectileFactory } from '../weapons/projectileFactory';
 import { ProjectileType } from '../weapons/projectileType';
 import { v4 as uuidv4 } from 'uuid';
 import { TimeOfDayType } from '../timeOfDayType';
+import { FlamingSkull } from '../weapons/flamingSkull';
 
 export enum PlayerCartesianOrientation {
     N,
@@ -1804,7 +1805,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(selectedWeapon != null && this.selectedWeaponInventoryItem.ammoCount > 0) {
             switch(selectedWeapon.pickupType) {
                 case PickupType.Special:
-                    this.tryFireRocks();
+                    //this.tryFireRocks();
+                    this.tryFireFlamingSkull();
                     break;
                 case PickupType.Rocket:
                     this.tryFireRocket();
@@ -1833,6 +1835,15 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.nextRocketTimer.isExpired(gameTimeNow)) {
             
             this.createProjectile(ProjectileType.FireRocket);
+            this.nextRocketTimer.startTimer(gameTimeNow);
+        }        
+    }
+
+    tryFireFlamingSkull() {
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextRocketTimer.isExpired(gameTimeNow)) {
+            
+            this.createProjectile(ProjectileType.FlamingSkull);
             this.nextRocketTimer.startTimer(gameTimeNow);
         }        
     }
@@ -2216,6 +2227,12 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 scaleX = 0.5;
                 scaleY = 0.5;
                 break;
+            case ProjectileType.FlamingSkull:
+                bulletVelocity = 350;
+                weaponImageKey = "deathIcon";
+                scaleX = 0.5;
+                scaleY = 0.5;
+                break;
         }            
 
         velocityX = this.aimX * bulletVelocity;
@@ -2349,6 +2366,16 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         projectile.init();
 
         this.bullets.add(projectile);
+
+        if(projectile.projectileType == ProjectileType.FlamingSkull){
+            var flamingSkull = <FlamingSkull>projectile;
+            flamingSkull.childrenProjeciles.getChildren().forEach(x => {
+                var childFlamingSkull = <FlamingSkull>x;
+
+                childFlamingSkull.init();                
+                this.bullets.add(childFlamingSkull);                
+            })
+        }
 
         return projectile;
     }

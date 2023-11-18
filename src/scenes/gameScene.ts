@@ -763,13 +763,20 @@ export default class GameScene extends Phaser.Scene
                     otherPlayer.tryDamage(projectile.projectileType, projectileLocation);            
             }
 
-            if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
-                bullet.remove();
+            if(projectile.projectileType == ProjectileType.FlamingSkull) {
+                if(projectile.active)
+                    projectile.detonate();
+            }
             else if(projectile.projectileType == ProjectileType.Freeze) {
                 projectile.detonate();
                 otherPlayer.tryFreeze();
             }
+            else if(projectile.projectileType == ProjectileType.Airstrike) {
 
+            }
+            else {
+                bullet.remove();
+            }
         }
     }
 

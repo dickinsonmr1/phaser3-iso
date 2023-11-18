@@ -12,7 +12,7 @@ export abstract class Projectile extends Phaser.Physics.Arcade.Sprite {
 
     public MapPosition: Phaser.Geom.Point;
 
-    public spotlight;//: Phaser.GameObjects.Light;
+    public spotlight: Phaser.GameObjects.Light;
 
     protected crosshairSprite: Phaser.GameObjects.Sprite;
 

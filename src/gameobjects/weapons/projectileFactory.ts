@@ -6,6 +6,7 @@ import { Airstrike } from "./airstrike";
 import { Bullet } from "./bullet";
 import { ProjectileType } from "./projectileType";
 import { Rocks } from "./rocks";
+import { FlamingSkull } from "./flamingSkull";
 
 export class ProjectileFactory {
     constructor() {
@@ -104,6 +105,23 @@ export class ProjectileFactory {
                         scaleX: scaleX,
                         scaleY: scaleY,
                         angle: angle
+                    }); 
+                case ProjectileType.FlamingSkull:
+                    return new FlamingSkull({
+                        scene: scene,
+                        projectileType: projectileType,
+                        isometricX: isometricX,
+                        isometricY: isometricY,
+                        mapPositionX: mapPositionX,
+                        mapPositionY: mapPositionY,
+                        key: weaponImageKey,
+                        damage: damage,
+                        velocityX: velocityX,
+                        velocityY: velocityY,
+                        scaleX: scaleX,
+                        scaleY: scaleY,
+                        angle: angle,
+                        countChildren: 2,
                     }); 
             }
     }
