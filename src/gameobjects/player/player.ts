@@ -2181,144 +2181,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     private createProjectile(projectileType) : Projectile {
-        //var body = <Phaser.Physics.Arcade.Body>this.body;
-        var velocityX: number;
-        var velocityY: number;
 
-        var bulletVelocity = 0;
-        var scaleX = 1;
-        var scaleY = 1;
-        var weaponImageKey = "bullet";
+        var bulletLaunchDistanceFromPlayerCenter = 22;               
+        var launchPoint = new Phaser.Math.Vector2(this.aimX, this.aimY);
 
-        switch(projectileType) {
-            case ProjectileType.HomingRocket:
-                bulletVelocity = 550;
-                weaponImageKey = "rocket";
-                scaleX = 0.5;
-                scaleY = 0.5;
-                break;
-            case ProjectileType.FireRocket:
-                bulletVelocity = 550;
-                weaponImageKey = "rocket";
-                scaleX = 0.5;
-                scaleY = 0.5;
-                break;
-            case ProjectileType.Bullet:
-                bulletVelocity = 700;    
-                weaponImageKey = "bullet";
-                scaleX = 0.25;
-                scaleY = 0.25;
-                break;
-            case ProjectileType.Airstrike:
-                bulletVelocity = 500;    
-                weaponImageKey = "deathIcon";
-                scaleX = 1.25;
-                scaleY = 1.25;
-                break;
-            case ProjectileType.Freeze:
-                bulletVelocity = 400;
-                weaponImageKey = "freezeRocket";
-                scaleX = 0.5;
-                scaleY = 0.5;
-                break;
-            case ProjectileType.Rocks:
-                bulletVelocity = 500;
-                weaponImageKey = "rock";
-                scaleX = 0.5;
-                scaleY = 0.5;
-                break;
-            case ProjectileType.FlamingSkull:
-                bulletVelocity = 350;
-                weaponImageKey = "deathIcon";
-                scaleX = 0.4;
-                scaleY = 0.4;
-                break;
-        }            
-
-        velocityX = this.aimX * bulletVelocity;
-        velocityY = this.aimY * bulletVelocity;
-        
-        var bulletLaunchDistanceFromPlayerCenter = 22;
-
-        //        -1 PI  1 PI 
-        //   -0.5PI           0.5 PI
-        //         0 PI  0 PI
-
-        var drawAngle = 0;        
-        switch(this.playerDrawOrientation) {
-            case PlayerDrawOrientation.N:
-                drawAngle = Math.PI;
-                break;
-
-            case PlayerDrawOrientation.N_NE:                
-                drawAngle = 10 * Math.PI / 12;                            
-                break;
-            case PlayerDrawOrientation.NE:                
-                //angle = 3 * Math.PI / 4;  
-                drawAngle = 8 * Math.PI / 12;                            
-                break;
-            case PlayerDrawOrientation.E_NE:                
-                drawAngle = 7 * Math.PI / 12;                            
-                break;
-
-            case PlayerDrawOrientation.E:
-                drawAngle = 6 * Math.PI / 12;
-                break;
-
-            case PlayerDrawOrientation.E_SE:                
-                //angle = 3 * Math.PI / 4;  
-                drawAngle = 5 * Math.PI / 12;                            
-                break;
-
-            case PlayerDrawOrientation.SE:                    
-                //angle = 3 * Math.PI / 4;
-                drawAngle = 4 * Math.PI / 12;               
-                break;
-
-            case PlayerDrawOrientation.S_SE:                    
-                //angle = 3 * Math.PI / 4;
-                drawAngle = 2 * Math.PI / 12;               
-                break;
-
-            case PlayerDrawOrientation.S:                
-                drawAngle = 0;
-                break;
-
-            case PlayerDrawOrientation.S_SW:    
-                //angle = -Math.PI / 4;      
-                drawAngle = -2 * Math.PI / 12;                  
-                break;
-
-            case PlayerDrawOrientation.SW:    
-                //angle = -Math.PI / 4;      
-                drawAngle = -4 * Math.PI / 12;                  
-                break;
-
-            case PlayerDrawOrientation.W_SW:    
-                //angle = -Math.PI / 4;      
-                drawAngle = -5 * Math.PI / 12;                  
-                break;
-
-            case PlayerDrawOrientation.W:
-                drawAngle = -6 * Math.PI / 12;
-                break;        
-            
-            case PlayerDrawOrientation.W_NW:
-                drawAngle = -7 * Math.PI / 12;
-                break;       
-
-            case PlayerDrawOrientation.NW:
-                //angle = -3 * Math.PI / 4;
-                drawAngle = -8 * Math.PI / 12;               
-                break;
-
-            case PlayerDrawOrientation.N_NW:
-                drawAngle = -10 * Math.PI / 12;
-                break;       
-    
-        }
-       var launchPoint = new Phaser.Math.Vector2(this.aimX, this.aimY);
-       if(projectileType == ProjectileType.Bullet) {
+        if(projectileType == ProjectileType.Bullet) {
             this.launchLeft = !this.launchLeft;
             
             if(this.launchLeft)
@@ -2354,22 +2221,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter,
             this.MapPosition.x,
             this.MapPosition.y,
-            weaponImageKey,
-            1,//this.currentWeaponDamage,
-            velocityX,
-            velocityY,
-            scaleX,
-            scaleY,
-            -drawAngle
+            this.aimX,
+            this.aimY,
+            this.playerDrawOrientation
         );
 
         projectile.init();
-
         this.bullets.add(projectile);
 
         if(projectile.projectileType == ProjectileType.FlamingSkull){
             var flamingSkull = <FlamingSkull>projectile;
-            flamingSkull.childrenProjeciles.getChildren().forEach(x => {
+            flamingSkull.childrenProjectiles.getChildren().forEach(x => {
                 var childFlamingSkull = <FlamingSkull>x;
 
                 childFlamingSkull.init();                

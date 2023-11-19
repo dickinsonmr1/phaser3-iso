@@ -7,7 +7,7 @@ export class FlamingSkull extends Projectile {
     public particleEmitterBurn: Phaser.GameObjects.Particles.ParticleEmitter;
     private skullColor: number;
     
-    public childrenProjeciles: Phaser.GameObjects.Group = this.scene.physics.add.group();
+    public childrenProjectiles: Phaser.GameObjects.Group = this.scene.physics.add.group();
 
     constructor(params) {
         super(params);
@@ -46,7 +46,7 @@ export class FlamingSkull extends Projectile {
                     isParent: false
                 }); 
                 temp.active = false;
-                this.childrenProjeciles.add(temp);
+                this.childrenProjectiles.add(temp);
             }        
         }
 
@@ -119,7 +119,7 @@ export class FlamingSkull extends Projectile {
 
             if(this.spotlight != null) {
                 this.spotlight.setPosition(this.x, this.y);
-                if(this.childrenProjeciles.getChildren().length == 0)
+                if(this.childrenProjectiles.getChildren().length == 0)
                     this.spotlight.setIntensity(this.spotlight.intensity -= 0.01);
             }
 
@@ -131,7 +131,7 @@ export class FlamingSkull extends Projectile {
             
             this.particleEmitterBurn.setPosition(this.x, this.y);    
             
-            this.childrenProjeciles.getChildren().forEach(x => {
+            this.childrenProjectiles.getChildren().forEach(x => {
                 var temp = <FlamingSkull>x;            
                 temp.setPosition(this.x, this.y);        
             });
@@ -140,7 +140,7 @@ export class FlamingSkull extends Projectile {
 
     detonate() {
 
-        this.childrenProjeciles.getChildren().forEach(x => {
+        this.childrenProjectiles.getChildren().forEach(x => {
             var temp = <FlamingSkull>x;            
             temp.setPosition(this.x, this.y);
             
