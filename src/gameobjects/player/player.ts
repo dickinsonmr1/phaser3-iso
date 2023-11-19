@@ -159,6 +159,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private lightningDamageSprites: Phaser.GameObjects.Sprite[] = [];
     public lightningLight: Phaser.GameObjects.Light;
+    private lightningMaxWidth: number = 111;
 
     private get emitterOffsetY(): number {return 30;}
 
@@ -1928,19 +1929,20 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             
             let numberPlayersReachableByLightning = 0;
             var otherPlayers = this.getGameScene().getOtherPlayers(this.playerId);
+
+            // loop through each player to see if lightning can reach them
             otherPlayers.forEach(x => {
 
                 var otherPlayer = <Player>x;
                 var distance = Math.abs(Phaser.Math.Distance.Between(otherPlayer.x, otherPlayer.y, this.x, this.y));
-                    
+                
+                // if player is close enough and not dead, show lightning hitting them
                 if(distance < 200 && !otherPlayer.deadUntilRespawnTimer.isActive()) {
-                    //let gameScene = <GameScene>this.scene;  
                     var destinationX = otherPlayer.x;
                     var destinationY = otherPlayer.y;
                     var deltaX = destinationX - this.x;
                     var deltaY = destinationY - this.y;
             
-                    //var isometricGamepadAxes = Utility.cartesianToIsometric(new Phaser.Geom.Point(x, y));
                     var arctangent = Math.atan2(deltaX, deltaY);
                     this.lightningAngle = -arctangent;//Utility.SnapTo16DirectionAngle(arctangent);
 
@@ -1956,8 +1958,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     }
                 }
                 else {                
-                    //this.lightningAngle = -this.arctangent;
-                    
+                    // set lightning rotation angle and hide any "damage" sprites
                     this.lightningAngle += Math.PI / 60;
                     if(this.lightningAngle > Math.PI * 2)
                         this.lightningAngle -= Math.PI * 2;
@@ -1969,6 +1970,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     }
                 }
     
+                // if there is any lightning that could potentially hit other player
                 let matchingLightning = this.lightningSprites.filter(x => x.getData('otherPlayerId') == otherPlayer.playerId);
                 if(matchingLightning.length > 0) {
                     let lightning = matchingLightning[0];
@@ -1976,20 +1978,24 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                     lightning.setPosition(this.x, this.y);
                     if(distance < 200)
                         lightning.setDisplaySize(48, distance);
-                    else
-                        lightning.setDisplaySize(48, 111);
-
+                    else {
+                        //lightning.setDisplaySize(48, 111);
+                        lightning.setDisplaySize(48, this.lightningMaxWidth - Math.abs(Math.cos(this.lightningAngle)) * 50);
+                    }
                     lightning.rotation = this.lightningAngle;  
+                    
                     lightning.setVisible(true);  
 
                     this.lightningLight.setPosition(lightning.getCenter().x, lightning.getCenter().y);
                 }
             });  
             
+            // if no players being hit by lightning, show 1 lightning sprite rotating around player
             if(numberPlayersReachableByLightning == 0) {
                 for(var i = 0; i < this.lightningSprites.length - 1; i++) {
                     if(i == 0) {
                         this.lightningSprites[i].setVisible(true);
+                        this.lightningSprites[i].setDisplaySize(48, this.lightningMaxWidth - Math.abs(Math.cos(this.lightningAngle)) * 50);
                         this.lightningLight.setPosition(this.lightningSprites[i].getCenter().x, this.lightningSprites[i].getCenter().y);
                     }
                     else
