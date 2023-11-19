@@ -277,6 +277,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     public frozenTimer: AutoDecrementingGameTimer;
 
+    public nextRapidFireRocketTimer1: GameTimeDelayTimer; //= new GameTimeDelayTimer(200);
+    public nextRapidFireRocketTimer2: GameTimeDelayTimer; // = new GameTimeDelayTimer(200);    
+    public nextRapidFireRocketTimer3: GameTimeDelayTimer; //= new GameTimeDelayTimer(200);
+    public nextRapidFireRocketTimer4: GameTimeDelayTimer; // = new GameTimeDelayTimer(200);
+
     //public deadUntilRespawnTime: number = 0;
     public deadUntilRespawnTimer: AutoDecrementingGameTimer = new AutoDecrementingGameTimer(Constants.respawnTime);
 
@@ -930,6 +935,37 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.activeLightningTimer.update();
             this.updateLightning();
+
+            var gameTimeNow = this.scene.game.loop.time;
+
+            if(this.nextRapidFireRocketTimer1 != null) {
+
+                if(this.nextRapidFireRocketTimer1.isExpired(gameTimeNow)) {
+                    this.createProjectile(ProjectileType.FireRocket, true);
+                    this.nextRapidFireRocketTimer1 = null;
+                }    
+            }
+            else if(this.nextRapidFireRocketTimer2 != null) {
+                
+                if(this.nextRapidFireRocketTimer2.isExpired(gameTimeNow)) {
+                    this.createProjectile(ProjectileType.FireRocket, true);
+                    this.nextRapidFireRocketTimer2 = null;                    
+                }    
+            }
+            else if(this.nextRapidFireRocketTimer3 != null) {
+                
+                if(this.nextRapidFireRocketTimer3.isExpired(gameTimeNow)) {
+                    this.createProjectile(ProjectileType.FireRocket, true);
+                    this.nextRapidFireRocketTimer3 = null;                    
+                }    
+            }
+            else if(this.nextRapidFireRocketTimer4 != null) {
+                
+                if(this.nextRapidFireRocketTimer4.isExpired(gameTimeNow)) {
+                    this.createProjectile(ProjectileType.FireRocket, true);
+                    this.nextRapidFireRocketTimer4 = null;                    
+                }    
+            }
         } 
 
         var currentlyDeadAndWaitingUntilRespawn = this.deadUntilRespawnTimer.isActive();
@@ -1807,7 +1843,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             switch(selectedWeapon.pickupType) {
                 case PickupType.Special:
                     //this.tryFireRocks();
-                    this.tryFireFlamingSkull();
+                    //this.tryFireFlamingSkull();
+                    this.tryRapidFireRockets();
                     break;
                 case PickupType.Rocket:
                     this.tryFireRocket();
@@ -1855,6 +1892,27 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             
             this.createProjectile(ProjectileType.Freeze);
             this.nextRocketTimer.startTimer(gameTimeNow);
+        }        
+    }
+
+    tryRapidFireRockets() {
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextRocketTimer.isExpired(gameTimeNow)) {
+
+            this.createProjectile(ProjectileType.FireRocket, true);
+            this.nextRocketTimer.startTimer(gameTimeNow);
+
+            this.nextRapidFireRocketTimer1 = new GameTimeDelayTimer(100);
+            this.nextRapidFireRocketTimer1.startTimer(gameTimeNow);
+
+            this.nextRapidFireRocketTimer2 = new GameTimeDelayTimer(200);            
+            this.nextRapidFireRocketTimer2.startTimer(gameTimeNow);                
+
+            this.nextRapidFireRocketTimer3 = new GameTimeDelayTimer(300);            
+            this.nextRapidFireRocketTimer3.startTimer(gameTimeNow);     
+
+            this.nextRapidFireRocketTimer4 = new GameTimeDelayTimer(400);            
+            this.nextRapidFireRocketTimer4.startTimer(gameTimeNow);     
         }        
     }
 
@@ -2186,7 +2244,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         return damageSprite;
     }
 
-    private createProjectile(projectileType) : Projectile {
+    private createProjectile(projectileType: ProjectileType, useMultipleLaunchPoints?: boolean) : Projectile {
 
         var bulletLaunchDistanceFromPlayerCenter = 22;               
         var launchPoint = new Phaser.Math.Vector2(this.aimX, this.aimY);
@@ -2203,7 +2261,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.particleEmitterMuzzleFlash.setDepth(this.y + launchPoint.y * bulletLaunchDistanceFromPlayerCenter);            
             this.particleEmitterMuzzleFlash.explode(1, launchPoint.x * bulletLaunchDistanceFromPlayerCenter, launchPoint.y * bulletLaunchDistanceFromPlayerCenter);               
         }
-        if(projectileType == ProjectileType.Rocks) {
+        if(projectileType == ProjectileType.Rocks || useMultipleLaunchPoints) {
             switch(this.lastRockLaunchPointOffset) {
                 case RockLaunchOffset.Left:
                     launchPoint = this.rockLaunchPointOffsetRight;
@@ -2246,7 +2304,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         return projectile;
-    }
+    }    
 }
 
 export { PlayerDrawOrientation };
