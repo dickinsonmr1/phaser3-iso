@@ -384,12 +384,12 @@ export class TitleScene extends Phaser.Scene {
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck,
-            armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Flamethrower",
+            armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Rapid Fire Rockets",
             driverName: "Kirk L.", quote: "Let's all get the job done."}));  
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse,
-            armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "Skulls",
+            armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "Flaming Skull",
             driverName: "Eugene F.", quote: "Cremation time"}));                 
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({

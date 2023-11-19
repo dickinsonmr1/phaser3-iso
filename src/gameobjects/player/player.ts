@@ -1842,9 +1842,23 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         if(selectedWeapon != null && this.selectedWeaponInventoryItem.ammoCount > 0) {
             switch(selectedWeapon.pickupType) {
                 case PickupType.Special:
-                    //this.tryFireRocks();
-                    //this.tryFireFlamingSkull();
-                    this.tryRapidFireRockets();
+                    switch(this.vehicleType){
+                        case VehicleType.Hearse:
+                            this.tryFireFlamingSkull();
+                            break;
+                        case VehicleType.Killdozer:
+                            this.tryFireRocks();
+                            break;
+                        case VehicleType.PickupTruck:                        
+                            this.tryRapidFireRockets();
+                        case VehicleType.Taxi:
+                        case VehicleType.Ambulance:
+                        case VehicleType.RaceCar:                        
+                        case VehicleType.MonsterTruck:
+                        case VehicleType.Police:
+                            this.tryFireFreeze();
+                            break;
+                    }
                     break;
                 case PickupType.Rocket:
                     this.tryFireRocket();
