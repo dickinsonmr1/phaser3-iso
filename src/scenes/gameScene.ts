@@ -882,6 +882,8 @@ export default class GameScene extends Phaser.Scene
             var projectile = <Projectile>playerOrWeapon;
             if(projectile.projectileType == ProjectileType.Airstrike)
                 return;
+            if(projectile.projectileType == ProjectileType.FlamingSkull)
+                projectile.detonate();
 
             projectile.remove();
         }
@@ -896,6 +898,8 @@ export default class GameScene extends Phaser.Scene
             var projectile = <Projectile>playerOrWeapon;
             if(projectile.projectileType == ProjectileType.Airstrike)
                 return;
+            if(projectile.projectileType == ProjectileType.FlamingSkull)
+                projectile.detonate();
 
             projectile.remove();
 

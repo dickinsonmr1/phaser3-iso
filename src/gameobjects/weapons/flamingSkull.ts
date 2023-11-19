@@ -1,6 +1,6 @@
+import * as Phaser from 'phaser';
 import { Constants } from "../../constants";
 import { Projectile } from "./projectile";
-import { ProjectileType } from "./projectileType";
 
 export class FlamingSkull extends Projectile {
 
@@ -8,7 +8,6 @@ export class FlamingSkull extends Projectile {
     private skullColor: number;
     
     public childrenProjeciles: Phaser.GameObjects.Group = this.scene.physics.add.group();
-    //private isActive: boolean = false;
 
     constructor(params) {
         super(params);
@@ -17,13 +16,18 @@ export class FlamingSkull extends Projectile {
 
         this.skullColor = 0x33FF33;
         particleColors = [ this.skullColor ];
+        //let thisAsSprite = <Phaser.Physics.Arcade.Sprite>this;        
+        this.setTint(this.skullColor);
+        this.setAlpha(0.5);
+        this.setOrigin(0.5, 0.5);
+
         
-        if(params.countChildren > 0) {
+        if(params.isParent) {
 
             for(let angle = -Math.PI; angle < Math.PI; angle+=(Math.PI / 4)) {
 
                 let velocityX = Math.cos(angle) * 100;
-                let velocityY = Math.sin(angle) * 100;
+                let velocityY = Math.sin(angle) * 0.6 * 100;
 
                 var temp = new FlamingSkull({
                     scene: params.scene,
@@ -32,21 +36,21 @@ export class FlamingSkull extends Projectile {
                     isometricY: params.isometricY,
                     mapPositionX: params.mapPositionX,
                     mapPositionY: params.mapPositionY,
-                    key: params.weaponImageKey,
+                    key: 'deathIcon',
                     damage: params.damage,
                     velocityX: velocityX, //params.velocityX,
                     velocityY: velocityY, //params.velocityY,
-                    scaleX: params.scaleX / 4,
-                    scaleY: params.scaleY / 4,
+                    scaleX: params.scaleX / 1.5,
+                    scaleY: params.scaleY / 1.5,
                     angle: params.angle,
-                    countChildren: 0
+                    isParent: false
                 }); 
                 temp.active = false;
                 this.childrenProjeciles.add(temp);
             }        
         }
 
-        if(params.countChildren > 0) {
+        if(params.isParent) {
             this.particleEmitter = this.scene.add.particles(0, 0, 'smoke', {                
                 color: particleColors,
                 //tint: rocketColor, // gray: 808080                
@@ -64,14 +68,16 @@ export class FlamingSkull extends Projectile {
             this.particleEmitter.setDepth(Constants.depthTurboParticles);
         }
 
-        this.particleEmitterBurn = this.scene.add.particles(this.x, this.y, 'deathIcon',
+        this.particleEmitterBurn = this.scene.add.particles(this.x, this.y, 'smoke',
         {
             //frame: 'white',
 
-            color: [ 0xEBFAF7, 0xE0FCF3, 0xC2FEE9, 0xA3F8E3, 0x91E8D6, 0x78D1C6, 0x54B5AA, 0x409C8F],
-            lifespan: 250,
-            angle: { min: 0, max: -180 },
-            scale: { start: params.scaleY, end: 0.1},
+            color: [ 0x040d61, 0xEBFAF7, 0xE0FCF3, 0xC2FEE9, 0xA3F8E3, 0x91E8D6, 0x78D1C6, 0x54B5AA, 0x409C8F, 0x409C8F, 0x409C8F],
+            lifespan: 300,
+            colorEase: 'quart.out',
+            angle: { min: -100, max: -80 },
+            //scale: { start: params.scaleY, end: 0.1},
+            scale: { start: params.scaleY, end: 0, ease: 'sine.in' },
             speed: { min: 50, max: 100 },
             //advance: 2000,
             blendMode: 'ADD',
@@ -88,8 +94,9 @@ export class FlamingSkull extends Projectile {
             */
             emitting: false            
         });
+        this.particleEmitterBurn.setDepth(Constants.depthTurboParticles);
 
-        if(params.countChildren > 0) {
+        if(params.isParent) {
             this.particleEmitterBurn.start(0, 2000);
             
             this.spotlight = this.scene.lights
@@ -117,7 +124,7 @@ export class FlamingSkull extends Projectile {
             }
 
             if(this.particleEmitter != null) {
-                this.particleEmitter.setDepth(4);
+                this.particleEmitter.setDepth(Constants.depthTurboParticles);
                 
                 this.particleEmitter.emitParticleAt(this.x, this.y);
             }
@@ -129,7 +136,7 @@ export class FlamingSkull extends Projectile {
                 temp.setPosition(this.x, this.y);        
             });
         }
-    }
+    }    
 
     detonate() {
 
@@ -145,7 +152,8 @@ export class FlamingSkull extends Projectile {
                 .setIntensity(1);
             temp.spotlight.setPosition(this.x, this.y);
             */
-            temp.active = true;      
+            temp.active = true;     
+            temp.visible = true; 
 
             temp.particleEmitterBurn.start(0, 2000);      
         });
@@ -159,6 +167,9 @@ export class FlamingSkull extends Projectile {
 
         if(this.scene != null && this.particleEmitter != null)
             this.particleEmitter.stop();
+
+        if(this.scene != null && this.particleEmitterBurn != null)
+            this.particleEmitterBurn.stop();
 
         this.destroy();
     }

@@ -2230,8 +2230,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             case ProjectileType.FlamingSkull:
                 bulletVelocity = 350;
                 weaponImageKey = "deathIcon";
-                scaleX = 0.5;
-                scaleY = 0.5;
+                scaleX = 0.4;
+                scaleY = 0.4;
                 break;
         }            
 

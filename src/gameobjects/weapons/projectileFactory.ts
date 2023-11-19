@@ -120,8 +120,8 @@ export class ProjectileFactory {
                         velocityY: velocityY,
                         scaleX: scaleX,
                         scaleY: scaleY,
-                        angle: angle,
-                        countChildren: 2,
+                        angle: 0,
+                        isParent: true,
                     }); 
             }
     }
