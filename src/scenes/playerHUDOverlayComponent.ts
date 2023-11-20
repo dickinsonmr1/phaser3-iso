@@ -169,6 +169,7 @@ export class PlayerHUDOverlayComponent {
             200, 20,
             0.5,
             HUDBarType.Shield);
+        this.shieldBar.updateHealth(0); // respawn with no shield
 
         this.livesIcons.push(this.scene.add.image(this.HealthBarStartX, this.ShieldBarStartY - 100, 'carIcon'));
         this.livesIcons.push(this.scene.add.image(this.HealthBarStartX + 100, this.ShieldBarStartY - 100, 'carIcon'));

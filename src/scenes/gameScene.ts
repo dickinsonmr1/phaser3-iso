@@ -834,6 +834,7 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Shield:
                 console.log('refill shield');
                 this.sceneController.hudScene.setInfoText("Shield restored - " + selectedPlayer.playerName, 2000);
+                selectedPlayer.refillShield();
                 break;
             case PickupType.Airstrike:
                 console.log('refill airstrike');

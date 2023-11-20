@@ -245,6 +245,8 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarShadowMid.visible = true;
         this.healthBarShadowRight.visible = true;
         this.icon.visible = true;
+
+        this.setVisible(true);
     }
 
     hide() {
@@ -257,6 +259,8 @@ export class HealthBar extends Phaser.GameObjects.Group {
         this.healthBarShadowMid.visible = false;
         this.healthBarShadowRight.visible = false;
         this.icon.visible = false;
+
+        this.setVisible(false);
     }
 
     preUpdate() {

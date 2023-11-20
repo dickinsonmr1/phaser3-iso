@@ -82,7 +82,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
     private health: number = this.maxHealth();
     private turbo: number = Player.maxTurbo;
-    private shield: number = Player.maxShield / 2;   
+    private shield: number = 0;//Player.maxShield / 2;   
 
     private numberDeaths: number = 0;
 
@@ -131,6 +131,21 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     healthBar: HealthBar;
 
     shieldBar: HealthBar;
+    public shieldRefillTimer: AutoDecrementingGameTimer;
+    public shieldDestroyTimer: AutoDecrementingGameTimer;
+    public shieldDamageTimer: AutoDecrementingGameTimer;
+    shieldColor: number = 0x007BFF;
+    shieldHitColor: number = 0xBFDEFF; //0xB200FF;
+    public shieldMaxScale(): number {
+        switch(this.vehicleType) {
+            case VehicleType.MonsterTruck:
+                return 0.5;
+            case VehicleType.Killdozer:
+                return 0.4;
+            default:
+                return 0.25;
+        }
+    }
 
     private debugCoordinatesText: Phaser.GameObjects.Text;
     private multiplayerNameText: Phaser.GameObjects.Text;
@@ -218,10 +233,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private otherPlayers: Phaser.GameObjects.GameObject[] = [];//Player[] = [];
 
-
     private getMaxFlamethrowerDistance(): number {return 100;}
     private flamethrowerDistance: number = 0;
-
 
     playerDrawOrientation: PlayerDrawOrientation;
     getPlayerIsometricOrientation(): PlayerCartesianOrientation {
@@ -417,13 +430,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         
         this.shieldBar = new HealthBar(this.scene)        
         this.shieldBar.init(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 1.5,
-            this.turbo, 
+            Player.maxShield, 
             50, 5,
             0.25,
-            HUDBarType.Shield);
-        
+            HUDBarType.Shield);        
+        this.shield = 0;        
         this.shieldBar.setDepth(Constants.depthHealthBar);
-        this.shieldBar.show();
+        this.shieldBar.updateHealth(this.shield);
+        this.shieldBar.hide(); // players do not spawn with shield
 
         // multiplayer player name text
         var playerNameText = this.scene.add.text(this.x, this.y - this.GetTextOffsetY, this.playerName,
@@ -566,24 +580,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             'shieldCircle');
 
         this.shieldCircle.setOrigin(0.5, 0.5);
-        
-        switch(this.vehicleType) {
-            case VehicleType.MonsterTruck:
-            case VehicleType.Killdozer:
-                this.shieldCircle.setScale(0.5);        
-                break;
-            default:
-                this.shieldCircle.setScale(0.25);        
-                break;
-        }
+        this.shieldCircle.setScale(this.shieldMaxScale());
 
         this.shieldCircle.alpha = 0.3;    
         this.shieldCircle.setDepth(this.depth + this.bodyDrawOffset().y + 1);
-        //this.shieldCircle.setVisible(this.isCpuPlayer);    
-        this.shieldCircle.setTint(0x7CB9FF);
+        this.shieldCircle.setTint(this.shieldColor);
 
         this.shieldCircle.setVisible(this.shield > 0);
 
+        this.shieldDamageTimer = new AutoDecrementingGameTimer(10);//, this.freezeTransitionTime(), this.freezeTransitionTime());
+        this.shieldRefillTimer = new AutoDecrementingGameTimer(25);
+        this.shieldDestroyTimer = new AutoDecrementingGameTimer(25);
     }
     init() {
         this.scene.physics.world.enable(this);
@@ -947,7 +954,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
             this.setOrigin(0.5, 0.5);
 
-            this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
+            this.turboBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.6);
             this.shieldBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.3);
 
             this.headlight.setPosition(this.x + this.aimX * 70, this.y + this.aimY * 70);
@@ -1007,9 +1014,28 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 }    
             }
 
-            this.shieldCircle.setVisible(this.shield > 0);
+            this.shieldCircle.setVisible(this.shield > 0 || this.shieldDestroyTimer.isActive());
             this.shieldCircle.setPosition(this.x, this.y);
             this.shieldCircle.setDepth(this.depth + 1);
+
+            this.shieldRefillTimer.update();
+            this.shieldDestroyTimer.update();
+
+            if(this.shieldRefillTimer.isActive)
+                this.shieldCircle.setScale(this.shieldMaxScale() * (1 - this.shieldRefillTimer.currentTime / this.shieldRefillTimer.maxDuration));
+            else if(this.shieldDestroyTimer.isActive)            
+                this.shieldCircle.setScale(this.shieldMaxScale() * (this.shieldDestroyTimer.currentTime / this.shieldDestroyTimer.maxDuration)); // 0.5 - (200 - 199 / 200)
+            else
+                this.shieldCircle.setScale(this.shieldMaxScale());
+
+            this.shieldDamageTimer.update();
+
+            if(this.shield > 0 && !this.shieldDestroyTimer.isActive()) {
+                if(this.shieldDamageTimer.isActive())
+                    this.shieldCircle.setTint(this.shieldHitColor)
+                else 
+                    this.shieldCircle.setTint(this.shieldColor);
+            }
         } 
 
         var currentlyDeadAndWaitingUntilRespawn = this.deadUntilRespawnTimer.isActive();
@@ -1492,13 +1518,16 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.turbo = 0;
         this.turboBar.updateHealth(this.turbo);
-        this.turboBar.setVisible(false);
 
         this.shield = 0;
         this.shieldBar.updateHealth(this.shield);
-        this.shieldBar.setVisible(false);
 
-        this.healthBar.setVisible(false);
+        this.shieldDamageTimer.stopTimer();
+        this.shieldRefillTimer.stopTimer();
+        this.shieldDestroyTimer.stopTimer();
+
+        this.healthBar.updateHealth(this.health);
+
         this.multiplayerNameText.setVisible(false);
         
         if(this.cpuIcon != null)
@@ -1578,7 +1607,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.updateHealth(this.health);
         this.healthBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY);
         this.healthBar.show();
-
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);        
 
         this.turbo = Player.maxTurbo;
@@ -1588,10 +1616,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.turboBar.show();
         this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
 
-        this.shield = Player.maxShield;
+        this.shield = 0;
         this.shieldBar.updateHealth(this.shield);        
-        this.shieldBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);
-        this.shieldBar.show();
+        this.shieldBar.updatePosition(this.x + this.healthBarOffsetX, this.y + this.healthBarOffsetY * 0.5);        
+        this.shieldBar.hide(); // respawn with no shield        
+
         this.scene.events.emit('updatePlayerShield', this.playerId, this.shield);
 
         this.deadUntilRespawnTimer.stopTimer();
@@ -1605,10 +1634,6 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.alignPlayerNameText(this.x + this.GetPlayerNameOffsetX, this.y + this.GetPlayerNameOffsetY);    
 
         this.setVisible(true);
-        
-        this.turboBar.setVisible(true);
-        this.healthBar.setVisible(true);
-        this.shieldBar.setVisible(true);
 
         this.multiplayerNameText.setVisible(true);
         //if(this.isCpuPlayer)
@@ -1769,6 +1794,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
    
     tryDamage(projectileType: ProjectileType, damageLocation: Phaser.Math.Vector2): void {
 
+        var shieldPreviouslyOn = this.shield > 0;
         var damageAmount = 0;
         var explosionLocation = new Phaser.Math.Vector2((this.x + damageLocation.x) / 2, (this.y + damageLocation.y)/2)
         switch(projectileType)
@@ -1806,6 +1832,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.shield > 0) {
             this.shield -= damageAmount;
+            this.shieldDamageTimer.startTimer();
         }
         else {
             this.health -= damageAmount;
@@ -1832,6 +1859,10 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
         if(this.health <= 0){
             this.tryKill();
+        }
+
+        if(this.shield <= 0 && shieldPreviouslyOn) {
+            this.shieldDestroyTimer.startTimer();
         }
     
 
@@ -1866,7 +1897,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     tryFreeze() {
-        if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
+        if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() || this.shield > 0) return;
 
         //this.frozenTime = this.maxFrozenTime();
         this.frozenTimer.startTimer();
@@ -1884,11 +1915,18 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
 
     private tryDamageWithAmount(totalDamage: number): void {
         
+        var shieldPreviouslyOn = this.shield > 0;
+        
         if(this.shield > 0) {
             this.shield -= totalDamage;
+            this.shieldDamageTimer.startTimer();
             
-            this.shieldBar.updateHealth(this.health);
+            this.shieldBar.updateHealth(this.shield);
             this.scene.events.emit('updatePlayerShield', this.playerId, this.shield);
+                
+            if(this.shield <= 0 && shieldPreviouslyOn) {
+                this.shieldDestroyTimer.startTimer();
+            }
         }
         else if(this.health > 0) {
             this.health -= totalDamage;
@@ -2263,18 +2301,28 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
     refillTurbo() {
         this.turbo = Player.maxTurbo;
         this.turboBar.updateHealth(this.turbo);
+        this.turboBar.show();
         this.scene.events.emit('updatePlayerTurbo', this.playerId, this.turbo);
     }
 
     refillHealth() {
         this.health = this.maxHealth();
         this.healthBar.updateHealth(this.health);
+        this.healthBar.show();
+
         this.scene.events.emit('updatePlayerHealth', this.playerId, this.health);
     }
 
     refillShield() {
+
+        // only show shield restore animation if shield was previously depleted
+        if(this.shield == 0)
+            this.shieldRefillTimer.startTimer();
+
         this.shield = Player.maxShield;
-        this.shieldBar.updateHealth(this.shield);
+        this.shieldBar.updateHealth(this.shield);    
+        this.shieldBar.show();
+        
         this.scene.events.emit('updatePlayerShield', this.playerId, this.shield);
     }
 
