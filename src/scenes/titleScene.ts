@@ -483,6 +483,9 @@ export class TitleScene extends Phaser.Scene {
 
     launchGame(): void {                             
 
+        if(this.input.gamepad.pad1 != null)
+            this.input.gamepad.pad1.removeAllListeners();
+
         let weatherType = WeatherType.None;
         var selectedWeatherMenuItem = <ComplexMenuItem>this.menuController.menuPages[1].items[1];
         if(selectedWeatherMenuItem.subItems[selectedWeatherMenuItem.selectedSubItemIndex] != null)

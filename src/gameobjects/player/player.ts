@@ -1491,6 +1491,11 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             //sprite.destroy();
         });
         
+        this.nextRapidFireRocketTimer1 = null;
+        this.nextRapidFireRocketTimer2 = null;
+        this.nextRapidFireRocketTimer3 = null;
+        this.nextRapidFireRocketTimer4 = null;
+        
         this.numberDeaths++;
 
         let gameScene = <GameScene>this.scene;  
@@ -1719,10 +1724,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
             case ProjectileType.FireRocket:
             case ProjectileType.HomingRocket:
-                this.health -= 5;
+            case ProjectileType.FlamingSkull:
+                this.health -= 2;
                 this.particleEmitterExplosion.setPosition(explosionLocation.x, explosionLocation.y);
                 this.particleEmitterExplosion.setDepth(explosionLocation.y + 64);
                 this.particleEmitterExplosion.explode(10);//, this.x, this.y);
+                break;
+            case ProjectileType.FlamingSkull:
+                this.health -= 5;
+                this.particleEmitterExplosion.setPosition(explosionLocation.x, explosionLocation.y);
+                this.particleEmitterExplosion.setDepth(explosionLocation.y + 64);
+                this.particleEmitterExplosion.explode(5);//, this.x, this.y);
                 break;
             case ProjectileType.Airstrike:
                 this.health -= 2;

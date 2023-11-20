@@ -3,21 +3,7 @@ export class Constants {
 
     public static get depthTurboParticles(): number {return 3;}
 
-    public static get gamepadIndexSelect (): number {return 0;}  
-    public static get gamepadIndexBack (): number {return 1;}   
-    public static get gamepadIndexInteract (): number {return 2;}   
-    public static get gamepadIndexLeft (): number {return 14;}   
-    public static get gamepadIndexRight (): number {return 15;}   
-    public static get gamepadIndexUp (): number {return 12;}   
-    public static get gamepadIndexDown (): number {return 13;}   
-    public static get gamepadIndexPause (): number {return 9;}
-
-    public static get gamepadIndexLB (): number {return 4;}   
-    public static get gamepadIndexRB (): number {return 5;}  
-
-    public static get gamepadIndexJump (): number {return 0;}   
-    public static get gamepadIndexShoot (): number {return 1;}   
-    
+    // gamepad button constants
     // A 0
     // B 1
     // X 2
@@ -34,6 +20,26 @@ export class Constants {
     // down 13
     // left 14
     // right 15
+
+    public static get gamepadIndexSelect (): number {return 0;}  
+    public static get gamepadIndexBack (): number {return 1;}   
+    public static get gamepadIndexInteract (): number {return 2;}   
+    public static get gamepadIndexLeft (): number {return 14;}   
+    public static get gamepadIndexRight (): number {return 15;}   
+    public static get gamepadIndexUp (): number {return 12;}   
+    public static get gamepadIndexDown (): number {return 13;}   
+    public static get gamepadIndexPause (): number {return 9;}
+
+    public static get gamepadIndexDebug (): number {return 8;}
+
+    public static get gamepadIndexLB (): number {return 4;}   
+    public static get gamepadIndexRB (): number {return 5;}  
+
+    public static get gamepadIndexJump (): number {return 0;}   
+    public static get gamepadIndexShoot (): number {return 1;}   
+    
+
+    // tile keys from Tiled json files
 
     public static get pickupSpawnTile(): number { return 31; }
 

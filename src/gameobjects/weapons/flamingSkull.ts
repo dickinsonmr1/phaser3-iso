@@ -26,8 +26,10 @@ export class FlamingSkull extends Projectile {
 
             for(let angle = -Math.PI; angle < Math.PI; angle+=(Math.PI / 4)) {
 
-                let velocityX = Math.cos(angle) * 100;
-                let velocityY = Math.sin(angle) * 0.6 * 100;
+                let childVelocity = 200;
+
+                let velocityX = Math.cos(angle) * childVelocity;
+                let velocityY = Math.sin(angle) * 0.6 * childVelocity;
 
                 var temp = new FlamingSkull({
                     scene: params.scene,

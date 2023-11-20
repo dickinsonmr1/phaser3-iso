@@ -103,6 +103,10 @@ export class SceneController extends Phaser.Scene {
         this.scene.remove('GameScene');
         this.scene.remove('HudScene');
         this.scene.remove('PauseScene');
+
+        this.gameScene = null;
+        this.hudScene = null;
+        this.pauseScene = null;
         //this.scene.remove('LevelCompleteScene');
     }
 

@@ -28,6 +28,8 @@ export class PauseScene extends Phaser.Scene {
     gamepad: Phaser.Input.Gamepad.Gamepad;
     sceneController: SceneController
 
+    mostRecentGamepadPauseKey: boolean = false;
+
     constructor(sceneController: SceneController){
         super({key: "PauseScene"});
 
@@ -92,6 +94,20 @@ export class PauseScene extends Phaser.Scene {
     }
 
     update(): void {
+
+        if(this.gamepad != null) {
+            if(this.gamepad.isButtonDown(Constants.gamepadIndexPause)) {
+                if(!this.mostRecentGamepadPauseKey) {
+
+                    this.returnToGame();
+
+                    this.mostRecentGamepadPauseKey = true;
+                }
+            }
+            else {
+                this.mostRecentGamepadPauseKey = false;              
+            }
+        }
         if(Phaser.Input.Keyboard.JustDown(this.selectKey)) {
     
             var returnToGameOrTitle = this.menuController.confirmSelection();
@@ -128,6 +144,10 @@ export class PauseScene extends Phaser.Scene {
 
     returnToGame(): void {
         this.input.keyboard.resetKeys();
+        
+        if(this.input.gamepad.pad1 != null)
+            this.input.gamepad.pad1.removeAllListeners();
+
         this.sceneController.returnToGame();
     }
     
@@ -137,48 +157,51 @@ export class PauseScene extends Phaser.Scene {
     }
 
     addGamepadListeners(): void {
-        this.gamepad = this.input.gamepad.pad1;
-        this.gamepad.on('down', (index, value, button) => {
+        if(this.input.gamepad.pad1 != null)
+        {
+            this.gamepad = this.input.gamepad.pad1;
+            this.gamepad.on('down', (index, value, button) => {
 
-            switch(index) {
-                case Constants.gamepadIndexSelect:
-                    console.log('A');
-                    var returnToGameOrTitle = this.menuController.confirmSelection();
-                    if(returnToGameOrTitle)
-                    {
-                        var itemJustConfirmed = this.menuController.getSelectedMenuPageItem();
-                        if(itemJustConfirmed instanceof UnpauseGameMenuItem)
-                            this.returnToGame();
-                        else if(itemJustConfirmed instanceof ReturnToTitleMenuItem)
-                            this.returnToTitle();
-                    }
-                    break;
-                case Constants.gamepadIndexPause:
-                case Constants.gamepadIndexBack:
-                    this.returnToGame();
-                    break;
-                case Constants.gamepadIndexInteract:
-                    console.log('X');
-                    break;
-                case Constants.gamepadIndexUp:
-                    console.log('Up');
-                    this.menuController.selectPreviousItem();
-                    break;
-                case Constants.gamepadIndexDown:
-                    console.log('Down');
-                    this.menuController.selectNextItem();
-                    break;
-                case Constants.gamepadIndexLeft:
-                case Constants.gamepadIndexLB:
-                    this.menuController.selectPreviousSubItem();
-                    console.log('Left');
-                    break;
-                case Constants.gamepadIndexRight:
-                case Constants.gamepadIndexRB:
-                    console.log('Right');
-                    this.menuController.selectNextSubItem();
-                    break;
-            }                
-        });
+                switch(index) {
+                    case Constants.gamepadIndexSelect:
+                        console.log('A');
+                        var returnToGameOrTitle = this.menuController.confirmSelection();
+                        if(returnToGameOrTitle)
+                        {
+                            var itemJustConfirmed = this.menuController.getSelectedMenuPageItem();
+                            if(itemJustConfirmed instanceof UnpauseGameMenuItem)
+                                this.returnToGame();
+                            else if(itemJustConfirmed instanceof ReturnToTitleMenuItem)
+                                this.returnToTitle();
+                        }
+                        break;
+                    case Constants.gamepadIndexPause:
+                    case Constants.gamepadIndexBack:
+                        //this.returnToGame();    
+                        break;
+                    case Constants.gamepadIndexInteract:
+                        console.log('X');
+                        break;
+                    case Constants.gamepadIndexUp:
+                        console.log('Up');
+                        this.menuController.selectPreviousItem();
+                        break;
+                    case Constants.gamepadIndexDown:
+                        console.log('Down');
+                        this.menuController.selectNextItem();
+                        break;
+                    case Constants.gamepadIndexLeft:
+                    case Constants.gamepadIndexLB:
+                        this.menuController.selectPreviousSubItem();
+                        console.log('Left');
+                        break;
+                    case Constants.gamepadIndexRight:
+                    case Constants.gamepadIndexRB:
+                        console.log('Right');
+                        this.menuController.selectNextSubItem();
+                        break;
+                }                
+            });
+        }
     }
 }

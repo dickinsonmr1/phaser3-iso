@@ -69,7 +69,7 @@ export class ProjectileFactory {
                     scaleY = 0.5;
                     break;
                 case ProjectileType.FlamingSkull:
-                    bulletVelocity = 350;
+                    bulletVelocity = 500;
                     weaponImageKey = "deathIcon";
                     scaleX = 0.4;
                     scaleY = 0.4;

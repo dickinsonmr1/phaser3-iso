@@ -70,6 +70,7 @@ export default class GameScene extends Phaser.Scene
     mostRecentR1: boolean = false;
     mostRecentY: boolean = false;
     mostRecentGamepadDebugKey: boolean = false;
+    mostRecentGamepadPauseKey: boolean = false;
 
     light: any;
 
@@ -685,8 +686,10 @@ export default class GameScene extends Phaser.Scene
     }
 
     addGamePadListeners() {
-        this.gamepad = this.input.gamepad.pad1;
-        this.gamepad.on('down', (index, value, button) => {
+        
+        if(this.input.gamepad.pad1 != null) {
+            this.gamepad = this.input.gamepad.pad1;
+            this.gamepad.on('down', (index, value, button) => {
                 switch(index) {
                     case Constants.gamepadIndexJump:
                         console.log('A');
@@ -721,6 +724,7 @@ export default class GameScene extends Phaser.Scene
                 }
             });
         };
+    }
 
     playerTouchingTileHandler(sprite, tile): boolean {
         let scene = <GameScene>this;//.scene;
@@ -965,8 +969,7 @@ export default class GameScene extends Phaser.Scene
 
 
             if(pad.R2) {
-                this.player1.tryFirePrimaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);
-                //this.player.tryFireBullet(scene.sys.game.loop.time, scene.sound);
+                this.player1.tryFirePrimaryWeaponWithGamepad();
             } 
             else {
                 this.player1.tryStopFireFlamethrower();
@@ -974,7 +977,6 @@ export default class GameScene extends Phaser.Scene
 
 
             if(pad.X) {
-                //this.player.tryFireSecondaryWeaponWithGamepad();//this.mostRecentCartesianGamepadAxes.x, this.mostRecentCartesianGamepadAxes.y);                
                 this.player1.tryTurboBoostOn();
             }
             else {
@@ -1025,7 +1027,7 @@ export default class GameScene extends Phaser.Scene
             if(rightAxisY > 0.2)
                 this.cameras.main.zoom -= 0.01;
            
-            if(pad.isButtonDown(8)) {
+            if(pad.isButtonDown(Constants.gamepadIndexDebug)) {
                 if(!this.mostRecentGamepadDebugKey) {
 
                     this.showDebug = !this.showDebug;
@@ -1040,6 +1042,18 @@ export default class GameScene extends Phaser.Scene
             }
             else {
                 this.mostRecentGamepadDebugKey = false;              
+            }
+
+            if(pad.isButtonDown(Constants.gamepadIndexPause)) {
+                if(!this.mostRecentGamepadDebugKey) {
+
+                    this.sceneController.pauseGame();
+
+                    this.mostRecentGamepadPauseKey = true;
+                }
+            }
+            else {
+                this.mostRecentGamepadPauseKey = false;              
             }
 
             //if(pad.isButtonDown(Constants.gamepadIndexPause)) {
