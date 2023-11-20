@@ -228,6 +228,12 @@ export class PlayerHUDOverlayComponent {
             this.turboBar.show();   
     }
 
+    updateShield(currentShield: number) {
+        this.shieldBar.updateHealth(currentShield);
+        if(currentShield > 0)
+            this.shieldBar.show();   
+    }
+
     updateCpuBehaviorOverrideText(behavior: string) {        
         if(behavior != null) {
             if(!this.cpuBehaviorOverrideText.visible)
@@ -264,5 +270,6 @@ export class PlayerHUDOverlayComponent {
     respawn() {
         this.healthBar.show();
         this.turboBar.show();
+        this.shieldBar.show();
     }
 }

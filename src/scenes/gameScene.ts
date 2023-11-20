@@ -216,6 +216,8 @@ export default class GameScene extends Phaser.Scene
 
         this.load.image('crosshair', './assets/sprites/crosshair061.png');
 
+        this.load.image('shieldCircle', './assets/shieldTexture.png');
+
         this.load.atlasXML('buildingSpritesheet', './assets/spritesheet-buildings.png', './assets/sprites-buildings.xml');   
         //this.load.atlasXML('tanksSpritesheet', './assets/sprites/weapons/tanks_spritesheetDefault.png', './assets/sprites/weapons/tanks_spritesheetDefault.xml');
     }

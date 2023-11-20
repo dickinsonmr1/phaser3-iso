@@ -96,6 +96,12 @@ import { v4 as uuidv4 } from 'uuid';
             this.updatePlayerTurbo(playerId, turbo);
         }, this);
 
+        ourGame.events.on('updatePlayerShield', function (playerId: uuidv4, shield) {
+            //this.fpsText.setText('Health: ' + health + '%');// + '\n' +            
+            this.updatePlayerShield(playerId, shield);
+        }, this);
+
+
         ourGame.events.on('infoTextEmitted', function(text) {
             this.setInfoText(text);
         }, this);
@@ -189,6 +195,14 @@ import { v4 as uuidv4 } from 'uuid';
         let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
         if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
             selectedPlayerGroup[0].updateTurbo(currentTurbo);
+        }
+    }
+    
+    updatePlayerShield(playerId: uuidv4, currentShield: number): void {
+
+        let selectedPlayerGroup = this.playerHUDOverlayComponents.filter(x => x.playerId == playerId);//.find(x => x.playerName == name);
+        if(selectedPlayerGroup != null && selectedPlayerGroup[0] != null) {
+            selectedPlayerGroup[0].updateShield(currentShield);
         }
     }
 
