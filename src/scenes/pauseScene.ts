@@ -63,7 +63,7 @@ export class PauseScene extends Phaser.Scene {
 
         this.menuController = new MenuController()
         
-        var pauseMenuPage = new MenuPage(this, false, false);
+        var pauseMenuPage = new MenuPage(this, "Pause", false, false);
 
         ///////////////////////////////////
         // title menu

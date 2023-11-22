@@ -18,6 +18,9 @@ export enum MenuItemType {
 */
 
 export class MenuPage {
+
+    name: string;
+    
     title: Phaser.GameObjects.Text;
     subtitle: Phaser.GameObjects.Text;
     footer: Phaser.GameObjects.Text;
@@ -76,7 +79,9 @@ export class MenuPage {
 
     useTextBackgroundStroke: boolean = true;
 
-    constructor(scene: Phaser.Scene, useAudio: boolean, useTextBackgroundStroke?: boolean) {        
+    constructor(scene: Phaser.Scene, name: string, useAudio: boolean, useTextBackgroundStroke?: boolean) {        
+
+        this.name = name;
         this.items = new Array<MenuItem>();
         this.selectedItemIndex = 0;
 
@@ -252,7 +257,7 @@ export class MenuPage {
         }
     */
 
-    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<MenuKeyValueMapping>): ComplexMenuItem {
+    addMenuComplexItem(scene: Phaser.Scene, text: string, subItems: Array<MenuKeyValueMapping>, showTitle?: boolean): ComplexMenuItem {
 
         let menuItemStartX = this.menuStartX;
         let menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
@@ -267,7 +272,8 @@ export class MenuPage {
                 align: this.align(),            
                 color: this.nonHighlightedColor(),
             },
-            subItems});
+            subItems,
+            showTitle});
         if(this.useTextBackgroundStroke)
             newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         newComplexMenuPageItem.setOrigin(0.5, 0.5);
@@ -281,7 +287,7 @@ export class MenuPage {
         return newComplexMenuPageItem;
     }
 
-    addMenuComplexItemWithSprites(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>, iconLocationOnMenu: LocationOnMenuPage, displayCategoryText: boolean = true): ComplexMenuItem  {
+    addMenuComplexItemWithSprites(scene: Phaser.Scene, text: string, iconMappings: Array<IconValueMapping>, iconLocationOnMenu: LocationOnMenuPage, showTitle?: boolean): ComplexMenuItem  {
 
         let menuItemStartX = this.menuStartX;
         let menuItemStartY = this.menuStartY + this.menuItemDistanceY() * this.items.length;
@@ -306,7 +312,8 @@ export class MenuPage {
                 align: this.align(),            
                 color: this.nonHighlightedColor(),
             },
-            subItems: iconMappings});
+            subItems: iconMappings,
+            showTitle});
         if(this.useTextBackgroundStroke)
             newComplexMenuPageItem.setStroke(this.fontStrokeColor(), this.fontStrokeThickness());
         newComplexMenuPageItem.setOrigin(0.5, 0.5);
@@ -804,11 +811,15 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
     selectedSubItemIndex: integer;
     sprite: Phaser.GameObjects.Sprite;
 
+    showTitle: boolean;
+
     constructor(params) {
         super(params.scene, params.x, params.y, params.text, params.style);
 
         this.itemTitle = params.text;
         this.subItems = params.subItems;
+
+        this.showTitle = this.showTitle ?? false;
         
         this.selectedSubItemIndex = 0;
 
@@ -864,8 +875,11 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
             this.sprite.setScale(subItem.scale);
             this.sprite.setTint(subItem.color);            
         }
-        else {            
-            this.text = this.itemTitle + ' - ' + subItem.description;
+        else {    
+            if(this.showTitle)        
+                this.text = this.itemTitle + ' - ' + subItem.description;
+            else
+                this.text = subItem.description;
         }
     }
 }

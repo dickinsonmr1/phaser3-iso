@@ -1,9 +1,10 @@
 import * as Phaser from 'phaser';
+import '../extensionMethods'
 
 import { PlayerHUDOverlayComponent } from "./playerHUDOverlayComponent";
 import { SceneController } from "./sceneController";
 import { VehicleType } from '../gameobjects/player/player';
-import { ComplexMenuItem, IconValueMapping, AnimatedSpriteValueMappingWithStats, LocationOnMenuPage, MenuPage } from './menuPage';
+import { ComplexMenuItem, IconValueMapping, AnimatedSpriteValueMappingWithStats, LocationOnMenuPage, MenuPage, MenuKeyValueMapping } from './menuPage';
 import { MenuController } from './menuController';
 import { Constants } from '../constants';
 import { WeatherType } from '../gameobjects/weather';
@@ -313,9 +314,9 @@ export class TitleScene extends Phaser.Scene {
 
         this.menuController = new MenuController()
         
-        var titleMenuPage = new MenuPage(this, false);        
-        var mapSelectionMenuPage = new MenuPage(this, false);
-        var vehicleSelectionMenuPage = new MenuPage(this, false);
+        var titleMenuPage = new MenuPage(this, "Title", false);        
+        var mapSelectionMenuPage = new MenuPage(this, "Map Selection", false);
+        var vehicleSelectionMenuPage = new MenuPage(this, "Vehicle Selection", false);
 
         ///////////////////////////////////
         // title menu
@@ -342,6 +343,12 @@ export class TitleScene extends Phaser.Scene {
         mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: 1}));
         mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: 2}));
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Map", mapIcons, LocationOnMenuPage.CenterScreen);
+
+        var gameTypeMenuItemMappings = new Array<MenuKeyValueMapping>();
+        gameTypeMenuItemMappings.push(new MenuKeyValueMapping({description: "Deathmatch", selectedIndex: 0}));
+        gameTypeMenuItemMappings.push(new MenuKeyValueMapping({description: "Team Deathmatch", selectedIndex: 1}));
+        mapSelectionMenuPage.addMenuComplexItem(this, "Game Type", gameTypeMenuItemMappings, false);
+
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Weather",
         [
             new IconValueMapping({description:'None', key: 'sunIcon', scale: 1, color: 0xFFFFFF, selectedIndex: WeatherType.None}),
@@ -487,12 +494,19 @@ export class TitleScene extends Phaser.Scene {
             this.input.gamepad.pad1.removeAllListeners();
 
         let weatherType = WeatherType.None;
-        var selectedWeatherMenuItem = <ComplexMenuItem>this.menuController.menuPages[1].items[1];
+        var selectedWeatherMenuItem = <ComplexMenuItem>this.menuController
+            //.menuPages[1]
+            .menuPages.single(x => x.name == "Map Selection")
+            .items[2];
         if(selectedWeatherMenuItem.subItems[selectedWeatherMenuItem.selectedSubItemIndex] != null)
             weatherType = selectedWeatherMenuItem.selectedSubItemIndex;
 
         let timeOfDayType = TimeOfDayType.Daytime;
-        var selectedTimeOfDayTypeMenuItem = <ComplexMenuItem>this.menuController.menuPages[1].items[2];
+        var selectedTimeOfDayTypeMenuItem = <ComplexMenuItem>this.menuController
+            //.menuPages[1]
+            .menuPages.single(x => x.name == "Map Selection")
+            .items[3];
+            
         if(selectedTimeOfDayTypeMenuItem.subItems[selectedTimeOfDayTypeMenuItem.selectedSubItemIndex] != null)
             timeOfDayType = selectedTimeOfDayTypeMenuItem.selectedSubItemIndex;
     
