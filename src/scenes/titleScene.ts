@@ -57,6 +57,16 @@ export class TitleScene extends Phaser.Scene {
         this.load.image('rainIcon', './assets/sprites/HUD/storm.png');
         this.load.image('snowIcon', './assets/sprites/HUD/freezeIcon.png');
 
+        this.load.image('backgroundImage', './assets/menu/background.png');
+        this.load.image('driver-killdozer', './assets/menu/Killdozer Driver2 256x256.png');
+        this.load.image('driver-monstertruck', './assets/menu/Monster Truck Driver2 256x256.png');
+        this.load.image('driver-racecar', './assets/menu/Race Car Driver2 256x256.png');
+        this.load.image('driver-police', './assets/menu/The Law v2 256x256.png');
+        this.load.image('driver-taxi', './assets/menu/Taxi Driver2 256x256.png');
+        this.load.image('driver-ambulance', './assets/menu/Ambulance Driver2 256x256.png');
+        this.load.image('driver-redneck', './assets/menu/Redneck Driver 256x256.png');
+        this.load.image('driver-hearse', './assets/menu/Hearse Driver v2 256x256.png');
+
         this.load.atlasXML('orangeCars', './assets/vehicles/spritesheet-orangecars-all.png', './assets/vehicles/sprites-orangecars-all.xml');        
         this.load.atlasXML('whiteCars', './assets/vehicles/spritesheet-whitecars-all.png', './assets/vehicles/sprites-whitecars-all.xml');        
         this.load.atlasXML('yellowCars', './assets/vehicles/spritesheet-yellowcars-all.png', './assets/vehicles/sprites-yellowcars-all.xml');        
@@ -312,6 +322,9 @@ export class TitleScene extends Phaser.Scene {
             repeat: -1,            
         });
 
+        let image = this.add.image(0, 0, 'backgroundImage');
+        image.setOrigin(0, 0);
+
         this.menuController = new MenuController()
         
         var titleMenuPage = new MenuPage(this, "Title", false);        
@@ -377,42 +390,50 @@ export class TitleScene extends Phaser.Scene {
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Taxi', key: 'select-taxiYellow', scale: 1.5, selectedIndex: VehicleType.Taxi,
             armorRating: 3, speedRating: 4, specialRating: 2, specialDescription: "Horn",
-            driverName: "Travis B.", quote: "The days go on and on... they don't end"}));
+            driverName: "Mildred F.", quote: "Gas is on the right, slowpokes!",
+            driverImageKey: "driver-taxi"}));           
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Ambulance', key: 'select-ambulance', scale: 1.5, selectedIndex: VehicleType.Ambulance,
-            armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren",
-            driverName: "Chad G.", quote: "Get out of my way, stat!"}));  
+            armorRating: 3, speedRating: 2, specialRating: 3, specialDescription: "Siren Zapper",
+            driverName: "Emilia D.", quote: "Get out of my way, stat!",
+            driverImageKey: "driver-ambulance"}));           
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Speed Demon', key: 'select-raceCar', scale: 1, selectedIndex: VehicleType.RaceCar,
             armorRating: 2, speedRating: 5, specialRating: 2, specialDescription: "Buzzsaw",
-            driverName: "Steve M.", quote: "Focus. Speed. I am speed."}));  
+            driverName: "Steve M.", quote: "Focus. Speed. I am speed.",
+            driverImageKey: "driver-racecar"}));            
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
-            description: 'Guerilla', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck,
+            description: 'Redneck', key: 'select-pickupTruckOrange', scale: 1.5, selectedIndex: VehicleType.PickupTruck,
             armorRating: 3, speedRating: 3, specialRating: 4, specialDescription: "Rapid Fire Rockets",
-            driverName: "Kirk L.", quote: "Let's all get the job done."}));  
+            driverName: "Tucker Family", quote: "The harvest is plentiful",
+            driverImageKey: "driver-redneck"}));             
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Hearse', key: 'select-hearseBlack', scale: 1.5, selectedIndex: VehicleType.Hearse,
             armorRating: 4, speedRating: 2, specialRating: 2, specialDescription: "Flaming Skull",
-            driverName: "Eugene F.", quote: "Cremation time"}));                 
+            driverName: "Gabriela", quote: "One way trip to the cemetery",
+            driverImageKey: "driver-hearse"}));                 
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Killdozer', key: 'select-killdozer', scale: 1.5, selectedIndex: VehicleType.Killdozer,
             armorRating: 5, speedRating: 1, specialRating: 4, specialDescription: "Demolition",
-            driverName: "Marvin H.", quote: "Sometimes reasonable men must do unreasonable things..."}));                
+            driverName: "Marvin H.", quote: "Sometimes reasonable men must do unreasonable things...",
+            driverImageKey: "driver-killdozer"}));                    
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Monster Truck', key: 'select-monstertruck', scale: 1.5, selectedIndex: VehicleType.MonsterTruck,
             armorRating: 5, speedRating: 3, specialRating: 2, specialDescription: "Slamtime",
-            driverName: "Rock E.", quote: "Get outta my way"}));                   
+            driverName: "Magnum", quote: "Crushin' it since 1979",
+            driverImageKey: "driver-monstertruck"}));                           
 
         vehicleSprites.push(new AnimatedSpriteValueMappingWithStats({
             description: 'Police', key: 'select-police', scale: 1, selectedIndex: VehicleType.Police,
             armorRating: 3, speedRating: 4, specialRating: 3, specialDescription: "Zapper",
-            driverName: "Odo", quote: "I am the law."}));                   
+            driverName: "Bill P.", quote: "I am the law.",
+            driverImageKey: "driver-police"}));                      
         
         var complexMenuItem = vehicleSelectionMenuPage.addMenuComplexItemWithSprites(this, "Vehicle", vehicleSprites, LocationOnMenuPage.CenterScreen);        
         vehicleSelectionMenuPage.setInitialStats(this, complexMenuItem);
@@ -495,7 +516,6 @@ export class TitleScene extends Phaser.Scene {
 
         let weatherType = WeatherType.None;
         var selectedWeatherMenuItem = <ComplexMenuItem>this.menuController
-            //.menuPages[1]
             .menuPages.single(x => x.name == "Map Selection")
             .items[2];
         if(selectedWeatherMenuItem.subItems[selectedWeatherMenuItem.selectedSubItemIndex] != null)
@@ -503,7 +523,6 @@ export class TitleScene extends Phaser.Scene {
 
         let timeOfDayType = TimeOfDayType.Daytime;
         var selectedTimeOfDayTypeMenuItem = <ComplexMenuItem>this.menuController
-            //.menuPages[1]
             .menuPages.single(x => x.name == "Map Selection")
             .items[3];
             

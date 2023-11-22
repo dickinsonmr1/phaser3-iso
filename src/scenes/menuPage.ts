@@ -20,7 +20,7 @@ export enum MenuItemType {
 export class MenuPage {
 
     name: string;
-    
+
     title: Phaser.GameObjects.Text;
     subtitle: Phaser.GameObjects.Text;
     footer: Phaser.GameObjects.Text;
@@ -40,6 +40,8 @@ export class MenuPage {
 
     driverNameText: Phaser.GameObjects.Text;
     quoteText: Phaser.GameObjects.Text;
+
+    driverIcon: Phaser.GameObjects.Image;
 
     titleIcon: Phaser.GameObjects.Image;
 
@@ -457,6 +459,12 @@ export class MenuPage {
             this.driverNameText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.driverNameText.setFontSize(this.footerFontSize());
 
+        this.driverIcon = scene.add.image(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.25, 'driver-killdozer');
+        this.driverIcon.setOrigin(0, 0.5);
+        this.driverIcon.setScale(1, 1);
+        
+        this.titleIcon.setDepth(1);
+
         this.quoteText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 200, "quote",
         {
             fontFamily: this.fontFamily(),
@@ -487,6 +495,9 @@ export class MenuPage {
             this.quoteText.setText(subItem.quote);
             this.driverNameText.setText(subItem.driverName);
         }
+
+        if(subItem.driverImageKey != null)
+            this.driverIcon.setTexture(subItem.driverImageKey);
     }
 
     setMarker(scene: Phaser.Scene, text: string) {
@@ -660,6 +671,9 @@ export class MenuPage {
         
         if(this.driverNameText != null)
             this.driverNameText.setVisible(true);
+
+        if(this.driverIcon != null)
+            this.driverIcon.setVisible(true);
         
         this.marker.setVisible(true);
 
@@ -716,6 +730,9 @@ export class MenuPage {
         
         if(this.driverNameText != null)
             this.driverNameText.setVisible(false);
+
+        if(this.driverIcon != null)
+            this.driverIcon.setVisible(false);
 
         this.marker.setVisible(false);
 
@@ -896,6 +913,7 @@ export class MenuKeyValueMapping {
     
     quote: string;
     driverName: string;
+    driverImageKey: string;
 
     color: number;
 
@@ -919,6 +937,7 @@ export class IconValueMapping extends MenuKeyValueMapping {
 
     quote: string;
     driverName: string;
+    driverImageKey: string;
 
     color: number;
 
@@ -945,6 +964,7 @@ export class AnimatedSpriteValueMappingWithStats extends IconValueMapping {
 
     driverName: string;
     quote: string;
+    driverImageKey: string;
 
     color: number;
 
@@ -959,5 +979,6 @@ export class AnimatedSpriteValueMappingWithStats extends IconValueMapping {
 
         this.driverName = params.driverName;
         this.quote = params.quote;
+        this.driverImageKey = params.driverImageKey;
     }
 }
