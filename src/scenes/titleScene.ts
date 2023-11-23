@@ -57,6 +57,10 @@ export class TitleScene extends Phaser.Scene {
         this.load.image('rainIcon', './assets/sprites/HUD/storm.png');
         this.load.image('snowIcon', './assets/sprites/HUD/freezeIcon.png');
 
+        this.load.image('desert-background', './assets/menu/desert-background-256x256.png');
+        this.load.image('forest-background', './assets/menu/forest-background-256x256.png');
+        this.load.image('urban-background', './assets/menu/urban-background-256x256.png');
+
         this.load.image('backgroundImage', './assets/menu/background.png');
         this.load.image('driver-killdozer', './assets/menu/Killdozer Driver2 256x256.png');
         this.load.image('driver-monstertruck', './assets/menu/Monster Truck Driver2 256x256.png');
@@ -324,12 +328,13 @@ export class TitleScene extends Phaser.Scene {
 
         let image = this.add.image(0, 0, 'backgroundImage');
         image.setOrigin(0, 0);
+        image.setTint(0x555555);
 
         this.menuController = new MenuController()
         
-        var titleMenuPage = new MenuPage(this, "Title", false);        
-        var mapSelectionMenuPage = new MenuPage(this, "Map Selection", false);
-        var vehicleSelectionMenuPage = new MenuPage(this, "Vehicle Selection", false);
+        var titleMenuPage = new MenuPage(this, "Title", false, false);        
+        var mapSelectionMenuPage = new MenuPage(this, "Map Selection", false, false);
+        var vehicleSelectionMenuPage = new MenuPage(this, "Vehicle Selection", false, false);
 
         ///////////////////////////////////
         // title menu
@@ -352,9 +357,9 @@ export class TitleScene extends Phaser.Scene {
         mapSelectionMenuPage.setMarker(this, ">>");
 
         var mapIcons = new Array<IconValueMapping>();
-        mapIcons.push(new IconValueMapping({description: 'Forest', key: 'deathIcon', scale: 3, selectedIndex: 0}));
-        mapIcons.push(new IconValueMapping({description: 'Quarry', key: 'shieldIcon', scale: 3, selectedIndex: 1}));
-        mapIcons.push(new IconValueMapping({description: 'Desert', key: 'deathIcon', scale: 3, selectedIndex: 2}));
+        mapIcons.push(new IconValueMapping({description: 'Forest', key: 'forest-background', scale: 1, selectedIndex: 0}));
+        mapIcons.push(new IconValueMapping({description: 'Desert', key: 'desert-background', scale: 1, selectedIndex: 1}));
+        mapIcons.push(new IconValueMapping({description: 'Urban', key: 'urban-background', scale: 1, selectedIndex: 2}));
         mapSelectionMenuPage.addMenuComplexItemWithSprites(this, "Map", mapIcons, LocationOnMenuPage.CenterScreen);
 
         var gameTypeMenuItemMappings = new Array<MenuKeyValueMapping>();
@@ -382,8 +387,8 @@ export class TitleScene extends Phaser.Scene {
         ///////////////////////////////////
         // vehicle selection menu
         ///////////////////////////////////
-        vehicleSelectionMenuPage.setTitle(this, "Player 1: Select Vehicle");
-        vehicleSelectionMenuPage.setTitleIcon(this, 'deathIcon', '', 1);
+        vehicleSelectionMenuPage.setTitle(this, "Player 1: Select Combatant");
+        vehicleSelectionMenuPage.setTitleIcon(this, 'carIcon', '', 1);
         vehicleSelectionMenuPage.setMarker(this, ">>");        
         var vehicleSprites = new Array<IconValueMapping>();
         
@@ -446,7 +451,7 @@ export class TitleScene extends Phaser.Scene {
             ],
             LocationOnMenuPage.NextToMenuItem);
 
-        vehicleSelectionMenuPage.addStartGameMenuItem(this, "Confirm Selection");   
+        vehicleSelectionMenuPage.addStartGameMenuItem(this, "Start Game");   
         vehicleSelectionMenuPage.setBackMenu(this, mapSelectionMenuPage); 
         
         // adding menus to menu controller in order        

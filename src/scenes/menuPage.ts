@@ -70,6 +70,7 @@ export class MenuPage {
     titleFontSize(): number {return 72;}
     subtitleFontSize(): number {return 48;}
     menuItemFontSize(): number {return 40;}
+    menuItemFontSizeSelected(): number {return 48;}
     footerFontSize(): number {return 32;}
 
     markerOffsetX(): number {return -300;}
@@ -410,44 +411,8 @@ export class MenuPage {
         this.footer2.setFontSize(this.footerFontSize());
     }
 
-    setInitialStats(scene: Phaser.Scene, complexMenuItem: ComplexMenuItem) {
-        this.stat1Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5, "stat1",
-        {
-            fontFamily: this.fontFamily(),
-            fontSize: this.footerFontSize().toString(),
-            align: this.align(),            
-            color:"rgb(255,255,255)",
-        });
-        this.stat1Text.setOrigin(0, 0.5);
-        if(this.useTextBackgroundStroke)
-            this.stat1Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
-        this.stat1Text.setFontSize(this.footerFontSize());
-
-        this.stat2Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 50, "stat2",
-        {
-            fontFamily: this.fontFamily(),
-            fontSize: this.footerFontSize().toString(),
-            align: this.align(),            
-            color:"rgb(255,255,255)",
-        });
-        this.stat2Text.setOrigin(0, 0.5);
-        if(this.useTextBackgroundStroke)
-            this.stat2Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
-        this.stat2Text.setFontSize(this.footerFontSize());
-
-        this.stat3Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 100, "stat3",
-        {
-            fontFamily: this.fontFamily(),
-            fontSize: this.footerFontSize().toString(),
-            align: this.align(),            
-            color:"rgb(255,255,255)",
-        });
-        this.stat3Text.setOrigin(0, 0.5);
-        if(this.useTextBackgroundStroke)
-            this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
-        this.stat3Text.setFontSize(this.footerFontSize());
-
-        this.driverNameText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 + 150, "driver",
+    setInitialStats(scene: Phaser.Scene, complexMenuItem: ComplexMenuItem) {        
+        this.driverNameText = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5 - 200, "driver",
         {
             fontFamily: this.fontFamily(),
             fontSize: this.footerFontSize().toString(),
@@ -459,9 +424,46 @@ export class MenuPage {
             this.driverNameText.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
         this.driverNameText.setFontSize(this.footerFontSize());
 
-        this.driverIcon = scene.add.image(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.25, 'driver-killdozer');
+        this.driverIcon = scene.add.image(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.5, 'driver-killdozer');
         this.driverIcon.setOrigin(0, 0.5);
         this.driverIcon.setScale(1, 1);
+
+        this.stat1Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.75, "stat1",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat1Text.setOrigin(0, 0.5);
+        if(this.useTextBackgroundStroke)
+            this.stat1Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        this.stat1Text.setFontSize(this.footerFontSize());
+
+        this.stat2Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.75 + 50, "stat2",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat2Text.setOrigin(0, 0.5);
+        if(this.useTextBackgroundStroke)
+            this.stat2Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        this.stat2Text.setFontSize(this.footerFontSize());
+
+        this.stat3Text = scene.add.text(scene.game.canvas.width * 0.75, scene.game.canvas.height * 0.75 + 100, "stat3",
+        {
+            fontFamily: this.fontFamily(),
+            fontSize: this.footerFontSize().toString(),
+            align: this.align(),            
+            color:"rgb(255,255,255)",
+        });
+        this.stat3Text.setOrigin(0, 0.5);
+        if(this.useTextBackgroundStroke)
+            this.stat3Text.setStroke(this.fontStrokeColor(), this.fontStrokeThicknessSmallText());
+        this.stat3Text.setFontSize(this.footerFontSize());
+
         
         this.titleIcon.setDepth(1);
 
@@ -470,7 +472,8 @@ export class MenuPage {
             fontFamily: this.fontFamily(),
             fontSize: this.footerFontSize().toString(),
             align: this.align(),            
-            color:"rgb(255,255,255)",
+            color:"rgb(255,255,255)",            
+            wordWrap: { width: 600, useAdvancedWrap: true }
         });
         this.quoteText.setOrigin(0, 0.5);
         if(this.useTextBackgroundStroke)
@@ -492,7 +495,7 @@ export class MenuPage {
             this.stat3Text.setText("Special: " + this.ratingToDots(subItem.specialRating) + "(" + subItem.specialDescription + ")" );        
 
         if(subItem.quote != null && subItem.driverName != null) {
-            this.quoteText.setText(subItem.quote);
+            this.quoteText.setText(`"${subItem.quote}"`);
             this.driverNameText.setText(subItem.driverName);
         }
 
@@ -544,9 +547,11 @@ export class MenuPage {
         for(var i = 0; i < this.items.length; i++) {
             if(i == this.selectedItemIndex) {
                 this.items[i].setColor(this.highlightedColor());
+                this.items[i].setFontSize(this.menuItemFontSizeSelected());
             }
             else {
                 this.items[i].setColor(this.nonHighlightedColor());
+                this.items[i].setFontSize(this.menuItemFontSize());
             }
         }     
 
@@ -885,7 +890,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
             this.text = subItem.description;
 
             if(subItem instanceof AnimatedSpriteValueMappingWithStats)
-                this.sprite.play(subItem.key);
+                this.sprite.play({key: subItem.key, frameRate: 8});
             else
                 this.sprite.setTexture(subItem.key);
 
