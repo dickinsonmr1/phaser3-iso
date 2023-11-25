@@ -8,6 +8,7 @@ import { ProjectileType } from "./projectileType";
 import { Rocks } from "./rocks";
 import { FlamingSkull } from "./flamingSkull";
 import { PlayerDrawOrientation } from "../player/playerDrawOrientation";
+import { SmokeGrenade } from "./smokeGrenade";
 
 export class ProjectileFactory {
     constructor() {
@@ -73,6 +74,12 @@ export class ProjectileFactory {
                     weaponImageKey = "deathIcon";
                     scaleX = 0.4;
                     scaleY = 0.4;
+                    break;
+                case ProjectileType.SmokeGrenade:
+                    bulletVelocity = 500;
+                    weaponImageKey = "smokeGrenade";
+                    scaleX = 0.25;
+                    scaleY = 0.25;
                     break;
             }            
     
@@ -238,6 +245,22 @@ export class ProjectileFactory {
                         scaleX: scaleX,
                         scaleY: scaleY,
                         angle: -drawAngle
+                    }); 
+                case ProjectileType.SmokeGrenade:
+                    return new SmokeGrenade({
+                        scene: scene,
+                        projectileType: projectileType,
+                        isometricX: isometricX,
+                        isometricY: isometricY,
+                        mapPositionX: mapPositionX,
+                        mapPositionY: mapPositionY,
+                        key: weaponImageKey,
+                        damage: damage,
+                        velocityX: velocityX,
+                        velocityY: velocityY,
+                        scaleX: scaleX,
+                        scaleY: scaleY,
+                        angle: 0
                     }); 
                 case ProjectileType.FlamingSkull:
                     return new FlamingSkull({

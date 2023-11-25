@@ -52,7 +52,7 @@ export class MenuPage {
     subtitleOffsetY(): number {return 150;}
 
     highlightedColor(): string {return "rgb(255,255,255)"};
-    nonHighlightedColor(): string {return "rgb(150,150,150)"};
+    nonHighlightedColor(): string {return "rgb(120,120,120)"};
 
     fontFamily(): string {return "Franklin Gothic"};
     align(): string {return "center"};
@@ -69,7 +69,7 @@ export class MenuPage {
 
     titleFontSize(): number {return 72;}
     subtitleFontSize(): number {return 48;}
-    menuItemFontSize(): number {return 40;}
+    menuItemFontSize(): number {return 36;}
     menuItemFontSizeSelected(): number {return 48;}
     footerFontSize(): number {return 32;}
 
@@ -841,7 +841,7 @@ export class ComplexMenuItem extends Phaser.GameObjects.Text {
         this.itemTitle = params.text;
         this.subItems = params.subItems;
 
-        this.showTitle = this.showTitle ?? false;
+        this.showTitle = params.showTitle ?? false;
         
         this.selectedSubItemIndex = 0;
 

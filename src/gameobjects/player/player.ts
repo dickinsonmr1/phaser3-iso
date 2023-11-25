@@ -970,7 +970,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             if(this.health <= 0.25 * this.maxHealth()) {
                 this.particleEmitterSmoke.setDepth(this.y + 64);
                 this.particleEmitterSmoke.emitParticleAt(this.x, this.y);        
-            }            
+            }     
             //this.particleEmitterExplosion.setDepth(this.y + 1000);
 
             //let angle2 = -this.arctangent;// + (Math.PI / 2)
@@ -1973,6 +1973,8 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
                         case VehicleType.Ambulance:
                         case VehicleType.RaceCar:                        
                         case VehicleType.MonsterTruck:
+                            this.tryFireSmokeGrenade();
+                            break;
                         case VehicleType.Police:
                             this.tryFireFreeze();
                             break;
@@ -2240,6 +2242,17 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             this.nextSpecialTimer.startTimer(gameTimeNow);
         }        
     }  
+
+    tryFireSmokeGrenade() {
+
+        if(this.deadUntilRespawnTimer.isActive() || this.frozenTimer.isActive() ) return;
+
+        var gameTimeNow = this.scene.game.loop.time;
+        if(this.nextSpecialTimer.isExpired(gameTimeNow)) {
+            this.createProjectile(ProjectileType.SmokeGrenade);            
+            this.nextSpecialTimer.startTimer(gameTimeNow);
+        }        
+    }
 
     tryTurboBoostOn(): void {
         

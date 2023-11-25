@@ -11,7 +11,8 @@ export enum PickupType {
     Airstrike,
     Shockwave,
     Freeze,
-    Lightning
+    Lightning,
+    Smoke
 }
 
 export class Pickup {

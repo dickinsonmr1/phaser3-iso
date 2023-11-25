@@ -5,6 +5,7 @@ export enum ProjectileType {
     Airstrike,
     Freeze,
     Rocks,
-    FlamingSkull
+    FlamingSkull,
+    SmokeGrenade
     // EMP
 }

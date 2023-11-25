@@ -170,6 +170,8 @@ export default class GameScene extends Phaser.Scene
         this.load.image('bullet', './assets/sprites/weapons/bulletSand1.png');
         this.load.image('freezeRocket', './assets/sprites/weapons/rocket_2_small_down_square_noExhaust - blue.png');
         this.load.image('rock', './assets/sprites/weapons/meteorBrown_med1.png');
+        this.load.image('smokeGrenade', './assets/sprites/weapons/smokeGrenade.png');
+
         // tiles
         //this.load.image('tiles', './assets/iso-64x64-outside.png');
         this.load.image('tiles2', './assets/iso-64x64-building.png');
@@ -211,6 +213,7 @@ export default class GameScene extends Phaser.Scene
         this.load.image('muzzleFlash', './assets/sprites/explosions/tank_explosion10.png');
         this.load.image('smoke', './assets/sprites/explosions/tank_explosion9.png');
         this.load.image('smokeDarker', './assets/sprites/explosions/tank_explosion12.png');
+        this.load.image('blackSmoke', './assets/sprites/weapons/blackSmoke.png');        
         this.load.image('sparks', './assets/sprites/explosions/tank_explosion5.png');
         this.load.image('shockwave', './assets/sprites/explosions/tank_explosion1.png');
 
@@ -569,7 +572,7 @@ export default class GameScene extends Phaser.Scene
             var rightColor = 0;
 
             var pickupType = PickupType.Rocket;
-            var rand = Utility.getRandomInt(10);
+            var rand = Utility.getRandomInt(12);
             var pickUpIconKey = "shieldIcon";
             switch(rand) {
                 case 0: // pink
@@ -641,6 +644,13 @@ export default class GameScene extends Phaser.Scene
                     rightColor = 0x5B74FF;
                     pickupType = PickupType.Lightning;
                     pickUpIconKey = "lightningIcon";
+                    break;
+                case 10: // white
+                    topColor = 0xCCCCCC;
+                    leftColor = 0xBBBBBB;
+                    rightColor = 0xAAAAAA;
+                    pickupType = PickupType.Smoke;
+                    pickUpIconKey = "blackSmoke";
                     break;
                 default: // pink
                     topColor = 0xFF6FCC;
@@ -746,7 +756,9 @@ export default class GameScene extends Phaser.Scene
         if(sprite instanceof Projectile)
         {
             var projectile = <Projectile>sprite;
-            if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze)
+            if(projectile.projectileType == ProjectileType.SmokeGrenade)
+                return;
+            else if(projectile.projectileType != ProjectileType.Airstrike && projectile.projectileType != ProjectileType.Freeze )
                 projectile.remove();
             else if(projectile.projectileType == ProjectileType.Freeze)
                 projectile.detonate();
@@ -764,7 +776,10 @@ export default class GameScene extends Phaser.Scene
         
         if(!otherPlayer.deadUntilRespawnTimer.isActive()) {
 
-            if(projectile.projectileType != ProjectileType.Airstrike
+            if(projectile.projectileType == ProjectileType.SmokeGrenade) {
+                return;
+            }
+            else if(projectile.projectileType != ProjectileType.Airstrike
                 || (projectile.projectileType == ProjectileType.Airstrike && projectile.detonated)) {
                     otherPlayer.tryDamage(projectile.projectileType, projectileLocation);            
             }
@@ -847,6 +862,10 @@ export default class GameScene extends Phaser.Scene
             case PickupType.Freeze:
                 console.log('refill freeze');
                 this.sceneController.hudScene.setInfoText("Freeze acquired - " + selectedPlayer.playerName, 2000);
+                break;
+            case PickupType.Smoke:
+                console.log('refill smoke');
+                this.sceneController.hudScene.setInfoText("Smoke refilled - " + selectedPlayer.playerName, 2000);
                 break;
         }
         

@@ -75,12 +75,12 @@ export class PauseScene extends Phaser.Scene {
         var controlMenuItemMappings = new Array<MenuKeyValueMapping>();
         controlMenuItemMappings.push(new MenuKeyValueMapping({description: "Default", selectedIndex: 0}));
         controlMenuItemMappings.push(new MenuKeyValueMapping({description: "Driving", selectedIndex: 1}));
-        pauseMenuPage.addMenuComplexItem(this, "Controls", controlMenuItemMappings);
+        pauseMenuPage.addMenuComplexItem(this, "Controls", controlMenuItemMappings, true);
 
         var soundMenuItemMappings = new Array<MenuKeyValueMapping>();
         soundMenuItemMappings.push(new MenuKeyValueMapping({description: "On", selectedIndex: 0}));
         soundMenuItemMappings.push(new MenuKeyValueMapping({description: "Off", selectedIndex: 1}));
-        pauseMenuPage.addMenuComplexItem(this, "Sound", soundMenuItemMappings);
+        pauseMenuPage.addMenuComplexItem(this, "Sound", soundMenuItemMappings, true);
 
         pauseMenuPage.addReturnToTitleMenuItem(this, "Exit to Main Menu");
       
