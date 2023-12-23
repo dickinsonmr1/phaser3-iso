@@ -582,7 +582,7 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
         this.shieldCircle.setOrigin(0.5, 0.5);
         this.shieldCircle.setScale(this.shieldMaxScale());
 
-        this.shieldCircle.alpha = 0.3;    
+        this.shieldCircle.alpha = 0.2;    
         this.shieldCircle.setDepth(this.depth + this.bodyDrawOffset().y + 1);
         this.shieldCircle.setTint(this.shieldColor);
 
@@ -696,14 +696,14 @@ export abstract class Player extends Phaser.Physics.Arcade.Sprite {
             color: [ 0x432244, 0x141315 ],
             //tint: 808080,
             colorEase: 'quart.out',
-            lifespan: 500,
-            angle: { min: -100, max: -80 },
-            scale: { start: 0.25, end: 1, ease: 'sine.in' },
-            alpha: {start: 0.8, end: 0.0},
-            speed: { min: 50, max: 100 },
+            lifespan: 1000,
+            angle: { min: -110, max: -70 },
+            scale: { start: 0.25, end: 1, ease: 'sine.out' },
+            alpha: {start: 0.3, end: 0.0},
+            speed: { min: 10, max: 50 },
             advance: 0,
-            blendMode: 'ADD',
-            quantity: 2,
+            //blendMode: 'ADD',
+            quantity: 1,
             emitting: false
     
             /*
